@@ -17,7 +17,7 @@ Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança e
 Defold não conta para a contagem. O uso 1 abaixo é anterior à decisão e permanece
 registrado.
 
-**Estado atual:** 1 de 10 mudanças; prazo aberto até 20/09/2026.
+**Estado atual:** 1 de 10 mudanças; 4 projetos Godot integrados; prazo aberto até 20/09/2026.
 
 | # | Data | Projeto | Mudança | Tempo | Conflito | Aviso útil/falso | Inspeção humana necessária | Regra ausente |
 |---:|---|---|---|---:|---|---|---|---|
@@ -42,6 +42,22 @@ não é continuação automática deste registro.
 | 2026-08-23 | porte BomberBoom (Godot) | 69 | 5 | 0 | 0 | fotografia posterior ao uso 1; não é uma segunda mudança |
 | 2026-08-23 | BomberBoom (Defold) | 27 | 76 | 0 | 19 | integração do segundo projeto, sem mudança de jogo associada |
 | 2026-08-23 | BomberBoom (Defold), após calibração | 27 | 76 | 0 | 12 | refinamento da mesma baseline; não é mudança de jogo |
+| 2026-08-23 | Gods (Godot) | 450 | 67 | 0 | 1 | integração do terceiro projeto Godot, sem mudança de jogo associada |
+| 2026-08-23 | Boomlitude (Godot) | 97 | 6 | 0 | 0 | integração do quarto projeto Godot, sem mudança de jogo associada |
+
+## Baseline do Gods: o único aviso
+
+`SAR-OWN-001` em `animation:godot:src/entities/card.gd:self:position`. Dois donos:
+`card.gd::set_elevated` na linha 1040 e `card.gd::_on_selection_end` na linha 1078.
+A ferramenta não bloqueia porque não consegue provar sobreposição pelo texto — os
+ciclos de vida das duas trajetórias não são decidíveis estaticamente.
+
+Não classificado ainda como útil ou falso: exige olhar a cena, e a classificação
+pertence à primeira mudança real que tocar `card.gd`. Registrado aqui para que a
+resposta não seja inventada depois.
+
+Varredura de 450 arquivos em 681 ms, mediana de cinco execuções — a medição do
+`RESULTADO-0.1.0.md` era 0,69 s, então a fronteira da Fase 1 não custou desempenho.
 
 ## Classificação da baseline Defold
 
