@@ -83,6 +83,7 @@ um atraso.
 | [0006](docs/decisoes/0006-contrato-estrito-de-relatorio-e-codigos-de-saida.md) | contrato estrito de relatório e códigos de saída |
 | [0007](docs/decisoes/0007-observe-como-binario-separado.md) | `sara observe` nasce como binário separado |
 | [0008](docs/decisoes/0008-gramaticas-tree-sitter-comunitarias-fixadas.md) | gramáticas tree-sitter comunitárias, fixadas por versão exata |
+| [0009](docs/decisoes/0009-baseline-em-projeto-real-expoe-regra-ausente.md) | baseline em projeto real também autoriza regra ausente |
 
 ## Os artigos
 

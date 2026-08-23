@@ -103,6 +103,34 @@ fn godot_distinguishes_sequential_and_competing_tweens() {
     assert!(green["diagnostics"].as_array().unwrap().is_empty());
 }
 
+/// ADR 0009. O padrão de dono centralizado — cada escritor encerra o Tween guardado
+/// antes de criar o seu — é a própria remediação que o `SAR-OWN-001` recomenda, e
+/// virava aviso falso quando o cancelamento passava por método auxiliar.
+///
+/// A segunda metade do teste é a que importa: uma regra boa demais silenciaria também
+/// o caso em que só um dos lados cancela, que não serializa nada.
+#[test]
+fn godot_recognizes_centralized_owner_cancellation() {
+    let (code, report, _) = json_report("godot_animation_centralized_owner_green", &[]);
+    assert_eq!(code, 0);
+    assert_eq!(report["claims"].as_array().unwrap().len(), 2, "{report:#}");
+    assert!(
+        report["diagnostics"].as_array().unwrap().is_empty(),
+        "dono centralizado por método auxiliar não pode gerar diagnóstico: {report:#}"
+    );
+
+    let (warn_code, warn, _) = json_report("godot_animation_uncancelled_owners_warn", &[]);
+    assert_eq!(warn_code, 0);
+    assert!(
+        warn["diagnostics"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| { item["rule"] == "SAR-OWN-001" && item["severity"] == "warning" }),
+        "cancelar de um lado só não serializa: o aviso precisa continuar de pé: {warn:#}"
+    );
+}
+
 #[test]
 fn godot_inventories_tweens_with_fluent_configuration() {
     let (code, report, _) = json_report("godot_animation_fluent_green", &[]);

@@ -42,22 +42,42 @@ não é continuação automática deste registro.
 | 2026-08-23 | porte BomberBoom (Godot) | 69 | 5 | 0 | 0 | fotografia posterior ao uso 1; não é uma segunda mudança |
 | 2026-08-23 | BomberBoom (Defold) | 27 | 76 | 0 | 19 | integração do segundo projeto, sem mudança de jogo associada |
 | 2026-08-23 | BomberBoom (Defold), após calibração | 27 | 76 | 0 | 12 | refinamento da mesma baseline; não é mudança de jogo |
-| 2026-08-23 | Gods (Godot) | 450 | 67 | 0 | 1 | integração do terceiro projeto Godot, sem mudança de jogo associada |
+| 2026-08-23 | Gods (Godot) | 450 | 67 | 0 | 1 -> 0 | integração do terceiro projeto Godot, sem mudança de jogo associada; o aviso era falso e virou a ADR 0009 |
 | 2026-08-23 | Boomlitude (Godot) | 97 | 6 | 0 | 0 | integração do quarto projeto Godot, sem mudança de jogo associada |
 
-## Baseline do Gods: o único aviso
+## Baseline do Gods: o único aviso, classificado
 
-`SAR-OWN-001` em `animation:godot:src/entities/card.gd:self:position`. Dois donos:
-`card.gd::set_elevated` na linha 1040 e `card.gd::_on_selection_end` na linha 1078.
-A ferramenta não bloqueia porque não consegue provar sobreposição pelo texto — os
-ciclos de vida das duas trajetórias não são decidíveis estaticamente.
+`SAR-OWN-001` em `animation:godot:src/entities/card.gd:self:position`, apontando
+`card.gd::set_elevated` (1040) e `card.gd::_on_selection_end` (1078).
 
-Não classificado ainda como útil ou falso: exige olhar a cena, e a classificação
-pertence à primeira mudança real que tocar `card.gd`. Registrado aqui para que a
-resposta não seja inventada depois.
+**Classificação: falso.** Não há conflito em runtime. As seis animações de `position`
+no arquivo seguem disciplina de dono centralizado: cada uma chama `_kill_active_tween()`
+antes de criar a sua e guarda a nova em `_active_tween`, então existe um único Tween de
+posição por construção. `_mouse_enter` e `_mouse_exit` ainda saem cedo quando
+`_selected or _dragging or _block_hand_spring or _hand_target_active`.
+
+**Regra ausente, em duas partes.** O adapter reconhecia cancelamento só como
+`variavel.kill()` literal entre as duas linhas, e não seguia a indireção do método
+auxiliar; e o aviso entre donos nunca consultava barreira nenhuma. O que decide o caso:
+a remediação que o próprio `SAR-OWN-001` imprime é *"centralize o proprietário"*, e é
+exatamente o que o `card.gd` faz. A ferramenta pedia o padrão que não sabia reconhecer.
+
+**Consertado** pela [ADR 0009](decisoes/0009-baseline-em-projeto-real-expoe-regra-ausente.md),
+que também ampliou a exceção da Fase 2 para baseline em projeto real. Duas trajetórias
+passam a se serializar quando **as duas** encerram o mesmo alvo antes de começar,
+seguindo um nível de indireção. Fixtures `godot_animation_centralized_owner_green` e
+`godot_animation_uncancelled_owners_warn` — a segunda existe para reprovar uma regra
+boa demais, e reprova mesmo: foi testada por mutação.
+
+Nos cinco projetos do corpus, as declarações são idênticas antes e depois, e a única
+mudança de diagnóstico é este aviso desaparecendo. Os 12 avisos do BomberBoom Defold
+permanecem intactos.
 
 Varredura de 450 arquivos em 681 ms, mediana de cinco execuções — a medição do
 `RESULTADO-0.1.0.md` era 0,69 s, então a fronteira da Fase 1 não custou desempenho.
+
+**Isto não conta como uso do Marco 6.** Baseline não é mudança real, e a ADR 0009 diz
+isso explicitamente. A contagem continua em 1 de 10.
 
 ## Classificação da baseline Defold
 

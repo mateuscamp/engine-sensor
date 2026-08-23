@@ -29,7 +29,10 @@ sentidos: o documento não promete o que o código não faz, nem cala o que ele 
 | Defold | entrada | `on_input` |
 
 O adapter Godot reconhece `tween_property` tanto encadeado quanto isolado, e emite a
-operação com o nome público `Tween.tween_property`. Pela ADR 0005 a lista do Defold
+operação com o nome público `Tween.tween_property`. O cancelamento é reconhecido tanto
+por `alvo.kill()` direto quanto por chamada a um método auxiliar que encerra — um nível
+de indireção, que é o padrão de dono centralizado (ADR 0009). Duas trajetórias só são
+consideradas serializadas quando **as duas** encerram o mesmo alvo antes de começar. Pela ADR 0005 a lista do Defold
 está congelada: ela não cresce enquanto o foco for Godot.
 
 ## Fora do contrato

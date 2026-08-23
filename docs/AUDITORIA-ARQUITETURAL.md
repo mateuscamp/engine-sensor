@@ -25,14 +25,14 @@ do Marco 7.
 
 ## 0. O que foi executado
 
-Tudo verificado: 32 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
+Tudo verificado: 33 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
 build de release ligando só contra `libc` e `libgcc`, execução em namespace sem rede
 terminando em código 0.
 
 | Item | Achado | Resultado |
 |---|---|---|
 | `common::action_branches` recebe `BlockSyntax` em vez de `godot: bool` | A1 | `src/adapters/common.rs` não menciona nenhuma engine |
-| `tests/governanca.rs` com treze fitness functions | A1, A2, A5, A6, A7 | 32 testes no total, contra 19 antes |
+| `tests/governanca.rs` com treze fitness functions | A1, A2, A5, A6, A7 | 33 testes no total, contra 19 antes |
 | ADR 0005 - foco em Godot, Defold congelado | A4 | matriz ponderada retirada do `ROTEIRO.md` |
 | ADR 0006 - contrato estrito de relatório e códigos de saída | A6 | forma do JSON congelada por teste |
 | ADR 0007 - `sara observe` como binário separado | A5 | `sara` permanece um quantum offline |
@@ -337,7 +337,7 @@ ponderada fora do `ROTEIRO.md` e o diagrama. Ver seção 0.
 
 ### Fase 1 - fronteira - CONCLUÍDA
 
-`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 32 testes
+`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 33 testes
 verdes, clippy sem aviso.
 
 ### Fase 2 - Marco 6, só Godot, sem nada em paralelo
@@ -345,8 +345,13 @@ verdes, clippy sem aviso.
 7. Dez mudanças reais em projetos Godot, ou a data. O que vier primeiro. Pela ADR
    0005, mudança em BomberBoom Defold não conta mais; o projeto continua no corpus de
    falso positivo.
-8. Nenhuma regra nova durante o marco, salvo quando uma mudança real expuser regra
-   ausente — que é como a fixture da cadeia fluente do `tween_property` apareceu.
+8. Nenhuma regra nova durante o marco, salvo quando uma mudança real **ou uma
+   baseline de integração em projeto real** expuser regra ausente. A primeira metade é
+   como a fixture da cadeia fluente do `tween_property` apareceu; a segunda foi
+   acrescentada pela [ADR 0009](decisoes/0009-baseline-em-projeto-real-expoe-regra-ausente.md),
+   quando a baseline do `gods` mostrou que o padrão de dono centralizado — a própria
+   remediação que o `SAR-OWN-001` recomenda — virava aviso falso. Uma terceira exceção
+   obriga a rever a Fase 2 inteira em vez de ampliá-la de novo.
 9. Dois dos cinco projetos Godot fecharam o corpus com zero declaração
    (`mineboom` com 0, `boomlitude` com 4). Se as dez mudanças não produzirem nenhum
    verdadeiro positivo em Godot, isso é um resultado, e ele é sobre o Sara, não sobre

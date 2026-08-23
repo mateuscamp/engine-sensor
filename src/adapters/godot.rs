@@ -196,6 +196,21 @@ fn diagnose_animations(
             .or_default()
             .push(claim);
     }
+    let kill =
+        Regex::new(r"([A-Za-z_][A-Za-z0-9_]*(?:\.[A-Za-z_][A-Za-z0-9_]*)*)\.kill\(\)").unwrap();
+
+    // Um mapa por arquivo que tem declaração, e não por par: varrer as funções de novo
+    // a cada comparação seria trabalho repetido sem motivo.
+    let mut helpers: BTreeMap<String, BTreeMap<String, BTreeSet<String>>> = BTreeMap::new();
+    for claim in groups.values().flatten() {
+        if helpers.contains_key(&claim.span.path) {
+            continue;
+        }
+        if let Some(source) = sources.iter().find(|item| item.path == claim.span.path) {
+            helpers.insert(claim.span.path.clone(), cancelling_helpers(source, &kill));
+        }
+    }
+
     for claims in groups.values_mut() {
         claims.sort_by_key(|item| item.span.line);
         let mut warned_between_owners = false;
@@ -217,6 +232,7 @@ fn diagnose_animations(
                 ));
             } else if (first.owner != second.owner || first.flow != second.flow)
                 && !warned_between_owners
+                && !serialized_by_cancel(first, second, sources, &helpers, &kill)
             {
                 diagnostics.push(common::conflict_diagnostic(
                     "SAR-OWN-001",
@@ -230,6 +246,83 @@ fn diagnose_animations(
             }
         }
     }
+}
+
+/// Alvos que o texto encerra explicitamente, na forma `alvo.kill()`.
+fn cancelled_targets(text: &str, kill: &Regex) -> BTreeSet<String> {
+    kill.captures_iter(text)
+        .map(|captures| captures[1].to_owned())
+        .collect()
+}
+
+/// Funções do arquivo que encerram algum Tween: nome da função para os alvos que ela
+/// encerra. É por elas que passa o padrão de dono centralizado.
+fn cancelling_helpers(source: &ParsedSource, kill: &Regex) -> BTreeMap<String, BTreeSet<String>> {
+    let mut helpers = BTreeMap::new();
+    for function in &source.functions {
+        let targets = cancelled_targets(&function.text, kill);
+        if !targets.is_empty() {
+            helpers.insert(function.name.clone(), targets);
+        }
+    }
+    helpers
+}
+
+/// Alvos encerrados dentro da função dona, antes da linha da declaração — direto por
+/// `alvo.kill()` ou por chamada a uma função que encerra, um nível de indireção.
+fn cancelled_before(
+    claim: &OwnershipClaim,
+    source: &ParsedSource,
+    helpers: &BTreeMap<String, BTreeSet<String>>,
+    kill: &Regex,
+) -> BTreeSet<String> {
+    let name = claim.owner.split("::").last().unwrap_or_default();
+    let Some(function) = source.functions.iter().find(|item| item.name == name) else {
+        return BTreeSet::new();
+    };
+    let mut targets = BTreeSet::new();
+    for (offset, line) in function.text.lines().enumerate() {
+        if function.start_line as usize + offset >= claim.span.line as usize {
+            break;
+        }
+        targets.extend(cancelled_targets(line, kill));
+        for (helper, cancelled) in helpers {
+            if line.contains(&format!("{helper}(")) {
+                targets.extend(cancelled.iter().cloned());
+            }
+        }
+    }
+    targets
+}
+
+/// Duas trajetórias se serializam quando **as duas** encerram o mesmo alvo antes de
+/// começar: quem entra depois desligou quem estava correndo.
+///
+/// Exigir os dois lados é deliberado. Cancelar de um lado só não serializa nada, e é
+/// o que separa esta regra de uma que cala aviso legítimo. Ver ADR 0009: sem ela, o
+/// padrão de dono centralizado — a própria remediação que o `SAR-OWN-001` sugere —
+/// era invisível sempre que o cancelamento passava por um método auxiliar.
+fn serialized_by_cancel(
+    first: &OwnershipClaim,
+    second: &OwnershipClaim,
+    sources: &[ParsedSource],
+    helpers: &BTreeMap<String, BTreeMap<String, BTreeSet<String>>>,
+    kill: &Regex,
+) -> bool {
+    if first.span.path != second.span.path {
+        return false;
+    }
+    let Some(source) = sources.iter().find(|item| item.path == first.span.path) else {
+        return false;
+    };
+    let Some(helpers) = helpers.get(&first.span.path) else {
+        return false;
+    };
+    let by_first = cancelled_before(first, source, helpers, kill);
+    if by_first.is_empty() {
+        return false;
+    }
+    !by_first.is_disjoint(&cancelled_before(second, source, helpers, kill))
 }
 
 fn has_ordering_barrier(
