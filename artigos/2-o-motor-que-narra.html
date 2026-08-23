@@ -1,0 +1,474 @@
+<title>O Motor que Narra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;0,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#eceef0; --panel:#f7f8f9; --panel-2:#dfe3e7; --panel-3:#d3d9de;
+  --ink:#171b20; --ink-2:#454e57; --ink-3:#79838d;
+  --rule:#c9d0d7; --rule-2:#b2bcc5;
+  --accent:#1d6b70; --warm:#9a5a2b; --alert:#8f3a30;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#101418; --panel:#181d22; --panel-2:#20262d; --panel-3:#283039;
+    --ink:#e6e9ec; --ink-2:#a3adb6; --ink-3:#727d87;
+    --rule:#2a3138; --rule-2:#3a434c;
+    --accent:#5fbec2; --warm:#d59a5e; --alert:#e08a7e;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#101418; --panel:#181d22; --panel-2:#20262d; --panel-3:#283039;
+  --ink:#e6e9ec; --ink-2:#a3adb6; --ink-3:#727d87;
+  --rule:#2a3138; --rule-2:#3a434c;
+  --accent:#5fbec2; --warm:#d59a5e; --alert:#e08a7e;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:Spectral,Georgia,serif;
+  font-size:17px;line-height:1.62;margin:0;padding:0 20px 96px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+header.top{padding:72px 0 32px;border-bottom:1px solid var(--rule);margin-bottom:34px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 20px;font-weight:500}
+h1{font-size:clamp(42px,7.6vw,72px);font-weight:800;line-height:.97;
+  letter-spacing:-.03em;margin:0 0 20px;text-wrap:balance}
+.dek{font-size:20px;color:var(--ink-2);max-width:40em;margin:0;font-weight:300;line-height:1.5}
+
+.sec{margin-top:80px;padding-top:32px;border-top:2px solid var(--ink)}
+.sec .snum{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 12px}
+.sec > h2{font-size:clamp(27px,4.3vw,37px);font-weight:800;letter-spacing:-.022em;
+  margin:0 0 14px;line-height:1.06;text-wrap:balance}
+
+h3{font-size:22px;font-weight:600;letter-spacing:-.012em;margin:44px 0 8px;text-wrap:balance}
+h4{font-size:18px;font-weight:600;margin:28px 0 7px}
+p{margin:0 0 17px;max-width:39em}
+strong{font-weight:600}
+.lead{font-size:19px;color:var(--ink-2);font-weight:300;max-width:39em}
+
+.obs{background:var(--panel);border-left:2px solid var(--warm);padding:15px 20px;margin:0 0 20px;
+  font-size:15.5px;color:var(--ink-2)}
+.obs .lbl{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--warm);display:block;margin-bottom:6px;font-weight:600}
+.obs p{margin:0;max-width:none}
+
+pre{background:var(--panel);border:1px solid var(--rule);padding:18px 20px;
+  overflow-x:auto;margin:20px 0;font-size:13px;line-height:1.65}
+pre code{font-family:"IBM Plex Mono",monospace;background:none;padding:0;color:var(--ink-2)}
+pre .cm{color:var(--ink-3);font-style:italic}
+pre .kw{color:var(--accent);font-weight:500}
+pre .st{color:var(--warm)}
+pre .er{color:var(--alert);font-weight:500}
+code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--panel-2);padding:1px 5px}
+
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--panel)}
+th,td{padding:11px 15px;text-align:left;border-bottom:1px solid var(--rule);font-size:14.5px;vertical-align:top}
+thead th{background:var(--panel-2);font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2);font-weight:600;
+  border-bottom:2px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:none}
+td:first-child{color:var(--ink-2)}
+td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13.5px}
+td.mech{color:var(--accent);font-weight:600}
+
+/* diagrama */
+.arch{margin:30px 0;border:1px solid var(--rule);background:var(--panel);padding:22px}
+.arch .band{display:grid;gap:1px;background:var(--rule)}
+.arch .row{background:var(--panel-2);padding:14px 18px;display:grid;
+  grid-template-columns:118px 1fr;gap:18px;align-items:baseline}
+.arch .row.core{background:var(--panel-3)}
+.arch .row .k{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:600;color:var(--accent)}
+.arch .row.borrow .k{color:var(--ink-3)}
+.arch .row .v{font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.arch .flow{display:flex;align-items:center;justify-content:center;gap:12px;
+  padding:11px 0;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
+.arch .flow b{color:var(--ink-2);font-weight:500}
+.arch .cap{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-3);
+  margin-top:14px;text-align:center}
+
+.risk{border-top:1px solid var(--rule);padding-top:22px;margin-top:28px}
+.risk h4{margin-top:0;color:var(--alert)}
+
+ul{max-width:39em;padding-left:20px}
+li{margin-bottom:10px}
+blockquote{margin:22px 0;padding:2px 0 2px 22px;border-left:2px solid var(--rule-2);
+  color:var(--ink-2);font-style:italic;max-width:37em}
+
+.kicker{background:var(--panel);border-left:3px solid var(--accent);padding:22px 26px;margin:30px 0}
+.kicker p{margin:0;max-width:none;font-size:18px}
+.kicker .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:9px;font-weight:600}
+
+footer{margin-top:80px;padding-top:24px;border-top:2px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
+footer p{max-width:44em}
+
+@media (max-width:640px){
+  body{font-size:16px;padding:0 16px 64px}
+  .sec{margin-top:60px}
+  .arch .row{grid-template-columns:1fr;gap:5px}
+}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">Exercício de projeto · e talvez um projeto</p>
+  <h1>O Motor que Narra</h1>
+  <p class="dek">Como seria uma engine cujo usuário principal é um processo, não uma pessoa. Não um manifesto: um desenho, com API, arquitetura, roteiro e a lista honesta do que pode dar errado.</p>
+</header>
+
+<p class="lead">O artigo anterior — <em>O Agente Não Vê</em> — terminou num arquivo de regras. Um <span class="mono">CLAUDE.md</span> dizendo ao agente que separe as regras do motor, que faça o jogo narrar o próprio estado, que garanta um dono por propriedade, que use semente própria, que não deixe atalho de teste no pacote.</p>
+
+<p>Aquele arquivo é útil e eu o escreveria de novo amanhã. Mas ele é também uma confissão.</p>
+
+<div class="kicker">
+  <span class="lbl">A tese deste artigo</span>
+  <p><strong>Cada linha daquele arquivo é uma falha de projeto da engine.</strong> Toda regra que precisa ser escrita e lembrada é uma coisa que o motor decidiu não garantir. Uma engine AI-first não é uma engine com boa documentação para agentes — é uma em que aquele arquivo fica vazio, porque não sobrou nada para pedir.</p>
+</div>
+
+<h3>A ponte: disciplina vira mecanismo</h3>
+
+<div class="tw">
+<table>
+<thead><tr><th>Regra que hoje se escreve</th><th class="mech">Mecanismo que a tornaria desnecessária</th></tr></thead>
+<tbody>
+<tr><td>«Regras do jogo em módulo puro, sem importar a engine»</td><td class="mech">O quadro é uma função pura. Não existe outro lugar onde pôr regra.</td></tr>
+<tr><td>«O jogo narra o próprio estado em log estruturado»</td><td class="mech">O motor responde consultas. Não há o que narrar.</td></tr>
+<tr><td>«Uma propriedade é animada por um lugar só»</td><td class="mech">Dois donos é erro de carga, com os dois sítios nomeados.</td></tr>
+<tr><td>«Gerador aleatório próprio, semente explícita»</td><td class="mech">A semente é argumento do passo. Não há gerador global.</td></tr>
+<tr><td>«O que só existe na plataforma é exercitado na plataforma»</td><td class="mech">A plataforma é um perfil declarado, e a suíte roda contra ele em qualquer máquina.</td></tr>
+<tr><td>«Prefixe o que é seu; engines reservam nomes comuns»</td><td class="mech">Espaço de nomes explícito. Colisão é recusa, não escolha silenciosa.</td></tr>
+<tr><td>«Afordância de teste entra por compilação, não por argumento»</td><td class="mech">A superfície de verificação é do motor, e não existe na variante de entrega.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Sete regras, sete mecanismos. Nenhum deles é sobre gráficos. É por isso que este projeto é menor do que parece.</p>
+
+<section class="sec">
+  <p class="snum">Contraponto</p>
+  <h2>Nem tudo que o agente constrói à mão é perda</h2>
+
+  <p class="lead">A tabela acima pode ser lida de um jeito grosseiro: <em>o que o motor oferece é bom, o que o agente escreve é desperdício</em>. O protocolo do bakeoff carregava a mesma suposição — pedia que se registrasse quando o agente reimplementava algo que a engine já tinha. <strong>A medição não sustenta isso.</strong></p>
+
+  <p>Cada um dos três agentes reimplementou exatamente três coisas, e nenhuma das nove foi por ignorância. Todas vieram com justificativa escrita, e a maior parte delas estava certa. O que existe não é uma regra, são três casos diferentes.</p>
+
+<h3>1 · A engine ganha quando sabe algo que você não pode conferir</h3>
+
+<blockquote>O acerto do toque usa <code>gui.pick_node</code>, a função da própria engine que testa um ponto contra um nó considerando o modo de ajuste de tela e a escala de input. Fazer essa conta à mão é o erro clássico e teria quebrado exatamente na tela 20:9 que o critério A15 exige.</blockquote>
+
+  <p>Ajuste de tela, escala de entrada, área segura, codificação de imagem, assinatura, empacotamento. São coisas que a engine apanhou em milhares de aparelhos que você não tem. <strong>Você não consegue verificar a sua versão contra um telefone que não possui</strong> — e é exatamente por isso que a versão da engine vale mais que a sua, mesmo quando a sua parece mais simples.</p>
+
+  <p>Foi o que os três fizeram: Unity não reimplementou codificador de PNG nem serialização; Godot deixou <code>Geometry2D</code> calcular o aro e o empacotador Android fazer o pacote; Defold usou <code>gui.pick_node</code> e disse por escrito por quê.</p>
+
+<h3>2 · A mão ganha quando você precisa de uma garantia que a engine não dá</h3>
+
+  <p>Os três reimplementaram o <strong>gerador de números aleatórios</strong>. Não por não achar o da engine — por ele não servir: nenhuma das três garante reprodutibilidade entre plataformas, e o critério exigia que a fase N fosse o mesmo tabuleiro no aparelho e no desktop.</p>
+
+  <p>O padrão se repete nos outros casos. A Unity fez o layout em aritmética em vez de usar o sistema de layout automático, <em>«porque com layout automático eu não teria como afirmar em teste que o pixel x pertence à célula c»</em>. O Defold escreveu a própria agenda de eventos em vez de usar o temporizador global, porque um temporizador global pode sobreviver à fase que o criou.</p>
+
+  <p>Em todos, a peça da engine funciona — <strong>ela só é uma caixa-preta com API conveniente e nenhum contrato sobre a propriedade de que você precisa</strong>: determinismo, estado serializável, tempo de vida explícito, ou a mera possibilidade de afirmar alguma coisa sobre ela num teste.</p>
+
+<h3>3 · A duplicação deliberada, que parece a pior e é a mais sofisticada</h3>
+
+  <p>O Godot escreveu uma <strong>reimplementação independente das regras em Python</strong>, que confere o GDScript a cada bomba. Por qualquer métrica de reuso, é desperdício puro: a mesma lógica escrita duas vezes, em duas linguagens. Bateu em 9 de 9 explosões na sessão de vitória.</p>
+
+  <p>O Defold fez o mesmo com outro nome, e explicou melhor do que eu explicaria:</p>
+
+<blockquote>Detecção de grade em <code>verificacao/grade.py</code>: de propósito. Se o verificador calculasse a posição das células com a mesma fórmula que o jogo usa para desenhar, um erro na fórmula passaria despercebido nos dois lados.</blockquote>
+
+  <p>Aqui <strong>compartilhar código destruiria a verificação</strong>. Duas implementações independentes que concordam são evidência; uma implementação consultada duas vezes é a mesma suposição escrita duas vezes. É a distinção que o agente do Defold usou de novo, mais tarde, ao descobrir que estava conferindo o tratamento do anúncio contra o próprio simulador — e foi ler o código-fonte da extensão oficial para ter um contrato vindo de fora.</p>
+
+<h3>A assimetria Godot ↔ Defold, e o que ela troca de verdade</h3>
+
+  <p>É aqui que a relação que você notou fica nítida, e ela não é «um oferece mais e o outro menos».</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>&nbsp;</th><th>Defold</th><th>Godot</th></tr></thead>
+<tbody>
+<tr><td>Cadeia Android</td><td>embutida no <code>bob</code>: <code>aapt2</code>, <code>apkc</code>, <code>zipalign</code>, <code>bundletool</code>. <strong>Sem SDK, sem NDK.</strong></td><td>SDK externo, Gradle, e <strong>dois JDKs</strong> — 17 para o build, 25 para assinar</td></tr>
+<tr><td>Anúncio</td><td>extensão oficial, <strong>278 linhas</strong></td><td>plugin próprio em Java, <strong>856 linhas</strong></td></tr>
+<tr><td>Para compilar a extensão</td><td><strong>servidor de build remoto</strong></td><td>nada remoto</td></tr>
+<tr><td>Quando o remoto caiu</td><td>o Estágio B <strong>parou</strong></td><td>não havia como parar assim</td></tr>
+</tbody>
+</table>
+</div>
+
+  <p>O Defold entrega mais pronto e entrega <strong>com coleira</strong>. O Godot entrega menos e o que você constrói <strong>é seu</strong>. As 856 linhas de Java que o agente do Godot escreveu são passivo por qualquer métrica de esforço — e são ativo pela única métrica que importou no dia em que o servidor não respondeu: <strong>ninguém pode tirá-las dele.</strong></p>
+
+  <p>Isso reposiciona a linha «o agente reimplementou algo que a engine já oferecia» de defeito para <em>escolha com dois lados</em>. Trabalho a mais, em troca de não depender.</p>
+
+<h3>O preço, que é real e foi pago</h3>
+
+  <p>Nada disso torna a mão gratuita. As duas ferramentas construídas à mão tiveram defeitos próprios, e os dois agentes registraram:</p>
+
+  <ul>
+    <li>O verificador do Godot <strong>mentiu</strong>: reportou «fiz» quando devia reportar «o alvo não confirmou», e entregou <strong>quatro capturas idênticas como se fossem evidência</strong>. Corrigido depois para conferir foco de janela, confirmar cada toque no log e comparar hashes — mas por um tempo ele estava produzindo prova falsa.</li>
+    <li>As ferramentas do Defold tinham <strong>quatro defeitos que só apareceram fora do Linux</strong>: um <code>keytool</code> procurado no diretório errado que impedia o build, dois <code>trap</code> se sobrescrevendo, uma dependência de binário <code>lua5.1</code> que no Homebrew se chama <code>luajit</code>, e um <code>stat -c%s</code> que é GNU e não existe no macOS.</li>
+  </ul>
+
+  <p>Ou seja: <strong>o código que o agente escreve para verificar o próprio trabalho é código não verificado.</strong> É a camada mais perigosa do projeto, porque um defeito ali não quebra o jogo — esconde que o jogo está quebrado.</p>
+
+<h3>O que isso pede da engine</h3>
+
+  <div class="kicker">
+    <span class="lbl">A correção da tese</span>
+    <p>Uma engine AI-first não é a que <strong>oferece mais</strong>. É a que oferece coisas <strong>conferíveis e possuíveis</strong>: com contrato explícito sobre determinismo e tempo de vida, verificáveis sem o aparelho físico, e que não dependem de um serviço que pode não responder. Onde ela não puder garantir isso, o certo é o agente construir — e a engine deve dizer qual dos dois casos é.</p>
+  </div>
+
+  <p>É por isso que o catálogo por intenção carrega as armadilhas junto das funções, e não só a assinatura. A pergunta que o agente precisa responder não é «existe algo pronto?», e sim <strong>«o pronto garante o que eu preciso, e a que custo de dependência?»</strong>.</p>
+</section>
+
+<section class="sec">
+  <p class="snum">O desenho</p>
+  <h2>Passo</h2>
+
+  <p class="lead">Chamo o projeto de <strong>Passo</strong>, porque tudo nele decorre de uma decisão só: <strong>o tempo não corre, é passado como argumento.</strong> As outras seis peças caem no lugar a partir daí.</p>
+
+<h3>O núcleo: o quadro é uma função</h3>
+
+<div class="obs">
+  <span class="lbl">Por que</span>
+  <p>Na Unity, a captura de tela leva 2,4 s e o pavio da bomba dura 0,85 s: <em>não dá para fotografar um estado transitório.</em> No Defold, 30 dos 48 minutos de espera de ferramenta foram rodar o jogo com toques injetados, esperando a encenação terminar. Os três agentes escreveram ferramenta só para conseguir olhar entre dois quadros.</p>
+</div>
+
+<pre><code><span class="cm">-- a assinatura inteira do motor cabe numa linha</span>
+<span class="kw">passo</span>(mundo, entrada) → mundo'
+
+<span class="cm">-- e por isso a verificação é aritmética, não corrida</span>
+m = Passo.<span class="kw">carregar</span>(<span class="st">"jogo/"</span>, { semente = 91021 })
+m = Passo.<span class="kw">passo</span>(m, { toque = {3, 4} })
+m = Passo.<span class="kw">passo</span>(m, 51)          <span class="cm">-- o pavio inteiro, sem relógio</span>
+
+<span class="kw">afirmar</span>(m.tabuleiro[3][4] == vazio)</code></pre>
+
+<p><code>mundo</code> é um valor, não um objeto vivo. Não há <code>update()</code> que alguém chama; não há laço que o motor esconde. Quando um humano assiste, um laço externo chama <code>passo</code> a 60 Hz. Quando um agente verifica, ele chama 51 vezes seguidas e olha. <strong>O mesmo código, o mesmo resultado, sem corrida.</strong></p>
+
+<p>Três consequências saem de graça, e cada uma custou trabalho real nas três engines medidas:</p>
+
+<ul>
+<li><strong>Reprodutibilidade.</strong> Se o quadro é função de <span class="mono">(mundo, entrada, semente)</span>, a mesma sequência dá o mesmo resultado em qualquer máquina. Os três agentes reimplementaram o gerador aleatório porque nenhuma engine garante isso.</li>
+<li><strong>Gravar e repetir é o formato nativo do bug.</strong> Um defeito não se descreve — se anexa: mundo inicial, lista de entradas, número do quadro. Quem recebe reproduz exatamente.</li>
+<li><strong>Voltar no tempo é grátis</strong> se o mundo for imutável com compartilhamento estrutural. Depurar deixa de ser reproduzir e passa a ser rebobinar.</li>
+</ul>
+
+<h3>A observação: perguntar, não imprimir</h3>
+
+<div class="obs">
+  <span class="lbl">Por que</span>
+  <p>Os três agentes inventaram o mesmo canal, sem combinar. Godot publicando <code>[layout]</code>, <code>[toque]</code>, <code>[estado]</code> no log. Unity fazendo o jogo «narrar o que faz em célula» e registrando que foi <strong>a melhor decisão de verificação da sessão</strong>. Defold criando uma função <code>marca()</code> para não perder a linha certa. Quando três agentes independentes constroem a mesma peça, ela pertence ao motor.</p>
+</div>
+
+<pre><code>Passo.<span class="kw">ver</span>(m, <span class="st">"tabuleiro/celula[3,4]"</span>)
+<span class="cm">→ { tipo="safira", nivel=2, tela={x=246,y=612,l=72,a=72} }</span>
+
+Passo.<span class="kw">ver</span>(m, <span class="st">"animando"</span>)
+<span class="cm">→ { { no="bomba/7", prop="escala", ate=51, dono="bomba.lua:34" } }</span>
+
+Passo.<span class="kw">ver</span>(m, <span class="st">"tabuleiro/*/tela"</span>)   <span class="cm">-- padrão, não só ponto</span></code></pre>
+
+<p>O detalhe que separa observação útil de log bonito: <strong>a consulta devolve geometria de tela.</strong> O verificador toca onde o jogo diz que a célula está, nunca numa coordenada escrita à mão — e continua funcionando quando o layout muda. Foi exatamente isso que o agente do Godot construiu à mão, e ele registrou por escrito que era o ponto central da conferência dele.</p>
+
+<p>O padrão com curinga não é enfeite: um agente navega por <span class="mono">grep</span>, e uma consulta que só aceita caminho exato o obriga a saber o que procura antes de procurar.</p>
+
+<p>E o que o log servia para fazer, a consulta faz melhor com um número: a varredura das 99 células que custou <strong>6 min 24 s</strong> por captura e injeção de toque vira uma chamada.</p>
+
+<h3>A posse: conflito é erro de carga</h3>
+
+<div class="obs">
+  <span class="lbl">Por que</span>
+  <p>Duas <code>gui.animate</code> na mesma propriedade se cancelando: a chama nunca aparecia, a bomba ficava minúscula, <strong>sem uma linha de erro</strong>. Dois vínculos de entrada no mesmo tratador: no Android cada toque valia duas bombas e os cartões de fim de run sumiam no quadro em que apareciam. As 107 asserções ficaram verdes o tempo todo. <strong>Foram os dois defeitos mais caros de toda a medição, e nenhum produziu erro.</strong></p>
+</div>
+
+<p>O Passo mantém uma tabela de posse e a verifica ao carregar. Uma propriedade animada, uma ação de entrada, uma célula do tabuleiro: <strong>um dono</strong>. Duas declarações e o projeto não sobe.</p>
+
+<pre><code><span class="er">✗ carga recusada — dois donos para uma propriedade</span>
+
+  bomba/7 . escala
+    bomba.lua:34    anima  0.2 → 1.0   quadros 0–12
+    juice.lua:88    anima  1.0 → 1.2   quadros 6–18
+
+  As duas se sobrepõem nos quadros 6–12. Escolha um dono,
+  ou declare `escala` como composta.</code></pre>
+
+<p>Mensagem no formato que o agente consome: <strong>o valor que ofendeu, os dois sítios com arquivo e linha, e a saída.</strong> É a regra de erro com contexto aplicada ao caso em que hoje não há erro nenhum.</p>
+
+<p>Este é o mecanismo mais barato de todos e o que mais teria mudado o resultado medido. Uma tabela e uma checagem.</p>
+
+<h3>O perfil: a plataforma é um argumento</h3>
+
+<div class="obs">
+  <span class="lbl">Por que</span>
+  <p>Todo o Estágio A do Defold verificou toque no desktop, sob display virtual. Passou. No Android o mesmo dedo chega por dois canais que só existem juntos ali. <strong>Nenhuma quantidade de teste headless teria encontrado isso</strong>, porque o headless era um quarto ambiente e não uma simulação dos outros três.</p>
+</div>
+
+<pre><code><span class="kw">perfil</span> <span class="st">"android"</span> {
+  entrada = { <span class="st">"ponteiro"</span>, <span class="st">"toque_multi"</span> },   <span class="cm">-- os dois, como no aparelho</span>
+  tela    = { 1080, 2400, densidade = 480 },
+  save    = <span class="st">"privado_do_app"</span>,
+  ciclo   = { <span class="st">"pausa_em_segundo_plano"</span>, <span class="st">"pode_ser_morto"</span> },
+}
+
+$ passo testar --perfil android      <span class="cm">-- numa máquina de mesa</span>
+<span class="er">✗ orçamento de bombas: esperado 10, obtido 5 (quadro 84)</span></code></pre>
+
+<p>É a inversão do que as engines fazem hoje: elas <strong>escondem</strong> a diferença de plataforma atrás de uma abstração e só a revelam no aparelho. O Passo <strong>expõe a diferença e a torna executável em qualquer lugar</strong>. O aparelho continua obrigatório para o que é físico — desempenho, toque real, ciclo de vida de verdade — mas deixa de ser onde se descobre a semântica.</p>
+
+<h3>O projeto: texto, sem sombra</h3>
+
+<div class="obs">
+  <span class="lbl">Por que</span>
+  <p>Mesmo jogo, três repositórios: Defold 82 arquivos e <strong>zero sombras</strong>; Godot 83 e 24 <code>.uid</code>; Unity 365 e <strong>176 <code>.meta</code></strong>. O GUID existe para sobreviver a renomeações feitas por um humano arrastando ícones. Um agente não arrasta — ele reescreve o caminho em todos os lugares, atomicamente.</p>
+</div>
+
+<p>Referência por caminho. Identidade é o caminho. Nenhum arquivo carrega um par invisível, porque um par invisível não diz nada num <span class="mono">grep</span> — e grep é a API primária de navegação do agente.</p>
+
+<p>Duas exigências que os formatos atuais não cumprem e que aqui são requisito:</p>
+
+<ul>
+<li><strong>Comentário sobrevive à ida e volta.</strong> Um <code>.tscn</code>, um <code>.prefab</code> ou um <code>.collection</code> aberto e salvo pelo editor volta normalizado, e a anotação morre. Como comentário virou proveniência — o porquê da decisão, que não existe em nenhum outro lugar —, se o editor não sabe preservar, ele não pode salvar.</li>
+<li><strong>O arquivo é decomponível.</strong> Cinco mil linhas de YAML para uma tela não cabem numa leitura, e o agente passa a raciocinar sobre fragmentos.</li>
+</ul>
+
+<h3>A cadeia: um binário, offline</h3>
+
+<div class="obs">
+  <span class="lbl">Por que</span>
+  <p>O Godot precisou de <strong>JDK 17 para o Gradle e JDK 25 para assinar</strong>, na mesma máquina. A Unity gastou 12 minutos baixando o módulo Android e falhou duas vezes no NDK com <code>1 item(s) failed to install</code> e nenhum motivo. O Defold, com o servidor de build fora de alcance, <strong>não degradou — parou</strong>.</p>
+</div>
+
+<p>Há um acerto a copiar, e é do Defold: o <code>bob.jar</code> traz <code>aapt2</code>, <code>apkc</code>, <code>zipalign</code> e <code>bundletool</code> embutidos, e a execução inteira não precisou de Android SDK nem de NDK. O Passo leva isso ao fim: <strong>a cadeia é um binário, versionado junto do projeto, e compila offline inclusive extensão nativa.</strong></p>
+
+<p>Se um serviço remoto pode parar o build, ele é ponto único de falha entre o agente e o produto — e foi exatamente o que aconteceu.</p>
+
+<h3>O catálogo: intenção, com as armadilhas juntas</h3>
+
+<pre><code>$ passo oferece <span class="st">"que ponto da tela caiu neste nó"</span>
+
+  Passo.acertou(m, no, x, y)
+    Respeita o modo de ajuste e a escala de entrada do perfil.
+
+  ⚠ Calcular à mão é o erro clássico: quebra em proporção
+    diferente da de projeto. Ver perfis/tela.</code></pre>
+
+<p>A documentação é escrita para quem procura. Um agente não procura: ele <strong>já decidiu</strong> escrever a função, e só descobre que ela existia se alguém interromper. Por isso o índice responde por <em>intenção</em>, e não por nome.</p>
+
+<p>E o aviso importa tanto quanto a resposta. <strong>O catálogo carrega as armadilhas junto das funções</strong>, porque é aí que a memória de um agente falha: ele sabe fazer a conta, e não sabe que a conta está errada. O agente do Defold escreveu exatamente isso, sem ser perguntado — que fazer o acerto de toque à mão «teria quebrado exatamente na tela 20:9».</p>
+</section>
+
+<section class="sec">
+  <p class="snum">Arquitetura</p>
+  <h2>Três camadas e uma direção</h2>
+
+<div class="arch">
+  <div class="band">
+    <div class="row"><span class="k">Ferramenta</span><span class="v">CLI única e hermética: <code>passo testar</code>, <code>passo ver</code>, <code>passo empacotar</code>, <code>passo oferece</code>. Sem SDK externo, sem servidor.</span></div>
+    <div class="row core"><span class="k">Núcleo</span><span class="v"><strong>Simulação determinística.</strong> <code>passo(mundo, entrada) → mundo'</code>. Tabela de posse. Perfis de plataforma. Protocolo de consulta. Nenhuma dependência de janela, GPU ou relógio.</span></div>
+    <div class="row borrow"><span class="k">Apresentação</span><span class="v">Renderizador, áudio, física de partícula, empacotamento por plataforma. <strong>Emprestado</strong> de uma engine hospedeira. Consome o mundo e desenha; nunca escreve de volta.</span></div>
+  </div>
+  <div class="flow"><b>entrada</b> → <b>núcleo</b> → <b>mundo'</b> → <b>apresentação</b></div>
+  <div class="cap">A seta nunca volta. É isso que torna o núcleo testável sozinho.</div>
+</div>
+
+<p>A separação não é estética. <strong>É a mesma que os três agentes construíram por conta própria</strong> — Defold com a lógica em Lua puro rodando fora do motor, Unity com um núcleo que não importa <code>UnityEngine</code>, Godot com uma reimplementação das regras em Python conferindo o GDScript a cada bomba. Três desenhos independentes, a mesma linha no mesmo lugar.</p>
+
+<p>O Passo não inventa essa arquitetura. Ele a torna <strong>a única possível</strong>, e entrega pronta a metade que hoje cada projeto reconstrói.</p>
+</section>
+
+<section class="sec">
+  <p class="snum">Limites</p>
+  <h2>O que o Passo não é</h2>
+
+<p><strong>Não é uma competição de renderizador.</strong> Nada no desenho fala de gráficos, física ou som — e isso não é omissão, é o achado central. Nenhum dos atritos medidos no bakeoff veio do renderizador. Vieram de tempo, observabilidade, silêncio, plataforma, metadado, cadeia de build e descoberta.</p>
+
+<p><strong>Não serve para todo jogo.</strong> Simulação determinística por quadro cabe bem em jogo de grade, tático, roguelike, puzzle, estratégia por turno, plataforma com física simples. Cabe mal em mundo aberto grande, física contínua acoplada à GPU, ou qualquer coisa em que o estado seja grande demais para ser um valor. Um motor honesto declara isso na primeira página em vez de descobrir junto com o usuário.</p>
+
+<p><strong>Não é hostil a humano.</strong> O editor existe — mas como <em>visor</em>, não como fonte da verdade. Ele lê o projeto, mostra, deixa mexer, e escreve de volta no mesmo texto que o agente escreveria. A inversão é essa: hoje o editor é o autor e o texto é o subproduto.</p>
+
+<p><strong>Não é IA dentro do motor.</strong> Não há assistente embutido, geração de código, nada. O motor é feito para <em>ser usado por</em> um agente, e isso é uma propriedade de desenho, não um recurso a vender.</p>
+</section>
+
+<section class="sec">
+  <p class="snum">Honestidade</p>
+  <h2>O que pode dar errado</h2>
+
+<div class="risk">
+  <h4>O estado imutável pode não pagar</h4>
+  <p>«O mundo é um valor» é lindo num tabuleiro 9×11 e caro numa cena com dez mil entidades. Compartilhamento estrutural ajuda, mas tem custo de alocação e de cache. <strong>O risco é o núcleo ser elegante e lento o bastante para ninguém usar.</strong> Mitigação possível: mutação em lugar com diário de alterações, que preserva a reprodutibilidade e a rebobinagem sem copiar o mundo — mais complexo, menos bonito, provavelmente necessário.</p>
+</div>
+
+<div class="risk">
+  <h4>A tabela de posse pode ser insuportável</h4>
+  <p>«Um dono por propriedade» é claramente certo para a escala em que foi medido. Numa cena grande com dezenas de sistemas tocando o mesmo transform, pode virar cerimônia que todo mundo desliga no primeiro dia. Se acontecer, o mecanismo estava errado e a disciplina volta a ser do humano. <strong>É o primeiro que eu construiria justamente por isso: é barato de refutar.</strong></p>
+</div>
+
+<div class="risk">
+  <h4>Os perfis podem não capturar o que importa</h4>
+  <p>Declarar que o Android entrega toque por dois canais é fácil <em>depois</em> de descobrir. A pergunta aberta é se a maior parte das diferenças de plataforma é declarável, ou se a cauda longa — driver, fabricante, versão de sistema, permissão — devora o ganho. Se só a metade fácil for declarável, o perfil vira falsa segurança, que é pior que nenhuma.</p>
+</div>
+
+<div class="risk">
+  <h4>Ninguém pediu isto</h4>
+  <p>O mercado de engines é feito de humanos fazendo jogos, e eles querem editor, loja de assets e renderizador. Um motor que é bom para agente e mediano para humano compete numa categoria que ainda não existe. <strong>A aposta é temporal:</strong> que a proporção de código de jogo escrito por agente cresça o bastante para a categoria nascer. Se essa aposta estiver errada, todo o resto está certo e não importa.</p>
+</div>
+</section>
+
+<section class="sec">
+  <p class="snum">Roteiro</p>
+  <h2>O que construir, e em que ordem</h2>
+
+<p class="lead">Escrever uma engine do zero para provar sete mecanismos é a forma mais cara de testá-los, e a que mais provavelmente morre antes de responder. Cada mecanismo tem um experimento que o refuta — e o mais barato vem primeiro.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Ordem</th><th>O que</th><th class="n">Custo</th><th>O que o refuta</th></tr></thead>
+<tbody>
+<tr><td class="n">0</td><td><strong>Linter de posse para Defold e Godot</strong> — nem faz parte do Passo</td><td class="n">dias</td><td>não pega os casos reais nos projetos que já existem</td></tr>
+<tr><td class="n">1</td><td>Núcleo por passo, sobre uma engine hospedeira</td><td class="n">semanas</td><td>o hospedeiro não deixa avançar quadro a quadro</td></tr>
+<tr><td class="n">2</td><td>Protocolo de consulta</td><td class="n">semanas</td><td>a introspecção custa mais que a captura de tela</td></tr>
+<tr><td class="n">3</td><td>Perfis de plataforma executáveis</td><td class="n">meses</td><td>as diferenças que importam não são declaráveis</td></tr>
+<tr><td class="n">4</td><td>Catálogo por intenção</td><td class="n">meses</td><td>o agente ignora o índice e escreve a função assim mesmo</td></tr>
+<tr><td class="n">5</td><td>Cadeia de build hermética</td><td class="n">alto</td><td>—</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>O passo zero, que não é uma engine</h3>
+
+<p>A coisa mais valiosa a construir primeiro <strong>não é o Passo</strong>. É um verificador de posse que roda nos projetos Defold e Godot que já existem: lê os arquivos, monta a tabela de quem anima o quê e de quem trata qual entrada, e reclama quando há dois.</p>
+
+<p>Custa dias. Roda na engine que você já usa, hoje. E teria pego <strong>os dois defeitos mais caros de toda a medição</strong> — as animações se cancelando e o toque entregue em dobro — antes de qualquer um deles chegar ao aparelho.</p>
+
+<div class="kicker">
+  <span class="lbl">Se só uma coisa for construída</span>
+  <p>Que seja essa. Ela testa a hipótese central — <em>o pior defeito de jogo é dois donos sem aviso</em> — pelo preço de um fim de semana, num projeto real, sem trocar de engine. Se pegar pouca coisa, a tese caiu e a engine não precisa existir. Se pegar muito, você tem a primeira evidência e uma ferramenta útil no mesmo commit.</p>
+</div>
+
+<h3>E depois, o teste que vale</h3>
+
+<p>Se o passo zero segurar, o teste seguinte é modesto e específico: <strong>reproduzir este mesmo jogo</strong> — grade, cascata, gravidade, três níveis de durabilidade — sobre o núcleo, e rodar contra ele as mesmas dezenove verificações do protocolo.</p>
+
+<p>Duas medidas dizem se funcionou, e as duas já têm número de referência: se o toque duplicado do Android for pego por uma asserção rodando no desktop, o perfil se provou. Se a varredura das 99 células cair de <strong>6 min 24 s</strong> para um segundo, a consulta se provou.</p>
+</section>
+
+<section class="sec">
+  <p class="snum">Ressalva</p>
+  <h2>Isto vem de uma execução por engine</h2>
+  <p>Os mecanismos vêm de defeitos reais, observados e registrados por escrito pelo agente que os encontrou, antes de corrigi-los — não de especulação. Mas cada engine correu uma vez, com o mesmo modelo, e um defeito visto uma vez pode ser propriedade da ferramenta ou do dia.</p>
+  <p>O que dá confiança é a <strong>convergência</strong>: onde três agentes independentes construíram a mesma peça improvisada — o canal de narração — ou reimplementaram a mesma função ausente — o gerador reprodutível —, a lacuna é da ferramenta. <strong>O núcleo por passo, a consulta e o projeto sem sombra</strong> se apoiam nisso. Os outros quatro mecanismos se apoiam em um caso bem documentado cada, e valem menos.</p>
+  <p>É por isso que o roteiro começa por um linter de fim de semana e não por um motor.</p>
+</section>
+
+<footer>
+<p>Derivado dos registros das execuções Godot, Unity e Defold do bakeoff de engines, agosto de 2026, e de <em>O Agente Não Vê</em>, que é a versão de jogos do Clean Code para agentes. Toda observação citada vem de um defeito registrado por escrito pelo agente que o encontrou, antes de corrigi-lo.</p>
+</footer>
+
+</div>

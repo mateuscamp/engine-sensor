@@ -1,0 +1,359 @@
+<title>O Que Só Aparece Depois</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,400;0,600;0,800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --ground:#efece5; --panel:#f9f7f2; --panel-2:#e3ded3;
+  --ink:#1e1c18; --ink-2:#4e4a42; --ink-3:#807a70;
+  --rule:#d4cec1; --rule-2:#bdb6a6;
+  --accent:#3b4a7a; --warm:#96522c; --ok:#3f6647;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#16150f; --panel:#1e1c16; --panel-2:#27251d;
+    --ink:#eae7dd; --ink-2:#b0aa9c; --ink-3:#807a6d;
+    --rule:#333026; --rule-2:#464236;
+    --accent:#8fa3dd; --warm:#dd9862; --ok:#84bb8e;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#16150f; --panel:#1e1c16; --panel-2:#27251d;
+  --ink:#eae7dd; --ink-2:#b0aa9c; --ink-3:#807a6d;
+  --rule:#333026; --rule-2:#464236;
+  --accent:#8fa3dd; --warm:#dd9862; --ok:#84bb8e;
+}
+
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:Spectral,Georgia,serif;
+  font-size:17px;line-height:1.62;margin:0;padding:0 20px 96px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+header.top{padding:70px 0 30px;border-bottom:1px solid var(--rule);margin-bottom:32px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.17em;
+  text-transform:uppercase;color:var(--accent);margin:0 0 20px;font-weight:500}
+h1{font-size:clamp(40px,7.2vw,68px);font-weight:800;line-height:.99;
+  letter-spacing:-.028em;margin:0 0 20px;text-wrap:balance}
+.dek{font-size:20px;color:var(--ink-2);max-width:40em;margin:0;font-weight:300;line-height:1.5}
+
+.sec{margin-top:80px;padding-top:32px;border-top:2px solid var(--ink)}
+.sec .snum{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 12px}
+.sec > h2{font-size:clamp(27px,4.3vw,37px);font-weight:800;letter-spacing:-.022em;
+  margin:0 0 14px;line-height:1.06;text-wrap:balance}
+
+h3{font-size:22px;font-weight:600;letter-spacing:-.012em;margin:44px 0 8px;text-wrap:balance}
+h4{font-size:18px;font-weight:600;margin:28px 0 7px}
+p{margin:0 0 17px;max-width:39em}
+strong{font-weight:600}
+.lead{font-size:19px;color:var(--ink-2);font-weight:300;max-width:39em}
+
+.quote{background:var(--panel);border-left:2px solid var(--warm);padding:16px 21px;margin:22px 0;
+  font-size:15.5px;color:var(--ink-2);font-style:italic}
+.quote .src{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--warm);display:block;margin-bottom:8px;font-weight:600;font-style:normal}
+.quote p{margin:0;max-width:none}
+.quote p+p{margin-top:11px}
+
+pre{background:var(--panel);border:1px solid var(--rule);padding:17px 19px;
+  overflow-x:auto;margin:20px 0;font-size:13px;line-height:1.6}
+pre code{font-family:"IBM Plex Mono",monospace;background:none;padding:0;color:var(--ink-2)}
+pre .cm{color:var(--ink-3);font-style:italic}
+pre .kw{color:var(--accent);font-weight:500}
+code{font-family:"IBM Plex Mono",monospace;font-size:.86em;background:var(--panel-2);padding:1px 5px}
+
+.tw{overflow-x:auto;margin:24px 0;border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;min-width:600px;background:var(--panel)}
+th,td{padding:11px 15px;text-align:left;border-bottom:1px solid var(--rule);font-size:14.5px;vertical-align:top}
+thead th{background:var(--panel-2);font-family:"IBM Plex Mono",monospace;font-size:10.5px;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-2);font-weight:600;
+  border-bottom:2px solid var(--rule-2)}
+tbody tr:last-child td{border-bottom:none}
+td:first-child{color:var(--ink-2)}
+td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:13.5px}
+td.mech{color:var(--accent);font-weight:600}
+
+/* estratos */
+.strata{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);margin:28px 0}
+.st{background:var(--panel);padding:16px 20px;display:grid;
+  grid-template-columns:132px 1fr;gap:20px;align-items:baseline}
+.st .nm{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;color:var(--accent)}
+.st .nm span{display:block;font-size:10.5px;color:var(--ink-3);font-weight:400;letter-spacing:.06em;margin-top:3px}
+.st .dd{font-size:14.5px;color:var(--ink-2);line-height:1.5}
+
+.kicker{background:var(--panel);border-left:3px solid var(--accent);padding:22px 26px;margin:30px 0}
+.kicker p{margin:0;max-width:none;font-size:18px}
+.kicker p+p{margin-top:13px}
+.kicker .lbl{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:9px;font-weight:600}
+
+.mech{border-top:1px solid var(--rule);padding-top:20px;margin-top:26px}
+.mech h4{margin-top:0;color:var(--accent)}
+
+ul{max-width:39em;padding-left:20px}
+li{margin-bottom:10px}
+
+footer{margin-top:80px;padding-top:24px;border-top:2px solid var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3)}
+footer p{max-width:44em}
+
+@media (max-width:640px){
+  body{font-size:16px;padding:0 16px 64px}
+  .sec{margin-top:60px}
+  .st{grid-template-columns:1fr;gap:6px}
+}
+</style>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">Terceiro de três · quatro projetos com história</p>
+  <h1>O Que Só Aparece Depois</h1>
+  <p class="dek">O bakeoff mediu o primeiro dia. Estes quatro repositórios medem o terceiro mês — e o que eles mostram não está em nenhum dos dois artigos anteriores, porque é invisível em uma sessão.</p>
+</header>
+
+<p class="lead">Os dois artigos anteriores saíram de um experimento limpo: três engines, um jogo, uma sessão cada, tudo do zero. É um bom desenho e ele esconde exatamente uma coisa — <strong>tudo que só quebra quando o trabalho é mais longo que a memória de quem o faz.</strong></p>
+
+<p>Quatro projetos anteriores do mesmo autor cobrem esse buraco. Não são experimentos: são jogos construídos, revisados e refeitos por uma pessoa só, que alterna entre eles conforme a vontade, com humano no circuito o tempo todo.</p>
+
+<div class="strata">
+  <div class="st"><span class="nm">gods<span>Godot · 251 commits · 15 dias</span></span>
+    <span class="dd">1 222 arquivos, <strong>65 documentos</strong>. Vários agentes — Claude, Codex, Gemini — em duas máquinas, revezando na mesma branch. É o único que chegou ao problema da continuidade e teve de inventar protocolo.</span></div>
+  <div class="st"><span class="nm">boomlitude<span>Godot · 67 commits · 3 dias</span></span>
+    <span class="dd">O porte integral de um jogo Defold para Godot, com <strong>prova de equivalência</strong> e um documento de comparação de dez seções. Responde, com evidência, a pergunta que o bakeoff só cercou.</span></div>
+  <div class="st"><span class="nm">bomberboom<span>Defold · 62 commits · 10 dias</span></span>
+    <span class="dd"><code>CLAUDE.md</code> de <strong>738 linhas</strong> e um log de 18 decisões numeradas. É o retrato de um arquivo de regras no auge do crescimento, cheio de dor já paga.</span></div>
+  <div class="st"><span class="nm">mineboom<span>Godot · 7 commits · 1 dia</span></span>
+    <span class="dd">Sete commits, sete marcos, do núcleo ao tutorial em dez idiomas. Um dia inteiro cabendo numa sessão — o contraponto que mostra o que a duração muda.</span></div>
+</div>
+
+<section class="sec">
+  <p class="snum">Lição 1</p>
+  <h2>Você já tinha respondido a pergunta do bakeoff</h2>
+
+  <p class="lead">O <code>boomlitude</code> é um porte completo de Defold+Lua para Godot+GDScript tipado, do mesmo jogo, com prova de que os dois são equivalentes: <strong>4 800 partidas completas</strong> — 200 sementes × 8 builds × 3 agentes — produzindo <em>tabela idêntica, linha por linha, incluindo casas decimais</em>.</p>
+
+  <p>E ele traz uma seção chamada, com todas as letras, «Qual serve melhor quando o agente escreve o código». A recomendação de lá foi <strong>Godot + GDScript tipado</strong>, e o primeiro dos três motivos é este:</p>
+
+  <div class="quote">
+    <span class="src">boomlitude · docs/COMPARACAO.md §10</span>
+    <p>É o único dos dois em que eu fecho o ciclo sozinho. <code>godot --script</code> instancia a cena, injeta toque e devolve um PNG. No Defold, conferir qualquer coisa de cena termina em «compila, roda, e alguém olha» — e esse alguém é você. <strong>É aí que mora o prejuízo: não no código que eu escrevo, mas no que só você consegue verificar.</strong></p>
+  </div>
+
+  <p>O bakeoff chegou à mesma conclusão por outro caminho e a enunciou mais fraco: registrou que o Godot tem <code>--headless</code> de fábrica e que o Defold precisou de display virtual, e contou que o Defold escreveu o dobro de ferramenta de verificação. <strong>Duas medições independentes, feitas com meses de distância e desenhos diferentes, apontando para o mesmo lugar.</strong></p>
+
+  <p>Isso vale mais que qualquer uma das duas sozinha. Foi o critério que a Parte II do primeiro artigo chamou de «portão headless», e é o único eixo em que as duas medições concordam sem ressalva.</p>
+
+  <h3>E o preço, que o porte também mediu</h3>
+
+<div class="tw">
+<table>
+<thead><tr><th>&nbsp;</th><th class="n">Lua</th><th class="n">GDScript</th><th>&nbsp;</th></tr></thead>
+<tbody>
+<tr><td>Domínio + conteúdo</td><td class="n">1 110</td><td class="n">1 424</td><td>+28%</td></tr>
+<tr><td>Arquivos de cena</td><td class="n">600 <span style="opacity:.6">(9 arq)</span></td><td class="n">71 <span style="opacity:.6">(1 arq)</span></td><td><strong>−88%</strong></td></tr>
+<tr><td>Arquivos-fonte</td><td class="n">31</td><td class="n">62</td><td>o dobro</td></tr>
+<tr><td>Campo de testes, 200 sementes</td><td class="n">90 s</td><td class="n">~45 min</td><td><strong>18× mais lento</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+  <p>As +28% de linhas no domínio têm explicação única: <strong>649 delas são 17 classes que no Lua eram tabelas anônimas</strong> — o contrato que o Lua escrevia em comentário e o compilador ignorava. Tirando essas, o código de lógica encolheu.</p>
+
+  <p>E a tipagem produziu um número que o bakeoff não tinha: <strong>três casos de teste do original deixaram de existir</strong>, porque as chamadas que eles protegiam não compilam. Passar uma <code>String</code> onde vai um comando, ou <code>2.5</code> onde vai um inteiro, virou erro de compilação em vez de teste.</p>
+
+  <div class="mech">
+    <h4>O que isso acrescenta ao projeto da engine</h4>
+    <p>O <em>portão mecânico antes da revisão</em> passa de preferência a requisito medido. O motor deve recusar o máximo possível <strong>na carga</strong>, não na execução — o que já era o princípio da posse, agora com um segundo argumento: cada recusa mecânica é um teste que ninguém precisa escrever, e código defensivo que ninguém precisa revisar.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="snum">Lição 2</p>
+  <h2>A memória do agente é mais curta que o projeto</h2>
+
+  <p class="lead">Esta é a lição que <strong>não existe</strong> nos dois artigos anteriores, porque cada execução do bakeoff coube numa sessão. O <code>gods</code>, com 251 commits e vários agentes revezando, bateu nela de frente e teve de inventar um protocolo inteiro.</p>
+
+  <div class="quote">
+    <span class="src">gods · docs/agent_coordination.md</span>
+    <p>Modo de trabalho: <strong>relay</strong>. Normalmente um agente trabalha enquanto o outro está parado (orçamento de tokens), e o próximo <strong>continua o mesmo trabalho de onde o anterior parou</strong> — inclusive nos arquivos do outro. Por isso o que mais importa não é «quem é dono de qual arquivo», e sim <strong>handoff impecável</strong>.</p>
+  </div>
+
+  <p>O que emergiu tem nome e regra. Um <strong>Baton</strong>, que é o índice curto de quem está com a bola. <strong>Ledgers</strong> em <code>docs/_active/</code>, que guardam a fila aceita e o ponto exato de retomada. E uma invariante que vale ser lida inteira:</p>
+
+  <div class="quote">
+    <span class="src">gods · «invariante anti-vazamento de tasks»</span>
+    <p>Cada task recebe ID estável (<code>T001</code>, <code>T002</code>…). IDs antigos nunca são renumerados nem removidos. Preservar cada task aceita até ela ficar concluída ou cancelada explicitamente pelo usuário. <strong>Nunca apagar item pendente para resumir contexto.</strong> Manter exatamente uma task em andamento por ledger, com checkpoint anterior, ponto exato de retomada, arquivos tocados e próxima ação concreta.</p>
+  </div>
+
+  <p>Repare no que essa invariante está defendendo. Não é contra esquecimento do humano — é contra <strong>o agente resumir a própria lista de tarefas para caber no contexto</strong>, e uma task aceita desaparecer no resumo. O documento diz isso explicitamente: um «próximo passo sugerido» no Baton não substitui task aceita pendente.</p>
+
+  <p>É a mesma classe de defeito que o bakeoff encontrou dentro do jogo — <em>duas coisas disputando um recurso e o sistema escolhendo uma em silêncio</em> — subindo um nível: agora o recurso é a atenção, e o que se perde é trabalho combinado.</p>
+
+  <div class="mech">
+    <h4>O que isso acrescenta ao projeto da engine</h4>
+    <p>Sendo honesto: <strong>continuidade entre sessões é responsabilidade do arnês, não do motor.</strong> Baton e ledger são artefatos do processo de trabalho, e não faz sentido embutir gerência de tarefa numa engine de jogo.</p>
+    <p>Mas há uma metade que <em>é</em> do motor, e nenhuma das três oferece: <strong>o estado de verificação</strong>. Que critérios estão verdes, contra qual revisão do código, e quais capturas de evidência ficaram velhas desde então. Um agente que retoma trabalho hoje não tem como saber o que ainda vale — ele reexecuta tudo ou confia. Um comando que responda «o que já foi verificado e continua valendo» é a peça de continuidade que cabe na ferramenta.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="snum">Lição 3</p>
+  <h2>O arquivo de regras tem um ciclo de vida</h2>
+
+  <p class="lead">Os três projetos documentados pegam o mesmo arquivo em três idades diferentes, e é um arco, não uma preferência.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Projeto</th><th class="n">Arquivo de regras</th><th class="n">Docs no projeto</th><th>Onde o conhecimento mora</th></tr></thead>
+<tbody>
+<tr><td>mineboom <span style="opacity:.6">· 1 dia</span></td><td class="n">CLAUDE.md + plano</td><td class="n">2</td><td>tudo no arquivo de regras</td></tr>
+<tr><td>boomlitude <span style="opacity:.6">· 3 dias</span></td><td class="n">242 linhas</td><td class="n">15</td><td>regras + specs por tema</td></tr>
+<tr><td>bomberboom <span style="opacity:.6">· 10 dias</span></td><td class="n"><strong>738 linhas</strong></td><td class="n">6</td><td><strong>quase tudo no arquivo de regras</strong></td></tr>
+<tr><td>gods <span style="opacity:.6">· 15 dias, multi-agente</span></td><td class="n"><strong>14 linhas</strong></td><td class="n"><strong>65</strong></td><td>governança documental com o arquivo apontando</td></tr>
+</tbody>
+</table>
+</div>
+
+  <p>O <code>bomberboom</code> mostra o auge: 738 linhas com seções chamadas «Pegadinhas do Defold já pagas», «Compilar não é verificar», «Definição de pronto». Cada uma é dor real convertida em regra, e o arquivo cresce porque é o único lugar que o agente lê sem falta.</p>
+
+  <p>O <code>gods</code> passou por esse crescimento e <strong>saiu dele por reescrita deliberada</strong>. O <code>CLAUDE.md</code> de hoje tem catorze linhas e quase todas dizem onde ler outra coisa. O conhecimento não encolheu — ele foi <em>governado</em>, e o projeto ganhou um documento só para dizer onde cada informação vive:</p>
+
+  <div class="quote">
+    <span class="src">gods · docs/documentation_workflow.md</span>
+    <p>Regra para humanos e agentes: documentação deve ajudar a continuar trabalho, não competir com o código como uma segunda fonte de verdade.</p>
+    <p><code>CLAUDE.md</code> e <code>GEMINI.md</code> ficam curtos e específicos ao papel. <strong>Não duplicar regras universais neles.</strong></p>
+  </div>
+
+  <p>Há uma razão econômica para essa reescrita, e ela é do Akita: o arquivo de regras é relido a cada iteração, então <strong>cada linha nele custa token em toda pergunta</strong>. Setecentas e trinta e oito linhas de dor paga são caras precisamente porque são valiosas — o agente as carrega mesmo quando está fazendo outra coisa.</p>
+
+  <p>A saída do <code>gods</code> é a resposta certa e ela tem um custo próprio: só funciona se o agente <em>de fato</em> seguir o ponteiro. Um arquivo de regras que diz «leia o Baton e todos os ledgers ativos» aposta numa obediência que 738 linhas de regra explícita não precisam apostar.</p>
+
+  <div class="mech">
+    <h4>O que isso acrescenta ao projeto da engine</h4>
+    <p>O catálogo por intenção não pode ser só do motor — precisa ser <strong>extensível pelo projeto</strong>. As «pegadinhas já pagas» do <code>bomberboom</code> são exatamente um catálogo local, e hoje só um humano as lê. Se a mesma pergunta que responde «o que o motor oferece para isso?» também respondesse «o que <em>este projeto</em> já descobriu sobre isso?», o arquivo de regras poderia encolher sem apostar em obediência.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="snum">Lição 4</p>
+  <h2>Medir não é ver — e vale para os dois lados</h2>
+
+  <p class="lead">O segundo artigo se chama <em>O Agente Não Vê</em>. O <code>bomberboom</code> tem uma seção que é o espelho exato disso, do outro lado da mesa.</p>
+
+  <div class="quote">
+    <span class="src">bomberboom · CLAUDE.md, «Mecânica que o autor não consegue ver não foi entregue»</span>
+    <p>A D-013 custou três tentativas até a peça chegar à mão de quem joga. Primeiro ela só existia atrás de um flag do portão. Depois ganhou um arquivo próprio, que exigia rodar o script certo — e «testei e não encontrei os obstáculos» veio de novo. Só na terceira ela entrou onde o resto do conteúdo sempre esteve.</p>
+    <p>O portão provava, nas três, que a regra rodava. <strong>Nenhuma dessas provas dizia nada sobre a peça ser alcançável</strong>, e menos ainda sobre ela ser boa — quando o autor finalmente jogou, recusou. <strong>Medir não é ver.</strong></p>
+  </div>
+
+  <p>São duas cegueiras diferentes e simétricas. O agente não enxerga o resultado do que escreveu: precisa que o jogo narre, que a evidência seja assada, que a varredura substitua a amostragem. E o autor não enxerga o que o agente construiu: precisa que a peça esteja <em>alcançável jogando</em>, não atrás de um flag que prova que ela existe.</p>
+
+  <p>A regra que o projeto tirou disso é a mais direta de todo o material lido:</p>
+
+  <div class="kicker">
+    <span class="lbl">bomberboom · a regra</span>
+    <p>Se a resposta a <strong>«como eu vejo isso?»</strong> for mais longa que um comando, a entrega não terminou.</p>
+  </div>
+
+  <p>Três tentativas para uma peça que passava no portão desde a primeira. E o desfecho é o argumento mais forte contra confiar em teste verde: quando a peça finalmente chegou às mãos do autor, ele a <strong>recusou</strong>. Os três obstáculos da D-013 estão construídos, medidos e zerados em todas as fases — código que passa, que funciona, e que o jogo não usa.</p>
+
+  <div class="mech">
+    <h4>O que isso acrescenta ao projeto da engine</h4>
+    <p>Um mecanismo novo, que eu não tinha derivado do bakeoff: <strong>o motor deve saber dizer o que é alcançável jogando.</strong> Conteúdo que só existe atrás de um sinalizador de verificação é conteúdo não entregue, e isso é verificável por máquina — partindo de um começo limpo, sem argumento de depuração, esta peça aparece?</p>
+    <p>É a mesma família da variante de loja não carregar afordância de teste, vista do lado oposto: lá o problema era o que sobra no pacote; aqui é o que nunca chega nele.</p>
+  </div>
+</section>
+
+<section class="sec">
+  <p class="snum">Lição 5</p>
+  <h2>O que está escrito e o agente não vê não existe</h2>
+
+  <p class="lead">A seção «Se o motor faz, o motor faz» do <code>bomberboom</code> descreve, com nome e sobrenome, exatamente a armadilha que o agente do bakeoff redescobriu sozinho três meses depois.</p>
+
+  <div class="quote">
+    <span class="src">bomberboom · CLAUDE.md</span>
+    <p>Conversão de coordenada é o caso que já custou caro aqui. A conta <code>(x - BOARD_X) / CELL</code> parecia inocente e <strong>errava a célula em até cinco blocos</strong>, porque <code>action.x</code> não chega em coordenada de projeto. O <code>gui.pick_node</code> sabia a resposta o tempo todo.</p>
+    <p>O teste de bolso: <em>se eu apagar estas linhas, existe função do motor que faz isso?</em> Se existe, use — ou escreva por que não dá.</p>
+  </div>
+
+  <p>No bakeoff, com esse arquivo bloqueado, o agente escreveu por conta própria que fazer o acerto à mão «teria quebrado exatamente na tela 20:9». Mesma armadilha, mesma solução, descoberta do zero.</p>
+
+  <p>Isso se lê de dois jeitos, e os dois são verdade. <strong>A lição é redescobrível</strong> — o que é uma boa notícia sobre o agente e uma má notícia sobre o valor do corpus. E <strong>o corpus só vale enquanto está visível</strong>: 738 linhas de dor paga não ajudaram em nada uma execução que não podia lê-las.</p>
+
+  <p>É exatamente por isso que a quinta execução do protocolo — a mesma engine, o mesmo jogo, com o histórico acumulado à disposição — é o número que mais falta. Ela mede a única coisa que decide se migrar custa reescrever um jogo ou <strong>descartar um ativo</strong>.</p>
+</section>
+
+<section class="sec">
+  <p class="snum">Lição 6</p>
+  <h2>O que se tentou e não pegou</h2>
+
+  <p>Vale registrar o que foi experimentado e não virou hábito, porque o silêncio sobre isso é como manual de ferramenta vira propaganda.</p>
+
+  <h4>Spec pesado antes do código</h4>
+  <p>O <code>gods</code> tem um <code>_spec_template.md</code> completo — <em>o quê</em>, <em>por quê</em> com alternativas descartadas, <em>plano técnico</em> com os arquivos a tocar — a ser aprovado com o usuário antes de criar tasks ou tocar código. Foi usado de verdade: existe uma spec de 181 linhas para um mecanismo de ascensão de cartas, com status «aprovado», propostas numeradas e questões respondidas.</p>
+  <p>Ela hoje começa assim:</p>
+  <div class="quote">
+    <span class="src">gods · docs/_logs/grupo_c_ascensao_spec.md</span>
+    <p><strong>HISTÓRICO:</strong> mecânica removida em 2026-05-30. Este documento preserva a decisão anterior para auditoria; não descreve regra ativa.</p>
+  </div>
+  <p>O processo funcionou — a spec foi escrita, aprovada, implementada. E cinco dias depois a mecânica saiu do jogo. <strong>O rigor do processo não protege contra a decisão de produto estar errada</strong>, e o custo do spec pesado é pago inteiro mesmo quando o resultado é descartado. Sobrou uma prática melhor: mover para <code>_logs/</code> com um cabeçalho que diz que não vale mais, em vez de apagar.</p>
+
+  <h4>Três arquivos de regras para três agentes</h4>
+  <p>O <code>gods</code> tem <code>CLAUDE.md</code>, <code>AGENTS.md</code> e <code>GEMINI.md</code>, com papéis distintos — o Gemini promove <code>dev</code> para <code>main</code>, e nenhum outro pode. Funciona, e cobra: três arquivos que podem divergir, e a disciplina de não duplicar regra universal em nenhum dos dois específicos.</p>
+
+  <h4>Marcos numerados como unidade de commit</h4>
+  <p>O <code>mineboom</code> fez sete commits em um dia, e cada um é um marco: <em>M0 contratos do núcleo</em>, <em>M1 primeiro turno jogável</em>, <em>M2 objetivo espacial</em>, até <em>M5 dez idiomas, som, tutorial e medição</em>. Cabe num dia e numa sessão. É o formato mais limpo do lote — e é o que só funciona <strong>enquanto o projeto couber numa sessão</strong>, que é precisamente a condição que os outros três perderam.</p>
+</section>
+
+<section class="sec">
+  <p class="snum">Convergência</p>
+  <h2>O que os três artigos, juntos, pedem</h2>
+
+  <p class="lead">Somando o bakeoff, a leitura do Clean Code para jogos e estes quatro projetos, a lista de mecanismos do <em>Passo</em> ganha três itens e confirma os outros.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Mecanismo</th><th>De onde vem</th><th class="n">Força</th></tr></thead>
+<tbody>
+<tr><td>O quadro é uma função pura</td><td>três agentes reimplementaram o gerador aleatório</td><td class="n">convergência</td></tr>
+<tr><td>O motor responde consultas</td><td>três agentes construíram o mesmo canal de narração</td><td class="n">convergência</td></tr>
+<tr><td>Projeto sem arquivo-sombra</td><td>medição de três repositórios</td><td class="n">convergência</td></tr>
+<tr><td><strong>Portão mecânico na carga</strong></td><td>posse (bakeoff) <strong>+ tipagem que apagou 3 testes (porte)</strong></td><td class="n"><strong>duas fontes</strong></td></tr>
+<tr><td><strong>Ciclo fechado sem humano</strong></td><td>headless (bakeoff) <strong>+ o porte, com meses de distância</strong></td><td class="n"><strong>duas fontes</strong></td></tr>
+<tr><td><strong>Alcançável jogando</strong></td><td><em>novo</em> — três tentativas da D-013 no bomberboom</td><td class="n">um caso</td></tr>
+<tr><td><strong>Estado de verificação consultável</strong></td><td><em>novo</em> — o problema de retomada do gods</td><td class="n">um caso</td></tr>
+<tr><td><strong>Catálogo extensível pelo projeto</strong></td><td><em>novo</em> — as pegadinhas pagas do bomberboom</td><td class="n">um caso</td></tr>
+<tr><td>Perfis de plataforma</td><td>toque duplicado no Android</td><td class="n">um caso</td></tr>
+<tr><td>Cadeia local e offline</td><td>servidor de build inalcançável</td><td class="n">um caso</td></tr>
+</tbody>
+</table>
+</div>
+
+  <div class="kicker">
+    <span class="lbl">O que mudou de peso</span>
+    <p>Dois mecanismos subiram de «um caso bem documentado» para <strong>duas medições independentes, com meses e desenhos diferentes</strong>: o portão mecânico antes da revisão, e o ciclo de verificação que o agente fecha sozinho.</p>
+    <p>Se o roteiro do <em>Passo</em> tivesse de ser cortado até sobrar uma coisa só, esses dois seriam os últimos a sair — e o segundo é, também, o argumento mais forte que existe hoje na disputa entre Godot e Defold.</p>
+  </div>
+
+  <p>E fica um dado que estes quatro projetos dão e o bakeoff não podia dar, sobre o que de fato limita o trabalho.</p>
+
+  <p>Nenhum dos quatro parou por dificuldade de ferramenta. Nenhum parou, aliás: são <strong>quatro explorações paralelas de uma pessoa só</strong>, que troca de frente conforme a vontade. O <code>gods</code> tem 251 commits em quinze dias e 65 documentos; o <code>mineboom</code> tem sete commits em um dia. A diferença entre eles não mede fôlego de projeto — mede onde a atenção estava naquela semana.</p>
+
+  <div class="kicker">
+    <span class="lbl">O gargalo verdadeiro</span>
+    <p>Se o limite é a atenção de <strong>uma pessoa</strong>, então o que vale mais não é o que reduz o trabalho do agente — é <strong>o que reduz o que só o humano consegue verificar</strong>. Toda ida e volta para «roda aí e me diz se ficou bom» consome o recurso mais escasso do projeto inteiro.</p>
+    <p>É exatamente o que o porte concluiu, com outras palavras: <em>o prejuízo não está no código que eu escrevo, mas no que só você consegue verificar.</em> E é o que dá ao ciclo fechado sem humano o primeiro lugar na lista — não por elegância de engenharia, mas por economia de atenção.</p>
+  </div>
+
+  <p>Isso também reordena o roteiro do <em>Passo</em>. Um motor que faz o agente escrever menos código vale pouco para quem tem tempo de agente de sobra e atenção humana escassa. Um motor que faz o agente <strong>provar mais coisas sozinho</strong> devolve exatamente o recurso que falta.</p>
+
+</section>
+
+<footer>
+<p>Leitura de <code>gods</code>, <code>bomberboom</code>, <code>boomlitude</code> e <code>mineboom</code> em 23 de agosto de 2026 — 387 commits e 88 documentos somados. Toda citação é literal, dos arquivos dos próprios projetos. Complementa <em>O Agente Não Vê</em> e <em>O Motor que Narra</em>.</p>
+</footer>
+
+</div>
