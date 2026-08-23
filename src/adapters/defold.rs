@@ -44,6 +44,15 @@ pub fn analyze(
     Ok(output)
 }
 
+/// Sintaxe de bloco do Lua usado pelo Defold. Fica aqui pelo mesmo motivo que a
+/// do GDScript fica no adapter Godot (achado A1).
+const LUA_BLOCKS: common::BlockSyntax = common::BlockSyntax {
+    opens_branch: &["if ", "elseif "],
+    condition_end: common::ConditionEnd::LineContains("then"),
+    closes_body_prefix: &["elseif "],
+    closes_body_exact: &["else", "end"],
+};
+
 fn animation_claims(
     source: &ParsedSource,
     output: &mut AdapterOutput,
@@ -334,7 +343,9 @@ fn input_claims(
             .iter()
             .filter(|item| item.name == "on_input")
         {
-            for branch in common::action_branches(function, &source.calls, &action_regex, false) {
+            for branch in
+                common::action_branches(function, &source.calls, &action_regex, LUA_BLOCKS)
+            {
                 for action in branch.actions {
                     for (handler, span) in &branch.handlers {
                         let resource = ResourceKey {

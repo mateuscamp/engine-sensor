@@ -9,3 +9,7 @@ casos, não declare a tarefa concluída. Relate também todos os avisos.
 
 Se a mudança tocar entrada ou animação, registre o uso e a evidência em
 `.sara/USOS.md` antes de concluir.
+
+A caixa de decisão em `.sara/CONTRATO.md` diz o que você decide sozinho e o que precisa
+de aprovação. Framework, runtime, serviço remoto e mudança de contrato público não são
+suas: proponha.

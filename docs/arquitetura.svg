@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 660" width="960" height="660" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+<style>
+  :root { --bg:#ffffff; --ink:#16181d; --muted:#5c636e; --line:#b9c0cc; --card:#f4f6f9; --edge:#8b93a1; --accent:#1f6feb; --accentbg:#e7f0fe; --warn:#b45309; --warnbg:#fdf3e3; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#111418; --ink:#e8eaed; --muted:#9aa3af; --line:#3a4149; --card:#1b1f25; --edge:#5b6470; --accent:#6ea8ff; --accentbg:#16263f; --warn:#e2a03f; --warnbg:#33270f; }
+  }
+  .bg { fill: var(--bg); }
+  .card { fill: var(--card); stroke: var(--line); stroke-width: 1.2; rx: 7; }
+  .accent { fill: var(--accentbg); stroke: var(--accent); stroke-width: 1.4; rx: 7; }
+  .warnbox { fill: var(--warnbg); stroke: var(--warn); stroke-width: 1.4; rx: 7; }
+  .zone { fill: none; stroke: var(--edge); stroke-width: 1.3; stroke-dasharray: 6 5; rx: 10; }
+  .t { fill: var(--ink); font-size: 13px; }
+  .tb { fill: var(--ink); font-size: 13.5px; font-weight: 600; }
+  .s { fill: var(--muted); font-size: 11.5px; }
+  .h { fill: var(--ink); font-size: 17px; font-weight: 700; }
+  .zl { fill: var(--muted); font-size: 11.5px; font-weight: 600; letter-spacing: .3px; }
+  .arrow { stroke: var(--edge); stroke-width: 1.5; fill: none; marker-end: url(#a); }
+  .code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+</style>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--edge)"/></marker></defs>
+
+<rect class="bg" x="0" y="0" width="960" height="660"/>
+<text class="h" x="32" y="40">Sara — o que é um quantum hoje, e onde o Marco 7 encosta</text>
+<text class="s" x="32" y="60">docs/AUDITORIA-ARQUITETURAL.md, achados A1 e A5 · ADR 0005, 0007</text>
+
+<!-- ============ PAINEL A ============ -->
+<rect class="zone" x="32" y="84" width="896" height="290"/>
+<text class="zl" x="48" y="106">BINÁRIO `sara` — UM QUANTUM: INDEPENDENTE, OFFLINE, SEM RUNTIME EXTERNO</text>
+
+<rect class="accent" x="48" y="122" width="128" height="46"/>
+<text class="tb code" x="60" y="142">sara check</text>
+<text class="s" x="60" y="158">CLI, main.rs</text>
+
+<rect class="card" x="200" y="122" width="140" height="46"/>
+<text class="tb code" x="212" y="142">scanner.rs</text>
+<text class="s" x="212" y="158">detecta engine, varre</text>
+
+<rect class="card" x="364" y="122" width="140" height="46"/>
+<text class="tb code" x="376" y="142">parser.rs</text>
+<text class="s" x="376" y="158">árvore tree-sitter</text>
+
+<rect class="card" x="528" y="122" width="150" height="46"/>
+<text class="tb code" x="540" y="142">analysis.rs</text>
+<text class="s" x="540" y="158">ordena, dedup, exceções</text>
+
+<rect class="accent" x="702" y="122" width="150" height="46"/>
+<text class="tb code" x="714" y="142">report.rs</text>
+<text class="s" x="714" y="158">texto | JSON · 0/1/2</text>
+
+<path class="arrow" d="M176 145 H196"/>
+<path class="arrow" d="M340 145 H360"/>
+<path class="arrow" d="M504 145 H524"/>
+<path class="arrow" d="M678 145 H698"/>
+
+<!-- adapters -->
+<rect class="zone" x="200" y="196" width="478" height="152"/>
+<text class="zl" x="214" y="216">ADAPTERS — TODA A SEMÂNTICA DE ENGINE VIVE AQUI</text>
+
+<rect class="card" x="216" y="228" width="150" height="52"/>
+<text class="tb code" x="228" y="248">adapters/godot.rs</text>
+<text class="s" x="228" y="264">GDSCRIPT_BLOCKS</text>
+
+<rect class="card" x="386" y="228" width="150" height="52"/>
+<text class="tb code" x="398" y="248">adapters/defold.rs</text>
+<text class="s" x="398" y="264">LUA_BLOCKS · congelado</text>
+
+<rect class="accent" x="216" y="292" width="320" height="44"/>
+<text class="tb code" x="228" y="311">adapters/common.rs</text>
+<text class="s" x="228" y="327">zero menções a engine (achado A1)</text>
+
+<path class="arrow" d="M291 284 V288"/>
+<path class="arrow" d="M461 284 V288"/>
+<path class="arrow" d="M603 168 V240"/>
+<text class="s code" x="556" y="262">adapters::</text>
+<text class="s code" x="556" y="278">analyze</text>
+<text class="s" x="556" y="298">devolve posses</text>
+<text class="s" x="556" y="314">e diagnósticos</text>
+
+
+<!-- nucleo -->
+<rect class="card" x="702" y="196" width="150" height="152"/>
+<text class="tb" x="714" y="218">Variação por engine</text>
+<text class="s" x="714" y="238">contida em cinco arquivos:</text>
+<text class="s code" x="714" y="256">config.rs</text>
+<text class="s code" x="714" y="272">init.rs</text>
+<text class="s code" x="714" y="288">model.rs</text>
+<text class="s code" x="714" y="304">parser.rs</text>
+<text class="s code" x="714" y="320">scanner.rs</text>
+<text class="s" x="714" y="340">Conjunto fechado por teste.</text>
+
+<!-- ============ PAINEL B ============ -->
+<text class="h" x="32" y="418">Marco 7 — onde entra a dependência de ambiente</text>
+<text class="s" x="32" y="438">ADR 0007: `observe` nasce como segundo binário. O portão do agente não herda o Godot.</text>
+
+<rect class="zone" x="32" y="456" width="440" height="176"/>
+<text class="zl" x="48" y="478">SEM AMBIENTE EXTERNO</text>
+<rect class="accent" x="48" y="492" width="200" height="60"/>
+<text class="tb code" x="60" y="514">sara</text>
+<text class="s" x="60" y="531">análise estática · offline</text>
+<text class="s" x="60" y="545">contrato estrito, ADR 0006</text>
+<text class="s" x="48" y="578">Teste offline e lista de dependências</text>
+<text class="s" x="48" y="596">autorizadas aplicam-se a este binário.</text>
+<text class="s" x="48" y="614">Roda sem rede e sem engine instalada.</text>
+
+<rect class="zone" x="504" y="456" width="424" height="176"/>
+<text class="zl" x="520" y="478">EXIGE GODOT INSTALADO</text>
+<rect class="warnbox" x="520" y="492" width="220" height="60"/>
+<text class="tb code" x="532" y="514">sara-observe</text>
+<text class="s" x="532" y="531">cena instrumentada · experimento</text>
+<text class="s" x="532" y="545">interface provisória, sem contrato</text>
+<text class="s" x="520" y="578">Pode falhar, mudar ou ser descartado</text>
+<text class="s" x="520" y="596">sem contaminar o portão que já está</text>
+<text class="s" x="520" y="614">em uso nos projetos.</text>
+
+<rect class="card" x="300" y="492" width="152" height="60"/>
+<text class="tb code" x="312" y="514">lib: model + report</text>
+<text class="s" x="312" y="531">compartilhados pelos dois</text>
+<text class="s" x="312" y="545">binários</text>
+
+<path class="arrow" d="M248 522 H296"/>
+<path class="arrow" d="M514 522 H458"/>
+</svg>

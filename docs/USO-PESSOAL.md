@@ -1,10 +1,23 @@
 # Registro do Marco 6 - uso pessoal
 
-Preencher uma linha para cada mudança em que animação ou entrada possa ter mudado.
-Dez usos em pelo menos dois projetos encerram o marco.
+> Este é o registro **do próprio Sara**. O modelo distribuído por `sara init` está em
+> [`kit/USOS.md`](../kit/USOS.md); a instância criada em cada projeto integrado fica em
+> `.sara/USOS.md` daquele projeto. Três arquivos, três papéis distintos.
 
-**Estado atual:** 1 de 10 mudanças; 2 de 2 projetos integrados. O marco permanece
-aberto até existirem nove mudanças reais adicionais.
+Preencher uma linha para cada mudança em que animação ou entrada possa ter mudado.
+
+**Critério de conclusão:** dez mudanças reais em projetos Godot.
+**Critério de parada:** 20 de setembro de 2026.
+
+O que vier primeiro encerra o marco. Chegar à data com menos de dez mudanças é um
+resultado, não um atraso: significa que a ferramenta não está no caminho do trabalho
+real, e o encerramento legítimo passa a ser manter só o kit ou congelar a ferramenta.
+
+Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança em projeto
+Defold não conta para a contagem. O uso 1 abaixo é anterior à decisão e permanece
+registrado.
+
+**Estado atual:** 1 de 10 mudanças; prazo aberto até 20/09/2026.
 
 | # | Data | Projeto | Mudança | Tempo | Conflito | Aviso útil/falso | Inspeção humana necessária | Regra ausente |
 |---:|---|---|---|---:|---|---|---|---|

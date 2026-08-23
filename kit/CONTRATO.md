@@ -16,6 +16,22 @@ pessoa olhando a engine.
 8. Durante o Marco 6, mudança de entrada ou animação registra resultado, tempo,
    avisos e inspeção humana em `.sara/USOS.md`.
 
+## Caixa de decisão do agente
+
+O contrato acima diz o que não fazer. Esta tabela diz o que o agente **pode decidir
+sozinho** — sem ela, ou o agente trava e consome atenção humana, ou decide sozinho o
+que não deveria.
+
+| Decisão | Regime |
+|---|---|
+| Nome, estrutura interna, teste, refatoração dentro de um módulo | decide sozinho |
+| Dependência de propósito específico, resolvida num canto | decide sozinho e registra no diff |
+| Dependência de propósito geral, fronteira nova entre módulos | propõe com justificativa; a pessoa aprova antes de aplicar |
+| Framework, runtime, serviço remoto, mudança de contrato público ou de código de saída | exige ADR; o agente não decide |
+
+Na dúvida entre duas linhas, use a de baixo. Propor custa uma mensagem; desfazer uma
+decisão de arquitetura custa uma tarde.
+
 ## Como ler o resultado
 
 - saída 0: não há conflito comprovado; avisos ainda precisam ser relatados;

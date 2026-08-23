@@ -139,23 +139,67 @@ pub fn conflict_diagnostic(
     }
 }
 
+/// Sintaxe de bloco condicional da linguagem analisada.
+///
+/// O núcleo compartilhado não sabe qual engine está sendo analisada: o adapter
+/// entrega a sintaxe como dado. Isso mantém a semântica de cada engine dentro do
+/// seu adapter, que é a fronteira exigida pelo achado A1 de
+/// `docs/AUDITORIA-ARQUITETURAL.md` e verificada por `tests/governanca.rs`.
+#[derive(Debug, Clone, Copy)]
+pub struct BlockSyntax {
+    /// Prefixos de linha que abrem um ramo condicional.
+    pub opens_branch: &'static [&'static str],
+    /// Como reconhecer que a condição terminou e o corpo começou.
+    pub condition_end: ConditionEnd,
+    /// Prefixos de linha que encerram o corpo de um ramo.
+    pub closes_body_prefix: &'static [&'static str],
+    /// Linhas exatas que encerram o corpo de um ramo.
+    pub closes_body_exact: &'static [&'static str],
+}
+
+/// Marca que separa a condição do corpo do ramo.
+#[derive(Debug, Clone, Copy)]
+pub enum ConditionEnd {
+    /// A condição termina na primeira linha que termina com este caractere.
+    LineEndsWith(char),
+    /// A condição termina na primeira linha que contém esta palavra.
+    LineContains(&'static str),
+}
+
+impl BlockSyntax {
+    fn opens(&self, trimmed: &str) -> bool {
+        self.opens_branch
+            .iter()
+            .any(|prefix| trimmed.starts_with(prefix))
+    }
+
+    fn condition_complete(&self, line: &str) -> bool {
+        match self.condition_end {
+            ConditionEnd::LineEndsWith(marker) => line.trim_end().ends_with(marker),
+            ConditionEnd::LineContains(word) => line.contains(word),
+        }
+    }
+
+    fn closes(&self, trimmed: &str) -> bool {
+        self.closes_body_prefix
+            .iter()
+            .any(|prefix| trimmed.starts_with(prefix))
+            || self.closes_body_exact.contains(&trimmed)
+    }
+}
+
 pub fn action_branches(
     function: &FunctionSite,
     calls: &[CallSite],
     action_regex: &Regex,
-    godot: bool,
+    syntax: BlockSyntax,
 ) -> Vec<Branch> {
     let lines = function.text.lines().collect::<Vec<_>>();
     let mut branches = Vec::new();
     let mut index = 0;
     while index < lines.len() {
         let trimmed = lines[index].trim_start();
-        let starts_branch = if godot {
-            trimmed.starts_with("if ") || trimmed.starts_with("elif ")
-        } else {
-            trimmed.starts_with("if ") || trimmed.starts_with("elseif ")
-        };
-        if !starts_branch {
+        if !syntax.opens(trimmed) {
             index += 1;
             continue;
         }
@@ -163,13 +207,7 @@ pub fn action_branches(
         let indent = indentation(lines[index]);
         let condition_start = index;
         let mut condition_end = index;
-        while condition_end + 1 < lines.len()
-            && !(if godot {
-                lines[condition_end].trim_end().ends_with(':')
-            } else {
-                lines[condition_end].contains("then")
-            })
-        {
+        while condition_end + 1 < lines.len() && !syntax.condition_complete(lines[condition_end]) {
             condition_end += 1;
         }
         let condition = lines[condition_start..=condition_end].join("\n");
@@ -187,17 +225,7 @@ pub fn action_branches(
         let body_start = condition_end + 1;
         let mut body_end = lines.len();
         for (candidate, line) in lines.iter().enumerate().skip(body_start) {
-            let candidate_trimmed = line.trim_start();
-            let boundary = if godot {
-                (candidate_trimmed.starts_with("elif ") || candidate_trimmed == "else:")
-                    && indentation(line) <= indent
-            } else {
-                (candidate_trimmed.starts_with("elseif ")
-                    || candidate_trimmed == "else"
-                    || candidate_trimmed == "end")
-                    && indentation(line) <= indent
-            };
-            if boundary {
+            if syntax.closes(line.trim_start()) && indentation(line) <= indent {
                 body_end = candidate;
                 break;
             }

@@ -17,7 +17,17 @@ mesmo efeito de entrada.
 | 3 | regras Defold | dois defeitos históricos falham e correções passam | Portão 0, teto acumulado de 40 h |
 | 4 | regras Godot | sequência e concorrência são distinguidas | escolher engine de foco |
 | 5 | binário 0.1.0 | precisão, desempenho, determinismo e offline | lançar internamente |
-| 6 | dez usos reais | utilidade sem falso bloqueio | manter privado, congelar ou propor nova ADR |
+| 6 | dez usos reais em Godot, **ou 20/09/2026** | utilidade sem falso bloqueio | manter privado, congelar ou propor nova ADR |
+
+O Marco 6 tem critério de conclusão **e** critério de parada. Dez mudanças reais em
+projetos Godot o encerram por conclusão; 20 de setembro de 2026 o encerra por data.
+Chegar à data com menos de dez mudanças não é atraso: é a evidência de que a ferramenta
+não está no caminho do trabalho real, e o encerramento legítimo passa a ser manter só o
+kit ou congelar a ferramenta privada.
+
+Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança em projeto
+Defold não conta para o marco. O BomberBoom Defold permanece no corpus de falso positivo
+bloqueante e suas duas regressões históricas continuam sendo o Portão 0.
 
 ## Continuação aprovada, fora da versão 0.1.0
 
@@ -32,6 +42,11 @@ O Marco 7 combina captura visual, estado da cena, entradas e logs. Ele não incl
 Defold, Android, SDK, runtime nem API pública e não conta como parte do lançamento
 `0.1.0`.
 
+Pela [ADR 0007](decisoes/0007-observe-como-binario-separado.md), `observe` nasce como um
+segundo binário, `sara-observe`, e não como subcomando de `sara`. O binário `sara`
+continua sendo um quantum único, offline, sem exigir Godot instalado; essa propriedade
+está medida e não pode degradar por causa de um experimento.
+
 ## O que fica adiado
 
 Publicação, código aberto, itch.io, preço, licença, marca Compositando, plugin de
@@ -39,19 +54,19 @@ editor, SARIF, daemon, SDK, protocolo público de consulta, perfil executável d
 plataforma, runtime e engine própria. O protocolo provisório e local necessário ao
 spike Godot é a única exceção autorizada.
 
-## Matriz de foco da engine
+## Foco de engine
 
-Cada engine recebe nota de 0 a 5. Uma vantagem de pelo menos 10 pontos ponderados
-muda o foco. Em empate, Godot vence por concentrar os projetos atuais. Falha funcional
-no aparelho, toque incorreto ou prova de cena dependente de uma pessoa têm veto.
+Resolvido pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md): **Godot
+é o foco declarado** e o adapter Defold está congelado como corpus de regressão.
 
-| Critério | Peso | Godot inicial | Defold inicial | Evidência atual |
-|---|---:|---:|---:|---|
-| ciclo sem atenção humana | 30% | 5 | 2 | Godot captura cena por script; Defold ainda exige janela |
-| posse resolvida com certeza | 25% | a medir | a medir | sai dos adapters |
-| precisão do diagnóstico | 20% | a medir | a medir | sai do corpus |
-| velocidade e estabilidade | 15% | 5 | 2 | portões medidos em 0,6 s e 32 s |
-| fidelidade no aparelho | 10% | pendente | pendente | medição Android tem veto |
+A matriz ponderada que ocupava esta seção foi retirada. Ela fixava pesos depois de o
+estudo ter sido lido, o que o próprio protocolo em [`RESULTADOS.md`](../RESULTADOS.md)
+proíbe, e transformava em aritmética uma comparação que não suporta aritmética. O que
+fazia o trabalho de decisão eram os vetos, e eles continuam valendo integralmente:
 
-O placar inicial é hipótese incompleta, não autorização para retirar suporte da outra
-engine.
+- falha funcional no aparelho;
+- toque incorreto no aparelho;
+- prova de cena que dependa de uma pessoa olhar.
+
+A medição Android continua sendo a evidência comparável que falta e mantém poder de
+veto sobre qualquer conclusão de foco.

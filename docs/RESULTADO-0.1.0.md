@@ -55,8 +55,14 @@ declarações; o critério precisa continuar sendo medido nas próximas mudança
 
 ## Compatibilidade e trade-offs
 
-- O núcleo comum mantém descoberta, configuração, modelo, ordenação e apresentação
-  fora dos adapters. Isso preserva a troca de foco sem reescrever o CLI.
+- O núcleo comum concentra descoberta, configuração, modelo, ordenação e apresentação.
+  A variação por engine existe e está contida em cinco arquivos nomeados — `config.rs`,
+  `init.rs`, `model.rs`, `parser.rs` e `scanner.rs` — mais os dois adapters. O código
+  compartilhado pelos adapters não conhece engine nenhuma. O conjunto é fechado por
+  `tests/governanca.rs`, que reprova quando cresce em silêncio. Isso preserva a troca de
+  foco sem reescrever o CLI. *(Corrigido em 23/08/2026: a redação anterior afirmava que
+  o núcleo mantinha tudo fora dos adapters, o que o código não sustentava. Achado A1 de
+  [`AUDITORIA-ARQUITETURAL.md`](AUDITORIA-ARQUITETURAL.md).)*
 - Tree-sitter está fixado pelo manifesto e lockfile. Erro sintático relevante encerra
   com código 2, sem resultado parcial apresentado como sucesso.
 - O parser comunitário de GDScript recusou inicialmente identificadores Unicode

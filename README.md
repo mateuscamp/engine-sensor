@@ -9,6 +9,10 @@ O primeiro resultado é o `sara 0.1.0`: um CLI Rust, offline, para detectar poss
 concorrente de animação e entrada em projetos Godot 4.7 e Defold 1.13. Ele bloqueia
 somente conflitos comprovados e transforma ambiguidades em avisos explicados.
 
+Desde a [ADR 0005](docs/decisoes/0005-foco-em-godot-com-defold-congelado.md), Godot é o
+foco de desenvolvimento e o adapter Defold está congelado: sem regra nova, mas com as
+duas regressões históricas preservadas — são elas o teste causal do Portão 0.
+
 Tudo aqui vem de medição. Um agente construiu o mesmo jogo mobile em **Godot, Unity e
 Defold**, sem contexto entre as execuções e sem receber uma única indicação de API. Os
 registros brutos, o protocolo e os critérios de aceitação estão em `estudo/`.
@@ -53,20 +57,32 @@ trade-offs e o que ainda precisa ser provado no uso pessoal.
 expansão do escopo, incluindo o spike Godot de visão instrumentada posterior ao uso
 pessoal.
 
+**[docs/AUDITORIA-ARQUITETURAL.md](docs/AUDITORIA-ARQUITETURAL.md)** - a auditoria do
+projeto contra as duas referências, os oito achados, as fitness functions de governança
+e o plano final de implementação. O desenho está em
+[docs/arquitetura.svg](docs/arquitetura.svg).
+
 ## A decisão atual
 
 Há evidência de uma lacuna em verificabilidade para agentes. Ainda não há evidência
 de que uma engine completa seja necessária ou economicamente viável. Por isso, o
 projeto permanece deliberadamente na camada de verificação compatível com engines
-existentes. A próxima prova são dez mudanças reais em ao menos dois projetos pessoais.
+existentes.
 
-As decisões estão registradas na
-[ADR 0001](docs/decisoes/0001-validar-mecanismos-antes-da-engine-completa.md) e na
-[ADR 0002](docs/decisoes/0002-lancamento-interno-e-foco-adaptativo.md). A troca do
-codinome anterior por Sara está na
-[ADR 0003](docs/decisoes/0003-sara-como-nome-provisorio.md). O próximo experimento
-aprovado, ainda condicionado ao Marco 6, está na
-[ADR 0004](docs/decisoes/0004-spike-de-visao-instrumentada-em-godot.md).
+A próxima prova é o Marco 6: dez mudanças reais em projetos Godot, ou 20 de setembro de
+2026, o que vier primeiro. Chegar à data com menos de dez mudanças é um resultado, não
+um atraso.
+
+| ADR | Decisão |
+|---|---|
+| [0001](docs/decisoes/0001-validar-mecanismos-antes-da-engine-completa.md) | validar mecanismos antes de uma engine completa |
+| [0002](docs/decisoes/0002-lancamento-interno-e-foco-adaptativo.md) | lançamento interno e foco adaptativo de engine |
+| [0003](docs/decisoes/0003-sara-como-nome-provisorio.md) | Sara como nome provisório da camada |
+| [0004](docs/decisoes/0004-spike-de-visao-instrumentada-em-godot.md) | spike de visão instrumentada em Godot, após o Marco 6 |
+| [0005](docs/decisoes/0005-foco-em-godot-com-defold-congelado.md) | foco em Godot, com Defold congelado como corpus de regressão |
+| [0006](docs/decisoes/0006-contrato-estrito-de-relatorio-e-codigos-de-saida.md) | contrato estrito de relatório e códigos de saída |
+| [0007](docs/decisoes/0007-observe-como-binario-separado.md) | `sara observe` nasce como binário separado |
+| [0008](docs/decisoes/0008-gramaticas-tree-sitter-comunitarias-fixadas.md) | gramáticas tree-sitter comunitárias, fixadas por versão exata |
 
 ## Os artigos
 

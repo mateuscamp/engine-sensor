@@ -3,9 +3,9 @@
 ## Incluído
 
 - Linux x86_64;
-- Godot 4.7 com GDScript e `project.godot` textuais;
-- Defold 1.13 com Lua 5.1/LuaJIT, `.script`, `.gui_script`, `.lua` e
-  `game.input_binding`;
+- Godot 4.7 com GDScript em arquivos `.gd` e `project.godot` textuais;
+- Defold 1.13 com Lua 5.1/LuaJIT em arquivos `.lua`, `.script`, `.gui_script` e
+  `.render_script`, mais `game.input_binding`;
 - `Tween.tween_property`, `go.animate`, `gui.animate`, cancelamento explícito e
   os caminhos de entrada descritos na documentação das duas engines.
 

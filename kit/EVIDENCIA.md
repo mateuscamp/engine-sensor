@@ -8,3 +8,4 @@
 - [ ] Avisos foram explicados, e não apenas ignorados.
 - [ ] A cena foi exercitada por script ou no aparelho-alvo.
 - [ ] O artefato de prova não depende de arquivo local oculto.
+- [ ] Nenhuma decisão da linha "exige ADR" da caixa de decisão foi tomada sem registro.

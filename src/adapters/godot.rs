@@ -30,6 +30,15 @@ pub fn analyze(
     Ok(output)
 }
 
+/// Sintaxe de bloco do GDScript. Fica aqui, e não no núcleo compartilhado: o
+/// `common` não deve saber qual engine está analisando (achado A1).
+const GDSCRIPT_BLOCKS: common::BlockSyntax = common::BlockSyntax {
+    opens_branch: &["if ", "elif "],
+    condition_end: common::ConditionEnd::LineEndsWith(':'),
+    closes_body_prefix: &["elif "],
+    closes_body_exact: &["else:"],
+};
+
 fn animation_claims(source: &ParsedSource, output: &mut AdapterOutput) {
     let assignments = tween_assignments(source);
     let naked_tween =
@@ -231,7 +240,9 @@ fn input_claims(
             "_input" | "_unhandled_input" | "_gui_input"
         )
     }) {
-        for branch in common::action_branches(function, &source.calls, &action_regex, true) {
+        for branch in
+            common::action_branches(function, &source.calls, &action_regex, GDSCRIPT_BLOCKS)
+        {
             for action in branch.actions {
                 for (handler, span) in &branch.handlers {
                     let declared = declared_actions.contains(&action);
