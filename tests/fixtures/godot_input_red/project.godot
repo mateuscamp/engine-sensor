@@ -1,0 +1,10 @@
+config_version=5
+
+[application]
+config/name="Sara Godot Input Red"
+
+[input]
+bomb={
+"deadzone": 0.5,
+"events": []
+}

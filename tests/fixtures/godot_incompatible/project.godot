@@ -1,0 +1,5 @@
+config_version=5
+config/features=PackedStringArray("4.6", "GL Compatibility")
+
+[application]
+config/name="Sara Godot Incompatible"

@@ -1,0 +1,7 @@
+config_version=5
+
+[application]
+config/name="Sara Godot Fluent Tween Green"
+
+[rendering]
+config/features=PackedStringArray("4.7", "GL Compatibility")

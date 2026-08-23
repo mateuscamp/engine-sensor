@@ -1,0 +1,9 @@
+function on_message(self, message_id)
+    if message_id == hash("acender") then
+        go.animate("#brilho", "tint", go.PLAYBACK_ONCE_FORWARD,
+            vmath.vector4(1, 1, 1, 1), go.EASING_LINEAR, 0.2, 0, function()
+                go.animate("#brilho", "tint", go.PLAYBACK_ONCE_FORWARD,
+                    vmath.vector4(1, 1, 1, 0), go.EASING_LINEAR, 0.2)
+            end)
+    end
+end

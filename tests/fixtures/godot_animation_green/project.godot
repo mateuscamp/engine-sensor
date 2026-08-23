@@ -1,0 +1,13 @@
+config_version=5
+
+[application]
+config/name="Sara Godot Animation Green"
+
+[input]
+bomb={
+"deadzone": 0.5,
+"events": []
+}
+
+[rendering]
+renderer/rendering_method="gl_compatibility"

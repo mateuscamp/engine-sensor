@@ -1,0 +1,9 @@
+local function plant_bomb(self, x, y)
+    msg.post("main:/game#script", "plant_bomb", { x = x, y = y })
+end
+
+function on_input(self, action_id, action)
+    if (action_id == hash("touch") or action_id == hash("multitouch")) and action.pressed then
+        plant_bomb(self, action.x, action.y)
+    end
+end

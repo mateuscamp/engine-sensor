@@ -1,1 +1,4 @@
+/target/
+.godot/
+*.tmp
 .DS_Store

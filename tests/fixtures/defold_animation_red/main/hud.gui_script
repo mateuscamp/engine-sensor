@@ -1,0 +1,4 @@
+function init(self)
+    gui.animate("bomb", gui.PROP_SCALE, vmath.vector3(1.2, 1.2, 1), gui.EASING_LINEAR, 0.2)
+    gui.animate("bomb", gui.PROP_SCALE, vmath.vector3(0.8, 0.8, 1), gui.EASING_LINEAR, 0.4)
+end

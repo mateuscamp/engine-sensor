@@ -1,0 +1,12 @@
+function init(self)
+    if self.nascendo then
+        go.animate("#sprite", "scale", go.PLAYBACK_ONCE_FORWARD,
+            vmath.vector3(1, 1, 1), go.EASING_LINEAR, 0.2, 0, function()
+                go.animate("#sprite", "scale", go.PLAYBACK_LOOP_PINGPONG,
+                    vmath.vector3(1.1, 1.1, 1), go.EASING_LINEAR, 0.2)
+            end)
+        return
+    end
+    go.animate("#sprite", "scale", go.PLAYBACK_LOOP_PINGPONG,
+        vmath.vector3(1.1, 1.1, 1), go.EASING_LINEAR, 0.2)
+end

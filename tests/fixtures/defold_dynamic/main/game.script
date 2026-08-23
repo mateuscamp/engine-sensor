@@ -1,0 +1,3 @@
+function init(self)
+    go.animate(self.targets[self.index], hash(self.property), go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_LINEAR, 0.2)
+end

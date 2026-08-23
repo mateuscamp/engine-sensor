@@ -1,0 +1,8 @@
+local function moldura(self, ligada)
+    gui.cancel_animations(self.frame, gui.PROP_COLOR)
+    if ligada then
+        gui.animate(self.frame, gui.PROP_COLOR, vmath.vector4(1, 1, 1, 1), gui.EASING_LINEAR, 0.2)
+    else
+        gui.animate(self.frame, gui.PROP_COLOR, vmath.vector4(1, 1, 1, 0), gui.EASING_LINEAR, 0.2)
+    end
+end

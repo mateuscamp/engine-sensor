@@ -1,0 +1,5 @@
+[project]
+title = Sara Defold Input Green
+
+[input]
+game_binding = /input/game.input_bindingc

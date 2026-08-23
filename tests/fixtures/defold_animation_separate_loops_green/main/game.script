@@ -1,0 +1,8 @@
+local function settle_board(self)
+    for _, powerup in ipairs(self.powerups) do
+        go.animate(powerup.id, "position", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(), go.EASING_LINEAR, 0.2)
+    end
+    for _, candy in ipairs(self.candies) do
+        go.animate(candy.id, "position", go.PLAYBACK_ONCE_FORWARD, vmath.vector3(), go.EASING_LINEAR, 0.2)
+    end
+end
