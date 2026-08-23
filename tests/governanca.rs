@@ -196,6 +196,124 @@ fn contrato_de_compatibilidade_cobre_toda_extensao_que_o_scanner_aceita() {
 }
 
 // ---------------------------------------------------------------------------
+// F7 - construções reconhecidas, nos dois sentidos (achado A7)
+// ---------------------------------------------------------------------------
+
+/// Lê a tabela "Construções reconhecidas" do contrato publicado e devolve uma
+/// linha por construção, no formato `engine|eixo|token`.
+fn construcoes_do_contrato() -> BTreeSet<String> {
+    let documento = ler("docs/COMPATIBILIDADE.md");
+    let inicio = documento
+        .find("## Construções reconhecidas")
+        .expect("a seção 'Construções reconhecidas' sumiu de docs/COMPATIBILIDADE.md");
+    let resto = &documento[inicio..];
+    let fim = resto[3..]
+        .find("\n## ")
+        .map(|pos| pos + 3)
+        .unwrap_or(resto.len());
+
+    let mut linhas = BTreeSet::new();
+    for linha in resto[..fim].lines() {
+        let limpa = linha.trim();
+        if !limpa.starts_with('|') || limpa.contains("---") || limpa.contains("Construção") {
+            continue;
+        }
+        let celulas = limpa
+            .trim_matches('|')
+            .split('|')
+            .map(str::trim)
+            .collect::<Vec<_>>();
+        if celulas.len() != 3 {
+            continue;
+        }
+        linhas.insert(format!(
+            "{}|{}|{}",
+            celulas[0].to_lowercase(),
+            celulas[1],
+            celulas[2].trim_matches('`')
+        ));
+    }
+    linhas
+}
+
+fn construcoes_declaradas() -> BTreeSet<String> {
+    sara_ai_first::adapters::recognized_constructs()
+        .into_iter()
+        .map(|item| format!("{}|{}|{}", item.engine, item.axis.label(), item.token))
+        .collect()
+}
+
+#[test]
+fn a7_contrato_publicado_e_adapters_declaram_as_mesmas_construcoes() {
+    let declaradas = construcoes_declaradas();
+    let publicadas = construcoes_do_contrato();
+    let caladas = declaradas
+        .difference(&publicadas)
+        .cloned()
+        .collect::<Vec<_>>();
+    let prometidas = publicadas
+        .difference(&declaradas)
+        .cloned()
+        .collect::<Vec<_>>();
+    assert!(
+        caladas.is_empty(),
+        "os adapters reconhecem construções que docs/COMPATIBILIDADE.md não declara: \
+         {caladas:?}. Quem lê o contrato precisa saber o que a ferramenta enxerga. Achado A7."
+    );
+    assert!(
+        prometidas.is_empty(),
+        "docs/COMPATIBILIDADE.md promete construções que nenhum adapter reconhece: \
+         {prometidas:?}. Contrato que promete a mais é pior que contrato ausente: ele \
+         é acreditado. Achado A7."
+    );
+}
+
+/// Fonte do adapter **sem** o bloco `CONSTRUCTS`. Sem essa remoção o teste abaixo é
+/// vacuoso: a própria declaração satisfaz a busca, e um token inventado passaria.
+fn fonte_do_adapter_sem_a_declaracao(engine: &str) -> String {
+    let fonte = ler(&format!("src/adapters/{engine}.rs"));
+    let inicio = fonte
+        .find("pub const CONSTRUCTS")
+        .unwrap_or_else(|| panic!("CONSTRUCTS sumiu de src/adapters/{engine}.rs"));
+    let fim = inicio
+        + fonte[inicio..]
+            .find("];")
+            .expect("bloco CONSTRUCTS sem fechamento")
+        + 2;
+    format!("{}{}", &fonte[..inicio], &fonte[fim..])
+}
+
+#[test]
+fn a7_toda_construcao_declarada_existe_no_fonte_do_adapter() {
+    let mut ausentes = Vec::new();
+    for item in sara_ai_first::adapters::recognized_constructs() {
+        let fonte = fonte_do_adapter_sem_a_declaracao(&item.engine.to_string());
+        if !fonte.contains(item.token) {
+            ausentes.push(format!("{}: {}", item.engine, item.token));
+        }
+    }
+    assert!(
+        ausentes.is_empty(),
+        "há construção declarada cujo token não aparece no fonte do adapter: {ausentes:?}. \
+         A lista virou histórico em vez de contrato. Achado A7."
+    );
+}
+
+#[test]
+fn adr_0005_lista_de_construcoes_do_defold_esta_congelada() {
+    let defold = construcoes_declaradas()
+        .into_iter()
+        .filter(|linha| linha.starts_with("defold|"))
+        .count();
+    assert_eq!(
+        defold, 5,
+        "o adapter Defold passou a reconhecer outro conjunto de construções. Pela ADR 0005 \
+         ele está congelado: sem regra nova, com as regressões históricas preservadas. \
+         Mudar este número exige a ADR que substitua a 0005."
+    );
+}
+
+// ---------------------------------------------------------------------------
 // ADR 0005 - Defold congelado como corpus de regressão
 // ---------------------------------------------------------------------------
 

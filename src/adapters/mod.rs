@@ -12,6 +12,46 @@ use crate::{
     parser::ParsedSource,
 };
 
+/// Eixo de posse que uma construção de API afeta.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Axis {
+    Animation,
+    Input,
+}
+
+impl Axis {
+    /// Nome do eixo como o contrato publicado o escreve.
+    pub fn label(self) -> &'static str {
+        match self {
+            Axis::Animation => "animação",
+            Axis::Input => "entrada",
+        }
+    }
+}
+
+/// Construção de API que um adapter reconhece.
+///
+/// A lista é pública porque ela **é** o contrato publicado em
+/// `docs/COMPATIBILIDADE.md`. `tests/governanca.rs` compara os dois nos dois
+/// sentidos: o documento não promete o que o código não faz, e não cala o que ele
+/// faz. Achado A7 de `docs/AUDITORIA-ARQUITETURAL.md`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Construct {
+    pub engine: Engine,
+    pub axis: Axis,
+    /// Token que o adapter procura no fonte analisado, escrito como aparece no código.
+    pub token: &'static str,
+}
+
+/// Todas as construções reconhecidas, na ordem em que cada adapter as declara.
+pub fn recognized_constructs() -> Vec<Construct> {
+    godot::CONSTRUCTS
+        .iter()
+        .chain(defold::CONSTRUCTS)
+        .copied()
+        .collect()
+}
+
 #[derive(Debug, Default)]
 pub struct AdapterOutput {
     pub claims: Vec<OwnershipClaim>,

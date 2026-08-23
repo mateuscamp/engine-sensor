@@ -8,7 +8,7 @@ use anyhow::{Context, Result};
 use regex::Regex;
 
 use crate::{
-    adapters::{AdapterOutput, common},
+    adapters::{AdapterOutput, Axis, Construct, common},
     config::Profile,
     model::{Confidence, Diagnostic, Engine, OwnershipClaim, ResourceKey, ResourceKind, Severity},
     parser::ParsedSource,
@@ -43,6 +43,36 @@ pub fn analyze(
     input_claims(project, sources, profiles, &mut output)?;
     Ok(output)
 }
+
+/// Construções de API que este adapter reconhece. Congelado pela ADR 0005: a lista
+/// não cresce, e `tests/governanca.rs` reprova se ela divergir do contrato publicado.
+pub const CONSTRUCTS: &[Construct] = &[
+    Construct {
+        engine: Engine::Defold,
+        axis: Axis::Animation,
+        token: "go.animate",
+    },
+    Construct {
+        engine: Engine::Defold,
+        axis: Axis::Animation,
+        token: "gui.animate",
+    },
+    Construct {
+        engine: Engine::Defold,
+        axis: Axis::Animation,
+        token: "go.cancel_animations",
+    },
+    Construct {
+        engine: Engine::Defold,
+        axis: Axis::Animation,
+        token: "gui.cancel_animations",
+    },
+    Construct {
+        engine: Engine::Defold,
+        axis: Axis::Input,
+        token: "on_input",
+    },
+];
 
 /// Sintaxe de bloco do Lua usado pelo Defold. Fica aqui pelo mesmo motivo que a
 /// do GDScript fica no adapter Godot (achado A1).

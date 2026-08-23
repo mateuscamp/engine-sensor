@@ -8,7 +8,7 @@ use anyhow::{Context, Result};
 use regex::Regex;
 
 use crate::{
-    adapters::{AdapterOutput, common},
+    adapters::{AdapterOutput, Axis, Construct, common},
     config::Profile,
     model::{Confidence, Diagnostic, Engine, OwnershipClaim, ResourceKey, ResourceKind, Severity},
     parser::ParsedSource,
@@ -29,6 +29,42 @@ pub fn analyze(
     diagnose_inputs(&output.claims, sources, &mut output.diagnostics);
     Ok(output)
 }
+
+/// Construções de API que este adapter reconhece. É a lista que
+/// `docs/COMPATIBILIDADE.md` publica e que `tests/governanca.rs` confere nos dois
+/// sentidos (achado A7).
+pub const CONSTRUCTS: &[Construct] = &[
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Animation,
+        token: "tween_property",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Animation,
+        token: "kill",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "_input",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "_unhandled_input",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "_gui_input",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "set_input_as_handled",
+    },
+];
 
 /// Sintaxe de bloco do GDScript. Fica aqui, e não no núcleo compartilhado: o
 /// `common` não deve saber qual engine está analisando (achado A1).

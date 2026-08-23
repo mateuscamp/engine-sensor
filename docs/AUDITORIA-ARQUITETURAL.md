@@ -1,6 +1,6 @@
 # Auditoria arquitetural e plano final de implementação
 
-**Status:** auditoria concluída; Fase 0 e Fase 1 executadas e verificadas
+**Status:** auditoria concluída; Fase 0 e Fase 1 executadas e verificadas; A7 fechado por inteiro
 **Data:** 23 de agosto de 2026
 **Escopo:** conformidade do Sara `0.1.0` com o método declarado em
 [`METODO-ARQUITETURAL.md`](METODO-ARQUITETURAL.md), medida contra as duas referências
@@ -25,14 +25,14 @@ do Marco 7.
 
 ## 0. O que foi executado
 
-Tudo verificado: 29 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
+Tudo verificado: 32 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
 build de release ligando só contra `libc` e `libgcc`, execução em namespace sem rede
 terminando em código 0.
 
 | Item | Achado | Resultado |
 |---|---|---|
 | `common::action_branches` recebe `BlockSyntax` em vez de `godot: bool` | A1 | `src/adapters/common.rs` não menciona nenhuma engine |
-| `tests/governanca.rs` com dez fitness functions | A1, A2, A5, A6, A7 | 29 testes no total, contra 19 antes |
+| `tests/governanca.rs` com treze fitness functions | A1, A2, A5, A6, A7 | 32 testes no total, contra 19 antes |
 | ADR 0005 - foco em Godot, Defold congelado | A4 | matriz ponderada retirada do `ROTEIRO.md` |
 | ADR 0006 - contrato estrito de relatório e códigos de saída | A6 | forma do JSON congelada por teste |
 | ADR 0007 - `sara observe` como binário separado | A5 | `sara` permanece um quantum offline |
@@ -242,7 +242,7 @@ dizendo qual é qual.
 **Referência.** `METODO §5`, de novo regra do próprio projeto: "informação operacional
 pertence ao teste ou ao código, não a uma segunda fonte de verdade em prosa".
 
-**Correção aplicada, metade.** F5 extrai as extensões do corpo de `scanner::supported`
+**Correção aplicada.** F5 extrai as extensões do corpo de `scanner::supported`
 e exige que cada uma apareça em `docs/COMPATIBILIDADE.md`. Na primeira execução o teste
 reprovou com `["gd", "render_script"]`: o contrato publicado não declarava a extensão
 principal do Godot nem uma das quatro do Defold. O documento foi corrigido.
@@ -250,6 +250,20 @@ principal do Godot nem uma das quatro do Defold. O documento foi corrigido.
 Os três diários receberam cabeçalho: `docs/USO-PESSOAL.md` é o registro do próprio
 Sara, `kit/USOS.md` é o modelo distribuído pelo `init`, e `.sara/USOS.md` é a instância
 de cada projeto integrado.
+
+**A metade que faltava, fechada depois.** As extensões eram só metade da duplicação: as
+*construções* — `tween_property`, `go.animate`, `gui.animate`, cancelamento, os pontos de
+entrada — viviam em prosa no documento e em literais espalhados pelos adapters, sem nada
+ligando os dois. Cada adapter agora declara `CONSTRUCTS`, no mesmo espírito do
+`BlockSyntax` da Fase 1, e a tabela do `COMPATIBILIDADE.md` é conferida nos dois sentidos:
+o documento não cala o que o código faz, nem promete o que ele não faz. Um contrato que
+promete a mais é pior que contrato ausente, porque é acreditado.
+
+A primeira versão de F7 nasceu vacuosa e o teste de mutação a pegou: como `CONSTRUCTS`
+mora no mesmo arquivo que o teste vasculhava, todo token declarado se encontrava a si
+mesmo, e um token inventado passava. O teste agora remove o bloco da declaração antes de
+buscar. Fica registrado porque é o argumento a favor de mutar toda fitness function nova:
+verde não é prova até falhar quando deve.
 
 ### A8 - Nenhum diagrama - CORRIGIDO
 
@@ -291,7 +305,7 @@ de ser só uma lista de proibições.
 
 Todas locais, todas em `cargo test`, nenhuma depende de rede.
 
-Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Dez testes.
+Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Treze testes.
 
 | # | Governa | Reprova quando |
 |---|---|---|
@@ -301,6 +315,7 @@ Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Dez teste
 | F4 | ADR 0007, quantum | aparece um `[[bin]]` fora de `sara` e `sara-observe` |
 | F5 | A7, fonte única | o scanner aceita extensão que o `COMPATIBILIDADE.md` não declara |
 | F6 | ADR 0005, Defold congelado | some qualquer uma das quatro fixtures ou dos dois cenários históricos |
+| F7 | A7, fonte única | adapter e `COMPATIBILIDADE.md` divergem sobre as construções reconhecidas, em qualquer um dos dois sentidos; token declarado que não existe no fonte; a lista do Defold cresce |
 
 F3 é a que merece explicação. Ela não proíbe variação por engine: declara a lista dos
 lugares onde ela pode existir e falha quando a lista cresce em silêncio. É a diferença
@@ -322,7 +337,7 @@ ponderada fora do `ROTEIRO.md` e o diagrama. Ver seção 0.
 
 ### Fase 1 - fronteira - CONCLUÍDA
 
-`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 29 testes
+`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 32 testes
 verdes, clippy sem aviso.
 
 ### Fase 2 - Marco 6, só Godot, sem nada em paralelo

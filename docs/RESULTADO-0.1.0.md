@@ -17,7 +17,7 @@ marca, SDK, runtime e engine própria continuam fora do escopo.
 |---|---:|---:|
 | testes unitários | 5 aprovados | todos aprovados |
 | cenários CLI e fixtures | 14 aprovados | todos aprovados |
-| fitness functions de governança | 10 aprovadas | toda ADR com conformidade executável |
+| fitness functions de governança | 13 aprovadas | toda ADR com conformidade executável |
 | projetos reais analisados | 5 de 5 | 5 de 5 |
 | arquivos do corpus aceitos ou recusados explicitamente | 694 de 694 | sem omissão silenciosa |
 | erros bloqueantes no corpus | 0 | zero falso positivo bloqueante |
@@ -25,7 +25,7 @@ marca, SDK, runtime e engine própria continuam fora do escopo.
 | variação nas cinco varreduras | 0,64–0,74 s | registrar estabilidade |
 | JSON repetido | idêntico byte a byte | determinístico |
 | execução sem rede | código 0 em namespace sem rede | offline |
-| binário distribuível | 3.840.416 bytes | Linux x86_64, sem Python/Node |
+| binário distribuível | 3.840.352 bytes | Linux x86_64, sem Python/Node |
 | portão em projeto ativo | porte BomberBoom | `AGENTS.md` e `CLAUDE.md` ativos |
 | portões copiáveis | Godot e Defold | entrada ausente reprova explicitamente |
 
@@ -34,11 +34,11 @@ namespace Linux sem rede. As dependências dinâmicas restantes são apenas bibl
 de sistema do Linux; não há runtime de linguagem externo.
 
 *(Atualizado em 23/08/2026: o artefato em `dist/` foi reconstruído sobre a fronteira da
-Fase 1. Os 3.432 bytes a mais são os descritores `BlockSyntax`; o comportamento é
-idêntico, verificado rodando o binário antigo e o novo contra as dezoito fixtures nos
-dois perfis, com saída e código de saída iguais byte a byte. O `strip` que produz este
-tamanho passou a viver em `[profile.release]` do `Cargo.toml` e em `tools/dist.sh`, em
-vez de depender de um passo manual lembrado.)*
+Fase 1 e o fechamento do A7. Os 3.368 bytes a mais são os descritores `BlockSyntax` e as
+listas `CONSTRUCTS`; o comportamento é idêntico, verificado rodando o binário anterior e
+o novo contra as dezoito fixtures nos dois perfis, com saída e código de saída iguais
+byte a byte. O `strip` que produz este tamanho passou a viver em `[profile.release]` do
+`Cargo.toml` e em `tools/dist.sh`, em vez de depender de um passo manual lembrado.)*
 
 O porte Godot recebeu `.sara/`, `sara.toml` e o portão curto tanto em `AGENTS.md`
 quanto em `CLAUDE.md`. A inicialização preservou as instruções e mudanças que já
