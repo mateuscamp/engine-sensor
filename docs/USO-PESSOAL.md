@@ -14,8 +14,9 @@ resultado, não um atraso: significa que a ferramenta não está no caminho do t
 real, e o encerramento legítimo passa a ser manter só o kit ou congelar a ferramenta.
 
 Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança em projeto
-Defold não conta para a contagem. O uso 1 abaixo é anterior à decisão e permanece
-registrado.
+Defold não conta para a contagem. Nenhum uso registrado até aqui é Defold — os dois são
+do porte, que é Godot —, então a regra ainda não excluiu nada; ela vale para os que
+vierem.
 
 **Estado atual:** 2 de 10 mudanças; prazo aberto até 20/09/2026.
 
@@ -158,7 +159,9 @@ Varredura de 450 arquivos em 681 ms, mediana de cinco execuções — a mediçã
 `RESULTADO-0.1.0.md` era 0,69 s, então a fronteira da Fase 1 não custou desempenho.
 
 **Isto não conta como uso do Marco 6.** Baseline não é mudança real, e a ADR 0009 diz
-isso explicitamente. A contagem continua em 1 de 10.
+isso explicitamente: a contagem não sobe por causa dela. O número corrente está no
+cabeçalho, e só lá — repeti-lo aqui foi o que fez esta seção contradizer o topo do
+arquivo por algumas horas.
 
 ## Classificação da baseline Defold
 
