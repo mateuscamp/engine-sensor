@@ -29,6 +29,18 @@ Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança e
 Defold não conta para o marco. O BomberBoom Defold permanece no corpus de falso positivo
 bloqueante e suas duas regressões históricas continuam sendo o Portão 0.
 
+**Desde 24 de agosto de 2026 há um único projeto Godot em desenvolvimento ativo:** o
+porte do BomberBoom. Gods, Boomlitude e MineBoom ficam parados como corpus de regressão.
+As dez mudanças virão todas do porte, e isso é ao mesmo tempo a força e o risco do marco.
+
+A força: o mesmo jogo existe em Defold e em Godot, então toda regra do Sara pode ser
+conferida contra o original. Foi assim que a [ADR 0010](decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md)
+nasceu — o porte reproduziu, em Godot, a regressão de entrada que o original tinha em
+Defold, e o Sara não a via porque o eixo de entrada exigia mapa de ações.
+
+O risco: um alvo só. Se o porte parar, o marco para junto e a data decide sozinha. Isso
+não muda o critério, muda o que a data significa quando chegar.
+
 ## Continuação aprovada, fora da versão 0.1.0
 
 O [ADR 0004](decisoes/0004-spike-de-visao-instrumentada-em-godot.md) autoriza, após

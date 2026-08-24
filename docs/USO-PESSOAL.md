@@ -17,9 +17,17 @@ Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança e
 Defold não conta para a contagem. O uso 1 abaixo é anterior à decisão e permanece
 registrado.
 
-**Estado atual:** 2 de 10 mudanças; 4 projetos Godot integrados, mas só o porte do
-BomberBoom em desenvolvimento ativo desde 23/08/2026 — Gods, Boomlitude e MineBoom
-ficam como corpus de regressão. Prazo aberto até 20/09/2026.
+**Estado atual:** 2 de 10 mudanças; prazo aberto até 20/09/2026.
+
+**Um único projeto em desenvolvimento ativo.** Desde 24/08/2026, o porte do BomberBoom
+para Godot é o único que se mexe; Gods, Boomlitude e MineBoom ficam parados. As dez
+mudanças, portanto, virão todas do porte — e ele é o melhor caso possível para isto: o
+mesmo jogo existe nas duas engines, então cada regra do Sara pode ser conferida contra o
+original em Defold. Foi assim que a ADR 0010 nasceu.
+
+O risco de ter um alvo só está registrado aqui para não ser descoberto no fim: se o
+porte parar, o marco para junto, e a data decide. Três projetos parados não substituem
+um em movimento — eles são corpus de falso positivo, e é isso que continuam sendo.
 
 | # | Data | Projeto | Mudança | Tempo | Conflito | Aviso útil/falso | Inspeção humana necessária | Regra ausente |
 |---:|---|---|---|---:|---|---|---|---|
@@ -73,6 +81,22 @@ físico. É o argumento mais forte a favor de escrever a regra antes de precisar
 | 2026-08-23 | BomberBoom (Defold), após calibração | 27 | 76 | 0 | 12 | refinamento da mesma baseline; não é mudança de jogo |
 | 2026-08-23 | Gods (Godot) | 450 | 67 | 0 | 1 -> 0 | integração do terceiro projeto Godot, sem mudança de jogo associada; o aviso era falso e virou a ADR 0009 |
 | 2026-08-23 | Boomlitude (Godot) | 97 | 6 | 0 | 0 | integração do quarto projeto Godot, sem mudança de jogo associada |
+| 2026-08-24 | Gods (Godot), após a ADR 0010 | 450 | 71 | 0 | 0 | rebaseline: o eixo de entrada passou a enxergar 4 declarações que eram invisíveis |
+| 2026-08-24 | Boomlitude (Godot), após a ADR 0010 | 97 | 12 | 0 | 0 | rebaseline: 6 declarações de entrada invisíveis; o inventário dobrou |
+
+## O que a ADR 0010 revelou nos projetos parados
+
+A regra de canal físico foi escrita por causa do porte, mas o rebaseline mostrou que o
+ponto cego não era só dele: o Gods tinha 4 declarações de entrada invisíveis e o
+Boomlitude tinha 6 — nele, metade do inventário. Nenhuma produziu diagnóstico. O olho
+abriu e não achou defeito nos parados, o que é o resultado que se quer de uma regra
+nova: ela precisa enxergar mais sem passar a reclamar mais.
+
+**O MineBoom não foi integrado, e isso é deliberado.** Ele não tem `.sara/` nem
+`sara.toml`. Integrar só serve para projeto que vai gerar mudança real, e ele está
+parado; como corpus de falso positivo ele já é lido direto pela biblioteca em
+`tests/corpus.rs`, sem precisar de contrato instalado. Fica registrado para não parecer
+esquecimento.
 
 ## Baseline do Gods: o único aviso, classificado
 
