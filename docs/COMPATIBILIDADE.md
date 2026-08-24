@@ -22,11 +22,23 @@ sentidos: o documento não promete o que o código não faz, nem cala o que ele 
 | Godot | entrada | `_unhandled_input` |
 | Godot | entrada | `_gui_input` |
 | Godot | entrada | `set_input_as_handled` |
+| Godot | entrada | `InputEventScreenTouch` |
+| Godot | entrada | `InputEventScreenDrag` |
+| Godot | entrada | `InputEventMouseButton` |
+| Godot | entrada | `InputEventMouseMotion` |
+| Godot | entrada | `emulate_mouse_from_touch` |
 | Defold | animação | `go.animate` |
 | Defold | animação | `gui.animate` |
 | Defold | animação | `go.cancel_animations` |
 | Defold | animação | `gui.cancel_animations` |
 | Defold | entrada | `on_input` |
+
+A entrada em Godot é reconhecida por dois caminhos independentes: por ação declarada
+na seção `[input]` do `project.godot`, e — desde a ADR 0010 — pela classe do evento
+testada no ramo, que é o que permite enxergar jogo de toque sem mapa de ações. Toque e
+mouse chegando ao mesmo efeito é conflito no perfil android, porque lá um toque entrega
+os dois eventos; `pointing/emulate_mouse_from_touch=false` desfaz isso e é a única saída
+provável pelo texto.
 
 O adapter Godot reconhece `tween_property` tanto encadeado quanto isolado, e emite a
 operação com o nome público `Tween.tween_property`. O cancelamento é reconhecido tanto

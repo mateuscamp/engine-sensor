@@ -17,7 +17,7 @@ use crate::{
 pub fn analyze(
     project: &Path,
     sources: &[ParsedSource],
-    _profiles: &[Profile],
+    profiles: &[Profile],
 ) -> Result<AdapterOutput> {
     let declared_actions = declared_actions(project)?;
     let mut output = AdapterOutput::default();
@@ -25,8 +25,20 @@ pub fn analyze(
         animation_claims(source, &mut output);
         input_claims(source, &declared_actions, &mut output);
     }
+    // O conflito de canal físico só existe onde toque e mouse são o mesmo dedo. Pelo
+    // mesmo motivo que no adapter Defold, fora do perfil android não há o que declarar.
+    if profiles.contains(&Profile::Android) {
+        for source in sources {
+            physical_channel_claims(source, &mut output);
+        }
+    }
     diagnose_animations(&output.claims, sources, &mut output.diagnostics);
     diagnose_inputs(&output.claims, sources, &mut output.diagnostics);
+    diagnose_physical_channels(
+        &output.claims,
+        emulates_mouse_from_touch(project),
+        &mut output.diagnostics,
+    );
     Ok(output)
 }
 
@@ -64,7 +76,79 @@ pub const CONSTRUCTS: &[Construct] = &[
         axis: Axis::Input,
         token: "set_input_as_handled",
     },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "InputEventScreenTouch",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "InputEventScreenDrag",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "InputEventMouseButton",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "InputEventMouseMotion",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Input,
+        token: "emulate_mouse_from_touch",
+    },
 ];
+
+/// Marca de propriedade das declarações de canal físico. Separa-as das declarações
+/// por ação: são regras diferentes sobre o mesmo eixo.
+const PHYSICAL_CHANNEL: &str = "physical_channel";
+
+/// Canal físico de onde a entrada vem.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Channel {
+    Mouse,
+    Touch,
+    Other,
+}
+
+/// Canal de uma classe de evento do Godot.
+///
+/// No Defold o canal vem do `game.input_binding`, que é obrigatório. No Godot não há
+/// arquivo equivalente quando o projeto não usa mapa de ações: o canal está na classe
+/// do evento testada no ramo. Ver ADR 0010.
+fn channel_of(event: &str) -> Channel {
+    match event {
+        "InputEventScreenTouch" | "InputEventScreenDrag" => Channel::Touch,
+        "InputEventMouseButton" | "InputEventMouseMotion" => Channel::Mouse,
+        _ => Channel::Other,
+    }
+}
+
+/// Mouse e toque são o mesmo dedo no aparelho: um toque entrega os dois eventos.
+fn physical_duplicate(first: Channel, second: Channel) -> bool {
+    matches!(
+        (first, second),
+        (Channel::Mouse, Channel::Touch) | (Channel::Touch, Channel::Mouse)
+    )
+}
+
+/// O Godot emula mouse a partir do toque por padrão. Desligar isso no `project.godot`
+/// separa os canais de verdade, e é a única saída provável pelo texto.
+fn emulates_mouse_from_touch(project: &Path) -> bool {
+    let Ok(source) = fs::read_to_string(project.join("project.godot")) else {
+        return true;
+    };
+    !source
+        .lines()
+        .filter_map(|line| line.split_once('='))
+        .any(|(chave, valor)| {
+            chave.trim().ends_with("emulate_mouse_from_touch") && valor.trim() == "false"
+        })
+}
 
 /// Sintaxe de bloco do GDScript. Fica aqui, e não no núcleo compartilhado: o
 /// `common` não deve saber qual engine está analisando (achado A1).
@@ -417,6 +501,86 @@ fn input_claims(
     }
 }
 
+/// Declarações de canal físico: o ramo testa a classe do evento e o corpo chama o
+/// efeito. Não exige mapa de ações, que é o que faltava para enxergar jogo de toque.
+fn physical_channel_claims(source: &ParsedSource, output: &mut AdapterOutput) {
+    let event_regex = Regex::new(r"\bis\s+(InputEvent[A-Za-z0-9_]*)").unwrap();
+    for function in source.functions.iter().filter(|item| {
+        matches!(
+            item.name.as_str(),
+            "_input" | "_unhandled_input" | "_gui_input"
+        )
+    }) {
+        for branch in
+            common::action_branches(function, &source.calls, &event_regex, GDSCRIPT_BLOCKS)
+        {
+            for event in branch.actions {
+                if channel_of(&event) == Channel::Other {
+                    continue;
+                }
+                for (handler, span) in &branch.handlers {
+                    output.claims.push(OwnershipClaim {
+                        resource: ResourceKey {
+                            engine: Engine::Godot,
+                            kind: ResourceKind::InputEffect,
+                            scope: source.path.clone(),
+                            target: handler.clone(),
+                            property: PHYSICAL_CHANNEL.to_owned(),
+                            profile: Some(Profile::Android),
+                        },
+                        owner: format!("{}::{}[{event}]", source.path, function.name),
+                        span: span.clone(),
+                        confidence: Confidence::Proven,
+                        operation: event.clone(),
+                        controller: handler.clone(),
+                        flow: String::new(),
+                    });
+                }
+            }
+        }
+    }
+}
+
+/// Dois canais físicos distintos chegando ao mesmo efeito. É a definição que o
+/// `ROTEIRO.md` dá do que o Sara bloqueia, e o adapter Godot não a aplicava quando o
+/// projeto não declarava ações. ADR 0010.
+fn diagnose_physical_channels(
+    all_claims: &[OwnershipClaim],
+    emulates: bool,
+    diagnostics: &mut Vec<Diagnostic>,
+) {
+    if !emulates {
+        return;
+    }
+    let mut groups: BTreeMap<ResourceKey, Vec<&OwnershipClaim>> = BTreeMap::new();
+    for claim in all_claims
+        .iter()
+        .filter(|item| item.resource.property == PHYSICAL_CHANNEL)
+    {
+        groups
+            .entry(claim.resource.clone())
+            .or_default()
+            .push(claim);
+    }
+    for claims in groups.values_mut() {
+        claims.sort_by(|left, right| left.owner.cmp(&right.owner));
+        for pair in claims.windows(2) {
+            let (first, second) = (pair[0], pair[1]);
+            if !physical_duplicate(channel_of(&first.operation), channel_of(&second.operation)) {
+                continue;
+            }
+            diagnostics.push(common::conflict_diagnostic(
+                "SAR-OWN-002",
+                Severity::Error,
+                first,
+                second,
+                "toque e mouse chegam ao mesmo efeito, e no aparelho um toque entrega os dois eventos porque o projeto não desliga emulate_mouse_from_touch",
+                "consuma o evento com set_input_as_handled, desligue emulate_mouse_from_touch em project.godot, ou trate um canal só",
+            ));
+        }
+    }
+}
+
 fn diagnose_inputs(
     all_claims: &[OwnershipClaim],
     sources: &[ParsedSource],
@@ -427,6 +591,7 @@ fn diagnose_inputs(
         item.resource.engine == Engine::Godot
             && item.resource.kind == ResourceKind::InputEffect
             && item.confidence == Confidence::Proven
+            && item.resource.property != PHYSICAL_CHANNEL
     }) {
         groups
             .entry(claim.resource.clone())

@@ -109,6 +109,52 @@ fn godot_distinguishes_sequential_and_competing_tweens() {
 ///
 /// A segunda metade do teste é a que importa: uma regra boa demais silenciaria também
 /// o caso em que só um dos lados cancela, que não serializa nada.
+/// ADR 0010. O eixo de entrada só enxergava projeto com mapa de ações declarado, e o
+/// porte do BomberBoom não usa mapa: despacha `InputEvent` cru. Metade da ferramenta
+/// era cega no único projeto em desenvolvimento.
+///
+/// As duas metades verdes é que dão sentido à vermelha: desligar a emulação separa os
+/// canais de verdade, e tratar os dois canais não é conflito quando cada um cai num
+/// efeito diferente.
+#[test]
+fn godot_detects_touch_and_mouse_reaching_the_same_effect() {
+    let (android_code, android, _) =
+        json_report("godot_input_channel_red", &["--profile", "android"]);
+    assert_eq!(android_code, 1);
+    assert!(
+        android["diagnostics"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .any(|item| { item["rule"] == "SAR-OWN-002" && item["severity"] == "error" }),
+        "{android:#}"
+    );
+
+    let (desktop_code, desktop, _) =
+        json_report("godot_input_channel_red", &["--profile", "desktop"]);
+    assert_eq!(
+        desktop_code, 0,
+        "sem toque não há canal duplicado: {desktop:#}"
+    );
+    assert!(desktop["diagnostics"].as_array().unwrap().is_empty());
+
+    let (green_code, green, _) =
+        json_report("godot_input_channel_green", &["--profile", "android"]);
+    assert_eq!(
+        green_code, 0,
+        "emulate_mouse_from_touch=false separa os canais: {green:#}"
+    );
+
+    let (separate_code, separate, _) = json_report(
+        "godot_input_channel_separate_green",
+        &["--profile", "android"],
+    );
+    assert_eq!(
+        separate_code, 0,
+        "canais distintos em efeitos distintos não são conflito: {separate:#}"
+    );
+}
+
 #[test]
 fn godot_recognizes_centralized_owner_cancellation() {
     let (code, report, _) = json_report("godot_animation_centralized_owner_green", &[]);

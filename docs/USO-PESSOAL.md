@@ -17,12 +17,14 @@ Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança e
 Defold não conta para a contagem. O uso 1 abaixo é anterior à decisão e permanece
 registrado.
 
-**Estado atual:** 1 de 10 mudanças; 4 projetos Godot integrados; prazo aberto até 20/09/2026.
+**Estado atual:** 2 de 10 mudanças; 4 projetos Godot integrados, mas só o porte do
+BomberBoom em desenvolvimento ativo desde 23/08/2026 — Gods, Boomlitude e MineBoom
+ficam como corpus de regressão. Prazo aberto até 20/09/2026.
 
 | # | Data | Projeto | Mudança | Tempo | Conflito | Aviso útil/falso | Inspeção humana necessária | Regra ausente |
 |---:|---|---|---|---:|---|---|---|---|
 | 1 | 2026-08-23 | porte BomberBoom (Godot) | bomba visual com Tween configurado em cadeia fluente | < 1 s | nenhum após correção | nenhum aviso; a primeira execução omitiu 2 declarações | sim, para comparar o inventário com o diff | parser perdia `tween_property` seguido de `set_trans`/`set_ease`; fixture adicionada |
-| 2 | | | | | | | | |
+| 2 | 2026-08-23 | porte BomberBoom (Godot) | `emulate_mouse_from_touch=false`: toque e mouse caíam no mesmo `_dedo` | < 1 s | erro comprovado, corrigido | 0 falsos | não, o diagnóstico bastou | nenhuma; a regra acabara de nascer pela ADR 0010 |
 | 3 | | | | | | | | |
 | 4 | | | | | | | | |
 | 5 | | | | | | | | |
@@ -34,6 +36,33 @@ registrado.
 
 O Sara pode permanecer privado ao final. Nova etapa pública exige nova decisão;
 não é continuação automática deste registro.
+
+## O uso 2 e sua procedência
+
+O uso 2 não veio do trabalho normal: veio de uma regra que o próprio Sara acabara de
+ganhar. Registrado assim de propósito, porque a diferença importa para julgar o marco.
+
+A sequência foi: a integração do porte mostrou zero declaração de entrada contra sete
+do original em Defold; a investigação achou a causa — o adapter Godot exigia mapa de
+ações, e o porte despacha `InputEvent` cru; a [ADR 0010](decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md)
+fez a regra enxergar canal por classe de evento; e a regra nova, na primeira execução,
+achou em `main/tabuleiro.gd` toque e mouse caindo no mesmo `_dedo`.
+
+**É o mesmo defeito que o original em Defold tinha**, e que está no `estudo/registros/defold.md`
+como uma das duas regressões históricas do Portão 0: "Todo toque era entregue duas vezes
+no Android", duas bombas por toque, invisível no desktop onde o Estágio A verificou tudo.
+O porte reproduziu o defeito em outra engine, e reproduziu junto o ponto cego que o
+escondia.
+
+Não dava bomba dupla hoje: `_dedo` zera `_carregando_em` antes de `jogar`, e a guarda
+`if alvo != Grade.FORA_DA_GRADE` engolia a segunda passada. Correto por propriedade da
+máquina de estado, não por exclusão de canal. Corrigido com uma linha no `project.godot`,
+porque o `if/elif` do `tabuleiro.gd` já tratava os dois canais e não precisava que o
+motor fabricasse o segundo.
+
+Uma fitness function que acha defeito no minuto em que entra apareceu três vezes neste
+projeto: a F5 com as extensões, a F7 com as construções, e agora a ADR 0010 com o canal
+físico. É o argumento mais forte a favor de escrever a regra antes de precisar dela.
 
 ## Baselines que não contam como mudança
 

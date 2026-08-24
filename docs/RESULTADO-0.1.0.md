@@ -16,7 +16,7 @@ marca, SDK, runtime e engine própria continuam fora do escopo.
 | Medida | Resultado | Critério |
 |---|---:|---:|
 | testes unitários | 5 aprovados | todos aprovados |
-| cenários CLI e fixtures | 15 aprovados | todos aprovados |
+| cenários CLI e fixtures | 16 aprovados | todos aprovados |
 | fitness functions de governança | 13 aprovadas | toda ADR com conformidade executável |
 | projetos reais analisados | 5 de 5 | 5 de 5 |
 | arquivos do corpus aceitos ou recusados explicitamente | 694 de 694 | sem omissão silenciosa |
@@ -25,7 +25,7 @@ marca, SDK, runtime e engine própria continuam fora do escopo.
 | variação nas cinco varreduras | 0,64–0,74 s | registrar estabilidade |
 | JSON repetido | idêntico byte a byte | determinístico |
 | execução sem rede | código 0 em namespace sem rede | offline |
-| binário distribuível | 3.877.536 bytes | Linux x86_64, sem Python/Node |
+| binário distribuível | 3.892.496 bytes | Linux x86_64, sem Python/Node |
 | portão em projeto ativo | porte BomberBoom | `AGENTS.md` e `CLAUDE.md` ativos |
 | portões copiáveis | Godot e Defold | entrada ausente reprova explicitamente |
 
@@ -34,8 +34,8 @@ namespace Linux sem rede. As dependências dinâmicas restantes são apenas bibl
 de sistema do Linux; não há runtime de linguagem externo.
 
 *(Atualizado em 23/08/2026: o artefato em `dist/` foi reconstruído três vezes no mesmo
-dia — pela fronteira da Fase 1, pelo fechamento do A7 e pela regra da ADR 0009 —, e são
-40.552 bytes a mais que o binário original do lançamento. O comportamento foi verificado
+dia — pela fronteira da Fase 1, pelo fechamento do A7 e pelas regras das ADRs 0009 e 0010 —,
+e são 55.512 bytes a mais que o binário original do lançamento. O comportamento foi verificado
 a cada vez rodando o binário anterior e o novo contra os cinco projetos do corpus: as
 declarações são idênticas em todos, e a única mudança de diagnóstico em toda a sequência
 é o aviso falso do `gods` desaparecendo. O `strip` que produz este tamanho vive em
