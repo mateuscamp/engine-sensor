@@ -83,6 +83,7 @@ físico. É o argumento mais forte a favor de escrever a regra antes de precisar
 | 2026-08-23 | Boomlitude (Godot) | 97 | 6 | 0 | 0 | integração do quarto projeto Godot, sem mudança de jogo associada |
 | 2026-08-24 | Gods (Godot), após a ADR 0010 | 450 | 71 | 0 | 0 | rebaseline: o eixo de entrada passou a enxergar 4 declarações que eram invisíveis |
 | 2026-08-24 | Boomlitude (Godot), após a ADR 0010 | 97 | 12 | 0 | 0 | rebaseline: 6 declarações de entrada invisíveis; o inventário dobrou |
+| 2026-08-24 | porte BomberBoom (Godot), após a ADR 0010 | 76 | 22 | 0 | 0 | rebaseline no commit `303c061`; ver a atribuição abaixo |
 
 ## O que a ADR 0010 revelou nos projetos parados
 
@@ -97,6 +98,33 @@ nova: ela precisa enxergar mais sem passar a reclamar mais.
 parado; como corpus de falso positivo ele já é lido direto pela biblioteca em
 `tests/corpus.rs`, sem precisar de contrato instalado. Fica registrado para não parecer
 esquecimento.
+
+## Rebaseline do porte: separando o que é o jogo do que é a ferramenta
+
+O porte saiu de 69 arquivos e 5 declarações para 76 e 22. O salto parece grande e é
+tentador creditá-lo à ferramenta, mas as duas causas são distintas e misturá-las
+corromperia a medição do marco.
+
+**As 20 de animação são o jogo crescendo.** A baseline anterior foi tirada em
+`70df43f`, às 16:48 de 23/08, no próprio commit do uso 1 — ou seja, já incluía a
+correção da cadeia fluente do `tween_property`. Quatro arquivos entraram depois dela:
+`explosao_na_tela.gd` (17:32, 2 declarações), `robo_na_tela.gd` (18:11, 3),
+`reacao_da_peca.gd` e `powerup_na_tela.gd` (19:24, 6 e 5). Dezesseis das vinte vêm daí.
+O Sara não passou a ver mais animação; passou a haver mais animação.
+
+**As 2 de entrada são a ferramenta.** Elas não existiam até a
+[ADR 0010](decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md): antes dela o eixo
+de entrada exigia mapa de ações declarado no `project.godot`, e o porte despacha
+`InputEvent` cru. A entrada do projeto inteiro era invisível, e o que estava escondido
+nesse ponto cego era o defeito do uso 2.
+
+A primeira versão desta nota atribuía o salto de animação à correção da cadeia fluente.
+Estava errada, e o `git log` do porte desmentiu antes de a nota ser publicada. Fica
+registrado porque a tentação é sistemática: numa medição que existe para julgar a
+utilidade de uma ferramenta, todo número que cresce parece obra dela.
+
+Medição tomada às 11:41 de 24/08, com o porte em `303c061`. O diário do próprio porte,
+em `.sara/USOS.md`, é mantido pela sessão que trabalha lá.
 
 ## Baseline do Gods: o único aviso, classificado
 
