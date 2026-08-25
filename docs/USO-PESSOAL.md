@@ -206,6 +206,73 @@ mesmo `_dedo` **não está nesta lista** — e a versão dele em Defold foi um d
 que chegou ao jogador, com duas bombas por toque. Ele não virou a pegadinha de número
 doze porque a Sara o achou antes. Uma lista de pegadinhas só registra o que passou.
 
+## O recorte é grande o bastante? — previsão registrada em 25/08/2026
+
+Isto **não é conclusão do marco**. O `RESULTADOS §4` proíbe pontuar antes de toda a
+evidência comparável existir, e faltam oito mudanças reais. É uma **previsão datada**,
+escrita agora justamente para poder ser conferida depois: previsão anotada antes da
+evidência é testável; conclusão tirada cedo é contaminação. Se o portão discordar do que
+está abaixo, o erro fica visível.
+
+### A medição
+
+A leitura crua é "zero de onze", e ela é enganosa. A pergunta certa é quantos defeitos
+**só uma pessoa olhando o aparelho** podia achar, porque é essa a atenção escassa que o
+projeto inteiro existe para economizar.
+
+Das onze pegadinhas, quatro são dessa classe: a 3 (o toque não faz nada), a 5 (tela
+cinza), a 6 ("quem viu foi o autor, olhando o jogo no aparelho") e a 7 ("jogando no
+aparelho"). As outras sete se anunciaram sozinhas — travaram um comando, imprimiram erro,
+quebraram um build.
+
+Somando os dois defeitos históricos do BomberBoom Defold — a bomba dupla por toque e as
+duas `gui.animate` que se cancelavam caladas, ambos sobreviventes de 107 asserções verdes
+e de todo o Estágio A no desktop:
+
+**Seis defeitos na classe "só olho humano acha". A Sara cobre dois.** Um terço, com
+amostra de seis.
+
+### O que puxa a favor
+
+Os dois que ela cobre são os dois que **ninguém tinha achado**. As outras quatro custaram
+tempo e foram encontradas; essas duas passaram por tudo que era automático. E o recorte
+não foi escolhido no chute — foi desenhado olhando o que deu errado num jogo real.
+
+### O que puxa contra
+
+Quatro dos seis ela não vê, e não é imaturidade: `mouse_filter` é configuração de nó,
+arte errada é string válida apontando para o arquivo errado, gemas encavaladas são dois
+relógios com um dono só. Nenhum vira conflito de posse por mais que a ferramenta cresça.
+Cobrir isso seria outra ferramenta, não uma versão melhor desta.
+
+E há o silêncio dos números. Na data da ADR 0005, os 667 arquivos Godot do corpus
+produziram zero erro e zero aviso. O `gods` tem 450 arquivos, 71 declarações e zero
+diagnóstico. O `mineboom` tem zero declaração — sobre ele a ferramenta não tem o que
+dizer.
+
+### A previsão
+
+**O recorte é pequeno demais para ser produto e grande o bastante para ser portão
+privado.** Dois defeitos que ninguém mais achou, num jogo só, já pagaram o custo de um
+binário. Não pagam uma engine, nem um lançamento, nem preço.
+
+Se isso se confirmar, o desfecho do portão será manter privado — que é uma das três
+saídas que o `RESULTADO-0.1.0.md` já autoriza, e não uma quarta inventada agora.
+
+Convém notar, sem comemorar: é o que a ADR 0001 decidiu antes de qualquer medição, ao
+mandar validar mecanismo antes de construir engine. A medição está caminhando para dar
+razão a ela. Isso é boa notícia sobre o método e notícia morna sobre o produto — e as
+duas coisas contam.
+
+### O que derrubaria a previsão
+
+- Uma das oito mudanças restantes produzir um verdadeiro positivo que teria chegado ao
+  jogador. Isso mudaria a conta de dois para três num denominador que também cresce.
+- A medição Android mostrar que a classe de posse é mais comum no aparelho do que o
+  desktop deixa ver.
+- O contrário também vale: as oito passarem sem nada útil. Aí o recorte não é pequeno
+  demais para produto — é pequeno demais para portão, e o desfecho é congelar.
+
 ## Classificação da baseline Defold
 
 - **7 falsos removidos:** laços com variáveis locais independentes, cancelamento que
