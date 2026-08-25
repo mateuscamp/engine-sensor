@@ -352,10 +352,16 @@ verdes, clippy sem aviso.
    quando a baseline do `gods` mostrou que o padrão de dono centralizado — a própria
    remediação que o `SAR-OWN-001` recomenda — virava aviso falso. Uma terceira exceção
    obriga a rever a Fase 2 inteira em vez de ampliá-la de novo.
-9. Dois dos cinco projetos Godot fecharam o corpus com zero declaração
-   (`mineboom` com 0, `boomlitude` com 4). Se as dez mudanças não produzirem nenhum
-   verdadeiro positivo em Godot, isso é um resultado, e ele é sobre o Sara, não sobre
-   os projetos.
+9. O corpus Godot era quase mudo quando esta linha foi escrita: `mineboom` com zero
+   declaração e `boomlitude` com quatro. A ADR 0010 mudou parte disso — o eixo de
+   entrada passou a enxergar, e o `boomlitude` foi para doze, metade delas de entrada.
+   O `mineboom` continua em zero. A conclusão que a linha carregava permanece de pé e
+   fica mais afiada: se as dez mudanças não produzirem nenhum verdadeiro positivo em
+   Godot, isso é um resultado sobre o Sara, não sobre os projetos — e agora sem a
+   desculpa de que ele estava olhando com um olho só.
+
+   *(Atualizado em 25/08/2026. Os números originais eram de antes da ADR 0010 e
+   descreviam um corpus que a ferramenta ainda não conseguia ler inteiro.)*
 
 ### Portão do Marco 6
 
