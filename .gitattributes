@@ -1,0 +1,5 @@
+# Os três artigos são texto, não código. O GitHub já exclui Markdown da barra de
+# linguagens por considerá-lo prosa, e sem esta linha ele contaria os artigos como
+# se fossem fonte — 86 KB de HTML contra 119 KB de Rust davam 40% da barra, num
+# repositório cuja escrita mora sobretudo nos 273 KB de Markdown que não aparecem.
+artigos/*.html linguist-documentation
