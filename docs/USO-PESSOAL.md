@@ -163,6 +163,49 @@ isso explicitamente: a contagem não sobe por causa dela. O número corrente est
 cabeçalho, e só lá — repeti-lo aqui foi o que fez esta seção contradizer o topo do
 arquivo por algumas horas.
 
+## Observação: as onze pegadinhas do porte, e quantas a Sara pegaria
+
+Não é uso do Marco 6 — não houve mudança real associada. É evidência sobre o **tamanho
+do recorte** da ferramenta, colhida de `docs/PEGADINHAS.md` do porte em 25/08/2026, onde
+o autor registrou onze defeitos pagos ao longo do porte.
+
+**De onde vêm:**
+
+| origem | quantas | quais |
+|---|---:|---|
+| Godot, semântica do motor | 6 | `--headless --script` trava para sempre se o script não compila; `ColorRect` engole todo toque pelo `mouse_filter` padrão; `--headless` não tem renderizador e não deixa capturar; caminho de arte como string literal que a tipagem estrita não confere; o motor reescreve o `project.godot` e apaga comentário; chamar antes do `_ready` mata todo `@onready` |
+| ambiente, nenhuma engine | 3 | JDK embutido no editor fora do `PATH`; emulador com swiftshader mostrando tela cinza; `adb` mudando de porta a cada reconexão |
+| ferramenta do próprio autor | 1 | o portão achava o defeito e morria antes de contar |
+| **o porte, de fato** | **1** | gemas encavaladas: a cascata resolve num quadro só no domínio — divergência declarada do porte — e a cena reconstruía o compasso pela metade |
+
+Uma em onze é atrito de porte. Fazer em Godot do zero teria poupado essa e cobrado as
+outras dez igual.
+
+**Seis das onze falham caladas.** As de número 3, 5, 6, 7, 10 e 11 trazem, escrito pelo
+autor, "em silêncio", "nenhum erro", "não acusa nada" ou "sintoma: nenhum". Isso
+contradiz o `RESULTADOS.md`, que concluiu que Godot falha "alto e opaco" e que quem falha
+mudo é o Defold. O estudo já se protegia dessa contradição: uma execução por engine, e
+"com n=1, um dia ruim do agente é indistinguível de propriedade da engine". Dias de porte
+real são a amostra maior, e ela discorda.
+
+**E a Sara não pegaria nenhuma das onze.** Nenhuma é conflito de posse: `mouse_filter` é
+configuração de nó, arte errada é string literal válida, os dois relógios das gemas são
+compasso de cena com um dono só. Ela vigia uma porta específica num corredor com seis
+portas caladas.
+
+As duas leituras são verdadeiras ao mesmo tempo, e o portão do Marco 6 vai ter que julgar
+as duas juntas:
+
+- **A favor da premissa.** Seis defeitos passaram por suíte verde e só apareceram quando
+  uma pessoa olhou o aparelho. É exatamente a lacuna que o projeto existe para nomear.
+- **Contra o escopo.** Ela cobre uma fatia estreita dessa lacuna, e a lista mostra o
+  tamanho da fatia com números em vez de impressão.
+
+**O contraponto honesto, para não pesar só de um lado:** o defeito de toque e mouse no
+mesmo `_dedo` **não está nesta lista** — e a versão dele em Defold foi um defeito real
+que chegou ao jogador, com duas bombas por toque. Ele não virou a pegadinha de número
+doze porque a Sara o achou antes. Uma lista de pegadinhas só registra o que passou.
+
 ## Classificação da baseline Defold
 
 - **7 falsos removidos:** laços com variáveis locais independentes, cancelamento que
