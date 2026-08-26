@@ -27,3 +27,4 @@ Estes riscos pertencem ao Marco 7 e não alteram o aceite do verificador `0.1.0`
 | Julgamento multimodal produzir falsa aprovação | 3 | 2 | 6 | regressões injetadas, oráculo independente e nenhuma reprovação baseada só em opinião visual |
 | Spike crescer até SDK ou runtime | 3 | 2 | 6 | ADR 0004 limita uma cena, uma engine e uma interface provisória |
 | Execução passar a depender de serviço remoto | 3 | 1 | 3 | Sara apenas produz artefatos locais; o agente consumidor fica fora do binário |
+| Ferramenta existente já entregar a unidade de evidência do spike | 3 | 3 | 9 | **materializado em 26/08/2026**: a Defold publicou a `extension-automation-bridge` oficial e há pelo menos quatro implementações comunitárias em Godot. Mitigação: [ADR 0011](decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) exige comparação escrita antes de o Marco 7 começar |

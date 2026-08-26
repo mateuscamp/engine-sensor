@@ -497,8 +497,8 @@ fn adr_0006_codigos_de_saida_continuam_exercitados() {
 /// é o experimento do Marco 7, que pode exigir Godot instalado sem contaminar o portão.
 const BINARIOS_AUTORIZADOS: &[&str] = &["sara", "sara-observe"];
 
-#[test]
-fn adr_0007_apenas_binarios_autorizados() {
+/// Nomes de binário lidos do `Cargo.toml`.
+fn binarios_declarados() -> Vec<String> {
     let manifesto = ler("Cargo.toml");
     let mut dentro = false;
     let mut nomes = Vec::new();
@@ -520,7 +520,47 @@ fn adr_0007_apenas_binarios_autorizados() {
             );
         }
     }
-    let intrusos = nomes
+    nomes
+}
+
+// ---------------------------------------------------------------------------
+// ADR 0011 - o Marco 7 não começa sem comparação com ferramenta existente
+// ---------------------------------------------------------------------------
+
+/// Freio, não escopo. Em 26/08/2026 descobriu-se que a unidade de evidência que a ADR
+/// 0004 manda construir já existe pronta: a `extension-automation-bridge` oficial da
+/// Defold e pelo menos quatro implementações comunitárias em Godot. A ADR 0004 não tem
+/// seção de opções consideradas e autorizou construir sem perguntar se já existia.
+///
+/// Este teste garante que o segundo binário não nasça antes da ADR que compara.
+#[test]
+fn adr_0011_observe_exige_adr_de_comparacao() {
+    if !binarios_declarados()
+        .iter()
+        .any(|nome| nome == "sara-observe")
+    {
+        return;
+    }
+    let comparacao = fs::read_dir(raiz().join("docs/decisoes"))
+        .expect("docs/decisoes")
+        .filter_map(|entrada| entrada.ok())
+        .any(|entrada| {
+            let nome = entrada.file_name().to_string_lossy().to_lowercase();
+            nome.contains("comparacao") && nome.ends_with(".md") && !nome.starts_with("0011")
+        });
+    assert!(
+        comparacao,
+        "o binário `sara-observe` existe, mas não há ADR de comparação em docs/decisoes/. \
+         Pela ADR 0011 o Marco 7 não começa sem confrontar o spike da ADR 0004, item a item \
+         contra as sete fitness functions dela, com as ferramentas que já entregam a mesma \
+         unidade de evidência — a extension-automation-bridge oficial da Defold e as \
+         implementações comunitárias em Godot. Escreva a ADR de comparação primeiro."
+    );
+}
+
+#[test]
+fn adr_0007_apenas_binarios_autorizados() {
+    let intrusos = binarios_declarados()
         .into_iter()
         .filter(|nome| !BINARIOS_AUTORIZADOS.contains(&nome.as_str()))
         .collect::<Vec<_>>();

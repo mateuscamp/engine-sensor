@@ -4,6 +4,9 @@
 **Data:** 23 de agosto de 2026
 **Decisor:** proprietário do Sara
 **Escopo:** experimento posterior ao Marco 6
+**Restringida por:** [ADR 0011](0011-marco-7-exige-comparacao-com-ferramenta-existente.md) — o
+Marco 7 não começa sem uma ADR que compare este spike contra as ferramentas existentes.
+Esta ADR não lista opções consideradas, e a ferramenta existente era alternativa viva.
 
 ## Contexto
 
