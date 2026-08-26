@@ -316,6 +316,7 @@ Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Treze tes
 | F5 | A7, fonte única | o scanner aceita extensão que o `COMPATIBILIDADE.md` não declara |
 | F6 | ADR 0005, Defold congelado | some qualquer uma das quatro fixtures ou dos dois cenários históricos |
 | F7 | A7, fonte única | adapter e `COMPATIBILIDADE.md` divergem sobre as construções reconhecidas, em qualquer um dos dois sentidos; token declarado que não existe no fonte; a lista do Defold cresce |
+| F8 | ADR 0011, freio do Marco 7 | o binário `sara-observe` aparece sem existir a ADR que compara o spike contra as ferramentas que já entregam a mesma unidade de evidência |
 
 F3 é a que merece explicação. Ela não proíbe variação por engine: declara a lista dos
 lugares onde ela pode existir e falha quando a lista cresce em silêncio. É a diferença
