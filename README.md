@@ -86,6 +86,7 @@ um atraso.
 | [0009](docs/decisoes/0009-baseline-em-projeto-real-expoe-regra-ausente.md) | baseline em projeto real também autoriza regra ausente |
 | [0010](docs/decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md) | canal físico de entrada em Godot, sem exigir mapa de ações |
 | [0011](docs/decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) | o Marco 7 não começa sem comparação com ferramenta existente |
+| [0012](docs/decisoes/0012-sara-e-corpus-coevoluem.md) | Sara e corpus coevoluem; a evolução do instrumento é registrada |
 
 ## Os artigos
 
