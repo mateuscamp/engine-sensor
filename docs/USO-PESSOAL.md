@@ -16,42 +16,77 @@ real, e o encerramento legítimo passa a ser manter só o kit ou congelar a ferr
 **A Sara muda durante o marco, e isso é o método — não um descuido.** Pela
 [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md), a obrigação deixou de ser "não
 altere o instrumento" e passou a ser "não altere o instrumento sem deixar evidência". Por
-isso a coluna **Sara** existe: ela diz qual instrumento respondeu a cada caso, e os dez
-não são uma série controlada. Quando um caso alterar a ferramenta, uma nota numerada
-abaixo da tabela registra o que faltava, o que mudou e o efeito no corpus inteiro.
+isso a coluna **Sara** existe: ela diz qual instrumento respondeu a cada caso. Quando um
+caso alterar a ferramenta, uma nota numerada abaixo da tabela registra o que faltava, o
+que mudou e o efeito no corpus inteiro.
+
+**E a série saiu mais controlada do que a ADR 0012 temia:** doze dos treze casos usaram o
+mesmo binário, `f1f4d5f`. Nenhum commit tocou `src/` depois de 23/08. A liberdade de
+mudar o instrumento durante o marco foi autorizada e quase não foi exercida — o que é um
+resultado sobre o método, e está registrado como tal em vez de virar acaso.
 
 A coluna que era "Regra ausente" virou **"Capacidade ausente"**: hoje é regra estática de
 posse, amanhã pode ser observação de runtime, entrada, determinismo ou estado visual.
 
 Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança em projeto
-Defold não conta para a contagem. Nenhum uso registrado até aqui é Defold — os três são
-do porte, que é Godot —, então a regra ainda não excluiu nada; ela vale para os que
-vierem.
+Defold não conta para a contagem. Nenhum uso registrado é Defold — os treze são do porte,
+que é Godot —, então a regra não excluiu nada; ela vale para os que vierem.
 
-**Estado atual:** 3 de 10 mudanças; prazo aberto até 20/09/2026.
+**Estado atual: 13 de 10 mudanças. O critério de conclusão está atingido, e o portão do
+Marco 6 está aberto** — vinte e três dias antes do critério de parada.
 
-**Um único projeto em desenvolvimento ativo.** Desde 24/08/2026, o porte do BomberBoom
-para Godot é o único que se mexe; Gods, Boomlitude e MineBoom ficam parados. As dez
-mudanças, portanto, virão todas do porte — e ele é o melhor caso possível para isto: o
-mesmo jogo existe nas duas engines, então cada regra do Sara pode ser conferida contra o
-original em Defold. Foi assim que a ADR 0010 nasceu.
+Atingir a contagem **não fecha o marco**: fecha a coleta de evidência. O portão pede uma
+decisão entre manter privado, congelar ou propor nova ADR, e essa decisão é do
+proprietário. Este arquivo agora carrega a evidência que ela precisa julgar, e não a
+conclusão.
 
-O risco de ter um alvo só está registrado aqui para não ser descoberto no fim: se o
-porte parar, o marco para junto, e a data decide. Três projetos parados não substituem
-um em movimento — eles são corpus de falso positivo, e é isso que continuam sendo.
+> ### ⚠️ E há uma contradição escrita que decide se a contagem vale
+>
+> O [`RESULTADO-0.1.0.md`](RESULTADO-0.1.0.md), de 23/08, diz: *"O Marco 6 exige dez
+> mudanças relevantes **em pelo menos dois projetos**"*. **As treze são todas do porte.**
+>
+> Este arquivo e o [`ROTEIRO.md`](ROTEIRO.md) dizem outra coisa: "dez mudanças reais em
+> projetos Godot", sem exigir que se espalhem. E o ROTEIRO vai além — desde 24/08 ele
+> registra, de propósito, que *"as dez mudanças virão todas do porte, e isso é ao mesmo
+> tempo a força e o risco do marco"*. Ou seja: o alvo único foi aceito por escrito, depois
+> da frase que exige dois projetos.
+>
+> **A leitura tardia governa, e por isso a contagem está registrada como atingida.** Mas a
+> frase antiga nunca foi riscada, e a diferença não é de redação:
+>
+> - pela leitura do ROTEIRO, o critério está cumprido e o portão está aberto;
+> - pela leitura do `RESULTADO-0.1.0.md`, ele **não** está — falta um segundo projeto com
+>   mudança real, e nenhum dos três parados se mexeu desde 24/08.
+>
+> Riscar uma das duas é decisão do proprietário, não conserto de redação, porque ela
+> decide se o portão pode ser julgado agora ou se a data de 20/09 volta a mandar.
+
+**Um único projeto em desenvolvimento ativo, e as treze mudanças vieram todas dele.**
+Desde 24/08/2026 o porte do BomberBoom para Godot é o único que se mexe; Gods, Boomlitude
+e MineBoom ficam parados. O risco de ter um alvo só estava registrado aqui para não ser
+descoberto no fim — ele não se materializou como parada, mas continua valendo para a
+leitura do portão: **treze mudanças de um projeto só não são treze projetos.** O que se
+mediu foi a Sara acompanhando um jogo, não a Sara acompanhando um corpus.
+
+A contrapartida é a que já estava escrita: o mesmo jogo existe nas duas engines, então
+cada regra pôde ser conferida contra o original em Defold. Foi assim que a ADR 0010
+nasceu.
 
 | # | Data | **Sara** | Projeto | Mudança | Tempo | Conflito | Aviso útil/falso | Inspeção humana necessária | Capacidade ausente |
 |---:|---|---|---|---|---:|---|---|---|---|
 | 1 | 2026-08-23 | `2603b30` | porte BomberBoom (Godot) | bomba visual com Tween configurado em cadeia fluente | < 1 s | nenhum após correção | nenhum aviso; a primeira execução omitiu 2 declarações | sim, para comparar o inventário com o diff | parser perdia `tween_property` seguido de `set_trans`/`set_ease`; fixture adicionada |
 | 2 | 2026-08-23 | `f1f4d5f` | porte BomberBoom (Godot) | `emulate_mouse_from_touch=false`: toque e mouse caíam no mesmo `_dedo` | < 1 s | erro comprovado, corrigido | 0 falsos | não, o diagnóstico bastou | nenhuma; a regra acabara de nascer pela ADR 0010 |
-| 3 | 2026-08-28 | `f1f4d5f` | porte BomberBoom (Godot) | a aranha que rouba a bomba (D-046/D-047): `RoboNaTela` vira subclasse de `BichoNaTela`, mais `AranhaNaTela`, `NinhoNaTela`, as duas entradas, e a teia que lentifica o pavio | < 1 s | nenhum | 0 úteis / 0 falsos | sim, e ela decidiu o caso: dos nove defeitos, portão pegou um e o autor achou dois — jogando | três, e as três dentro da família que a Sara já modela: `pause()`/`play()`, `set_speed_scale` e profundidade por ordem de filho. Ver [CASO-DA-ARANHA.md](CASO-DA-ARANHA.md) |
-| 4 | | | | | | | | | |
-| 5 | | | | | | | | | |
-| 6 | | | | | | | | | |
-| 7 | | | | | | | | | |
-| 8 | | | | | | | | | |
-| 9 | | | | | | | | | |
-| 10 | | | | | | | | | |
+| 3 | 2026-08-24 | `f1f4d5f` | porte BomberBoom (Godot) | pavio que SOME em vez de virar carvão: o shader apaga do sprite a corda já queimada | < 1 s | nenhum; 22 declarações | 0 úteis / 0 falsos | sim — três momentos do pavio comparados em captura, porque o portão não vê fragmento | shader não entra no inventário de animação: a corda encurta por `set_shader_parameter`, não por Tween |
+| 4 | 2026-08-24 | `f1f4d5f` | porte BomberBoom (Godot) | halo pulsante na gema de lvl 3 (D-034), fogo reduzido a meia célula, power-up acima da gema | < 1 s | nenhum; 24 declarações | 0 úteis / 0 falsos | sim — o halo herdou a escala do pai e sumiu atrás da gema; só a captura mostrou | nenhuma |
+| 5 | 2026-08-24 | `f1f4d5f` | porte BomberBoom (Godot) | `_encenar` dividido em três e os enfeites da peça extraídos para `EnfeitesDaPeca` | < 1 s | nenhum; 24 declarações, as mesmas de antes | 0 úteis / 0 falsos | não — as declarações ficaram idênticas às do uso 4, e a suíte ganhou 5 casos que cobram o halo por portão em vez de olho | nenhuma; é o caso em que o inventário idêntico **é** a prova da refatoração |
+| 6 | 2026-08-25 | `f1f4d5f` | porte BomberBoom (Godot) | barra de fúria: de `value = partida.furia`, um estado sem animação, para os TRÊS do original animados por `Tween` | < 1 s | nenhum; 25 declarações | **1 útil** / 0 falsos | sim — só a captura distingue barra parada de barra animando | nenhuma. O `SAR-PARSE-001` acusou `^"value"` como propriedade dinâmica que não consegue provar; trocado por `"value"` textual, o aviso sumiu. **A remediação sugerida estava certa** |
+| 7 | 2026-08-25 | `f1f4d5f` | porte BomberBoom (Godot) | o ESTOURO ao armar: escala 1,10 × 3,4 com volta `OUTELASTIC` de 0,70 s, mais o clarão do trilho | < 1 s | nenhum; 26 declarações | 0 úteis / 0 falsos | sim, e foi decisiva — o defeito era um `Container` zerando o `scale` do filho, e só a sonda quadro a quadro o viu | posse de `scale` entre `Container` e `Tween`: o container reescreve a propriedade a cada layout, e a Sara não o modela como dono |
+| 8 | 2026-08-25 | `f1f4d5f` | porte BomberBoom (Godot) | console de testes: cena própria que hospeda `main/tabuleiro.tscn` e abre um painel no **F1** | < 1 s | nenhum; 27 declarações | 0 úteis / 0 falsos | sim — a sonda `conferir_console.gd` pegou o painel mostrando a ficha de uma posição com o tabuleiro de outra | **tecla não é canal de entrada**: o `_unhandled_input[InputEventKey]` do F1 não virou declaração nenhuma. Sem risco aqui, mas um projeto de teclado ficaria sem cobertura de entrada e sem aviso |
+| 9 | 2026-08-25 | `f1f4d5f` | porte BomberBoom (Godot) | a piscada do AUXILIAR (D-041): `DicasDoAuxiliar` desenha as conexões e anima `modulate:a` uma vez por assentamento | < 1 s | nenhum; 29 declarações | 0 úteis / 0 falsos | sim — só a captura mostra se a barra translúcida deixa a gema legível | nenhuma |
+| 10 | 2026-08-25 | `f1f4d5f` | porte BomberBoom (Godot) | a LOJINHA do meta (D-023): cartão opcional que solta ao ser tocado de novo, e a marcação passa a sair de `set_meta` | < 1 s | nenhum; 29 declarações | 0 úteis / 0 falsos | sim — e a prova de cena pegou o que nenhum teste viu: o JSON do Godot devolve todo número como **float**, e o save real zerava o progresso | posse de estado de UI entre `Button.button_pressed` e a seção que é a fonte da verdade: a Sara modela animação, não seleção |
+| 11 | 2026-08-25 | `f1f4d5f` | porte BomberBoom (Godot) | a CERIMÔNIA DA GARRAFA (D-009): um `Tween` encadeia escorrer → encher → estalar → sobrar, uma etapa por fragmento | < 1 s | nenhum; 31 declarações | 0 úteis / 0 falsos | sim, e decidiu duas coisas: o anel sumia sobre a gema dourada, e só a captura mostra o compasso da barra | encadeamento de `tween_callback().bind()` com `tween_property` no mesmo Tween: a Sara vê a propriedade, não a sequência |
+| 12 | 2026-08-26 | `f1f4d5f` | porte BomberBoom (Godot) | brasas do estouro com `use_fixed_seed`/`seed` derivado da célula, e o portão de cena passando a exigir `--fixed-fps 60` | < 1 s | nenhum; 27 claims em 102 arquivos | 0 úteis / 0 falsos | sim, e ela **é** a medida: três rodadas do portão comparadas byte a byte, de 9 capturas instáveis para 0 | semente de `GPUParticles2D` não entra no inventário: a partícula anda na GPU, não por Tween, e a Sara não modela o relógio da rodada como dono |
+| 13 | 2026-08-28 | `f1f4d5f` | porte BomberBoom (Godot) | a aranha que rouba a bomba (D-046/D-047): `RoboNaTela` vira subclasse de `BichoNaTela`, mais `AranhaNaTela`, `NinhoNaTela`, as duas entradas, e a teia que lentifica o pavio | < 1 s | nenhum; 302 claims em 1142 arquivos | 0 úteis / 0 falsos | sim, e ela decidiu o caso: dos nove defeitos, portão pegou um e o autor achou dois — jogando | três, e as três dentro da família que a Sara já modela: `pause()`/`play()`, `set_speed_scale` e profundidade por ordem de filho. Ver [CASO-DA-ARANHA.md](CASO-DA-ARANHA.md) |
 
 O Sara pode permanecer privado ao final. Nova etapa pública exige nova decisão;
 não é continuação automática deste registro.
@@ -83,7 +118,7 @@ Uma fitness function que acha defeito no minuto em que entra apareceu três veze
 projeto: a F5 com as extensões, a F7 com as construções, e agora a ADR 0010 com o canal
 físico. É o argumento mais forte a favor de escrever a regra antes de precisar dela.
 
-## O uso 3, e as três capacidades que ele nomeou
+## O uso 13, e as três capacidades que ele nomeou
 
 A leitura inteira do caso está em [`CASO-DA-ARANHA.md`](CASO-DA-ARANHA.md). Aqui fica só o
 que pertence ao marco.
@@ -122,21 +157,33 @@ confrontada com o corpus, então nenhuma está decidida: a
 [ADR 0012 §3](decisoes/0012-sara-e-corpus-coevoluem.md) exige o confronto antes da
 incorporação.
 
-### Uma discrepância que precisa de decisão, e não de conserto meu
+### De onde vieram os usos 3 a 12 — a transcrição, e o que ela custou de julgamento
 
-O diário do porte, em `.sara/USOS.md`, tem **13 linhas** — as três últimas são desta mesma
-sessão. Este registro tem 3. Pelo critério escrito no topo daqui — *"uma linha para cada
-mudança em que animação ou entrada possa ter mudado"* —, as dez linhas intermediárias do
-porte também qualificariam: todas rodaram `sara check`, todas mexeram em animação, e sete
-delas declaram inspeção humana necessária.
+Estas dez linhas não são trabalho novo: são mudanças reais de 24 a 26 de agosto que
+estavam registradas só no diário do porte, em `.sara/USOS.md`, e nunca subiram para cá.
+Pelo critério escrito no topo — *"uma linha para cada mudança em que animação ou entrada
+possa ter mudado"* — elas sempre qualificaram. O proprietário decidiu em 28/08 que contam,
+e a transcrição é esta.
 
-Ou este registro está dez linhas atrás, ou o Marco 6 tem um critério mais estreito que o
-que está escrito. As duas leituras mudam o portão: pela primeira, o marco já estaria
-fechado por conclusão; pela segunda, o critério precisa ser escrito antes de a data chegar.
+**Três coisas precisaram de julgamento, e ficam declaradas em vez de escondidas:**
 
-**Fica como pergunta, e não como número corrigido.** Quem move o contador de um portão é o
-proprietário, e inventar aqui qual das duas leituras vale seria decidir o desfecho do marco
-por descuido de redação.
+1. **O diário do porte tem 16 linhas físicas, não 13.** Duas sessões paralelas escreveram
+   na mesma tabela e a numeração colidiu: há dois usos numerados 8, dois numerados 9, e as
+   *brasas do estouro* aparecem **duas vezes, com texto idêntico**, numeradas 9 e 8.
+   Contadas as distintas, são 15. Menos os usos 1 e 2, já registrados, e menos as três
+   linhas da aranha, sobram exatamente dez.
+2. **A aranha entrou como um uso, e o porte a registrou como três.** As linhas 11, 12 e 13
+   de lá são três commits da mesma peça, na mesma sessão, sob um carimbo só. Contá-las
+   1:1 como as outras daria 15 em vez de 13. **Escolhi o número menor porque ele é o que
+   arrisca menos**: a contagem decide um portão, e nas duas leituras o portão está
+   passado, então a ambiguidade não muda o desfecho — só a estatística. Se o proprietário
+   preferir o 1:1, são duas linhas a acrescentar e nenhuma conclusão a rever.
+3. **A ordem dentro de 25/08 segue a ordem do arquivo do porte**, não um carimbo de tempo.
+   Seis mudanças caem no mesmo dia e o diário de lá não registra a hora.
+
+**O que a transcrição não faz:** não recalcula nenhuma medição, não revê nenhuma
+classificação de aviso, e não toca na previsão datada de 25/08 mais abaixo. Ela move para
+cá o que já estava medido lá.
 
 ## Baselines que não contam como mudança
 
@@ -272,6 +319,16 @@ que chegou ao jogador, com duas bombas por toque. Ele não virou a pegadinha de 
 doze porque a Sara o achou antes. Uma lista de pegadinhas só registra o que passou.
 
 ## O recorte é grande o bastante? — previsão registrada em 25/08/2026
+
+> **Nota de 28/08/2026, acrescentada sem tocar no texto abaixo.** A previsão foi escrita
+> quando o registro marcava duas mudanças e dizia "faltam oito". Hoje a contagem está em
+> treze, e **a previsão passou a ser conferível** — que era exatamente o ponto de datá-la.
+> O texto original fica intacto, porque previsão corrigida depois da evidência não prova
+> nada. As onze mudanças que entraram desde então não produziram nenhum verdadeiro
+> positivo bloqueante — a primeira das duas condições que a própria previsão listou como
+> capazes de derrubá-la —, e produziram **um aviso útil** (uso 6, o `SAR-PARSE-001` da
+> barra de fúria) e **sete capacidades ausentes nomeadas**. Quem julga o que isso faz com
+> a previsão é o portão, não esta nota.
 
 Isto **não é conclusão do marco**. O `RESULTADOS §4` proíbe pontuar antes de toda a
 evidência comparável existir, e faltam oito mudanças reais. É uma **previsão datada**,

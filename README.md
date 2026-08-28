@@ -74,9 +74,13 @@ de que uma engine completa seja necessária ou economicamente viável. Por isso,
 projeto permanece deliberadamente na camada de verificação compatível com engines
 existentes.
 
-A próxima prova é o Marco 6: dez mudanças reais em projetos Godot, ou 20 de setembro de
-2026, o que vier primeiro. Chegar à data com menos de dez mudanças é um resultado, não
-um atraso.
+A prova em curso é o Marco 6: dez mudanças reais em projetos Godot, ou 20 de setembro de
+2026, o que vier primeiro. **Em 28/08/2026 o registro chegou a 13 mudanças** — todas do
+porte do BomberBoom —, e com isso a coleta de evidência terminou antes da data. Atingir a
+contagem não fecha o marco: o portão pede uma decisão entre manter privado, congelar ou
+propor nova ADR, e ela ainda não foi tomada. Há também uma contradição registrada sobre se
+o critério exige dois projetos; ela está em
+[`docs/USO-PESSOAL.md`](docs/USO-PESSOAL.md) e precisa ser resolvida antes do julgamento.
 
 | ADR | Decisão |
 |---|---|

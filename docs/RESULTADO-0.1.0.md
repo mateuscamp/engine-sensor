@@ -91,9 +91,14 @@ declarações; o critério precisa continuar sendo medido nas próximas mudança
 O risco dominante deixou de ser incompatibilidade do parser e passou a ser utilidade
 cotidiana: regras conservadoras podem avisar demais no Defold ou cobrir pouco código
 dinâmico. O Marco 6 exige dez mudanças relevantes em pelo menos dois projetos, com o
-registro em [`USO-PESSOAL.md`](USO-PESSOAL.md). A medição atual está em uma de dez
-mudanças reais e dois de dois projetos integrados; baselines e instalação não contam
-como mudanças de uso.
+registro em [`USO-PESSOAL.md`](USO-PESSOAL.md). Baselines e instalação não contam como mudanças de uso.
+
+**Atualização de 28/08/2026:** a medição corrente saiu de uma para **treze mudanças
+reais**, e o registro vive em [`USO-PESSOAL.md`](USO-PESSOAL.md) — é lá que ele deve ser
+lido, e não aqui. As treze são todas do porte do BomberBoom, o que colide com a exigência
+de "pelo menos dois projetos" escrita no parágrafo acima. A frase fica de pé, sem conserto,
+porque riscá-la é decisão do proprietário: ela decide se o portão do Marco 6 pode ser
+julgado agora.
 
 Se houver falso bloqueio, necessidade recorrente de inspeção humana ou ausência de
 uso voluntário, o encerramento legítimo é manter apenas o kit AI-first ou congelar a

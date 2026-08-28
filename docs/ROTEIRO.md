@@ -37,7 +37,10 @@ que nasce num projeto generaliza para o corpus.
 
 **Desde 24 de agosto de 2026 há um único projeto Godot em desenvolvimento ativo:** o
 porte do BomberBoom. Gods, Boomlitude e MineBoom ficam parados como corpus de regressão.
-As dez mudanças virão todas do porte, e isso é ao mesmo tempo a força e o risco do marco.
+As dez mudanças vieram todas do porte, e isso é ao mesmo tempo a força e o risco do marco.
+**Em 28/08/2026 elas somaram 13** e a contagem fechou; o portão está aberto e a decisão
+dele não foi tomada. Ver o estado, e a contradição sobre exigir dois projetos, em
+[`USO-PESSOAL.md`](USO-PESSOAL.md).
 
 A força: o mesmo jogo existe em Defold e em Godot, então toda regra do Sara pode ser
 conferida contra o original. Foi assim que a [ADR 0010](decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md)
