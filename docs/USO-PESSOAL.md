@@ -83,6 +83,76 @@ nasceu.
 | 12 | 2026-08-26 | `f1f4d5f` | porte BomberBoom (Godot) | brasas do estouro com `use_fixed_seed`/`seed` derivado da célula, e o portão de cena passando a exigir `--fixed-fps 60` | < 1 s | nenhum; 27 claims em 102 arquivos | 0 úteis / 0 falsos | sim, e ela **é** a medida: três rodadas do portão comparadas byte a byte, de 9 capturas instáveis para 0 | semente de `GPUParticles2D` não entra no inventário: a partícula anda na GPU, não por Tween, e a Sara não modela o relógio da rodada como dono |
 | 13 | 2026-08-28 | `f1f4d5f` | porte BomberBoom (Godot) | a aranha que rouba a bomba (D-046/D-047): `RoboNaTela` vira subclasse de `BichoNaTela`, mais `AranhaNaTela`, `NinhoNaTela`, as duas entradas, e a teia que lentifica o pavio | < 1 s | nenhum; 302 claims em 1142 arquivos | 0 úteis / 0 falsos | sim, e ela decidiu o caso: dos nove defeitos, portão pegou um e o autor achou dois — jogando | três, e as três dentro da família que a Sara já modela: `pause()`/`play()`, `set_speed_scale` e profundidade por ordem de filho. Ver [CASO-DA-ARANHA.md](CASO-DA-ARANHA.md) |
 
+### Nota 1 — o uso 13 alterou a Sara: o relógio do Tween
+
+Pela [ADR 0012 §2](decisoes/0012-sara-e-corpus-coevoluem.md), caso que altera a ferramenta
+registra três coisas. A coluna `Sara` do uso 13 continua declarando `f1f4d5f`, que foi o
+instrumento que **respondeu** ao caso; a mudança veio depois dele.
+
+**O que faltava.** A Sara declarava alvo, propriedade e dono de cada trajetória. Nenhuma
+das três muda quando alguém pausa, retoma, para ou desacelera o Tween — e o que acontece na
+tela muda inteiro. No caso da aranha isso não era detalhe: depois do conserto, *"a teia não
+para o pavio, ela o lentifica"* **é a regra da peça**, e ela mora numa chamada de
+`set_speed_scale`. A Sara varreu 1142 arquivos e deu saída 0 sobre um mecanismo cuja regra
+central era invisível para ela.
+
+**O que mudou.** `pause`, `play`, `stop` e `set_speed_scale` passam a virar declaração sobre
+a mesma propriedade da trajetória que o Tween anima, com o dono sendo quem mexe no relógio.
+O contrato em [`COMPATIBILIDADE.md`](COMPATIBILIDADE.md) declara as quatro, nos dois
+sentidos que o achado A7 exige. Dois limites foram deliberados:
+
+- **Ela só declara. Não há diagnóstico novo.** É como a ADR 0010 entrou, e é o que permite
+  saber depois qual das duas coisas produziu ruído. Se controle de relógio entre donos
+  merece aviso, isso é decisão própria e precisa de outra rodada de evidência.
+- **Ela resolve a variável de laço.** O caso de origem estava escrito como
+  `for animacao: Tween in [_caminhada_do_pavio, _espera_do_panico]:`, e sem isso a
+  capacidade não veria o próprio caso que a motivou. Fixture e teste cobrem as duas formas,
+  e o teste foi conferido por mutação.
+- **Ela não inventa.** Prefixo que não resolve para um Tween conhecido não vira declaração:
+  o `_alto_falante.play()` da fixture tem o mesmo nome de método e continua invisível, de
+  propósito. É a assertiva que reprova uma regra boa demais.
+
+**O efeito no corpus, medido nos cinco projetos antes e depois:**
+
+| projeto | declarações perdidas | declarações novas | diagnósticos |
+|---|---:|---:|---|
+| porte BomberBoom (Godot) | 0 | **3** | idênticos |
+| Gods (Godot) | 0 | 0 | idênticos |
+| Boomlitude (Godot) | 0 | 0 | idênticos |
+| MineBoom (Godot) | 0 | 0 | idênticos |
+| BomberBoom (Defold) | 0 | 0 | idênticos |
+
+As três novas são exatamente as três chamadas que o caso nomeou: `mostrar_teia` pausando e
+retomando a caminhada da faísca, e `lentificar_o_pavio` desacelerando-a.
+
+**E o resultado transversal é fraco, o que importa mais que o longitudinal.** A ADR 0010
+entrou achando 4 declarações invisíveis no Gods e 6 no Boomlitude — o que nasceu num
+projeto se sustentou nos outros. **Esta não achou nada nos parados.** Está provado que ela
+não produz ruído; **não** está mostrado que ela generaliza. O único projeto que a exercita é
+o que a motivou, e essa é precisamente a segunda linha de evidência da
+[ADR 0012 §5](decisoes/0012-sara-e-corpus-coevoluem.md) saindo neutra.
+
+**Duas coisas de higiene que o confronto expôs, e que não são da capacidade:**
+
+1. **Os caminhos do corpus em `tests/corpus.rs` estavam obsoletos.** Os cinco projetos
+   migraram de `~/Godot` para `~/godot` e o porte mudou de nome. O teste é `#[ignore]`, então
+   a defasagem ficou invisível — **e com ela o confronto com o corpus que a ADR 0012 §3
+   exige.** Corrigidos no mesmo commit.
+2. **A varredura entra em `.claude/worktrees/`.** As mesmas declarações são contadas uma vez
+   por worktree viva, e como worktree nasce e morre, a contagem do porte muda entre duas
+   execuções sem nada no jogo ter mudado — foram 347 e 309 com minutos de diferença. As
+   medições deste registro que citam número de claims do porte carregam esse ruído. **Fica
+   anotado e não fica consertado:** decidir se `.claude/` sai da varredura é escolha de
+   contrato, não conserto, e vale para todo projeto que use worktrees.
+
+### O que ficou de fora, e é a terceira capacidade
+
+**Profundidade por ordem de filho** — `z_index` relativo ao pai e `move_child` — continua
+sem declaração. É a que pegou o fio de seda invisível, e **um sprite invisível continua
+passando por todos os portões**. Ela não entrou aqui porque não é da família de posse de
+animação: é ordem de desenho, um eixo próprio, e misturá-la ao relógio no mesmo commit
+tornaria impossível dizer qual das duas mexeu no corpus.
+
 O Sara pode permanecer privado ao final. Nova etapa pública exige nova decisão;
 não é continuação automática deste registro.
 

@@ -193,13 +193,27 @@ Estas valem mais que as outras três, e a diferença é de natureza: **não pede
 São todas de posse de animação em Godot, que é exatamente o que a Sara faz hoje. Foram
 escritas pela sessão, na hora, nas linhas 11 a 13 do `.sara/USOS.md` do porte.
 
-| # | o que a Sara não vê | por que dói |
-|---:|---|---|
-| A1 | **`pause()` / `play()` num Tween** | ela vê a propriedade e o dono, não o fato de o relógio ter parado. Uma bomba presa para sempre, com o tween pausado, é indistinguível de uma que está queimando |
-| A2 | **`set_speed_scale` num Tween** | ela modela quem *anima* a propriedade, não o relógio com que anima. Aqui não é detalhe: *"um pavio que passou a queimar na metade da velocidade é indistinguível de um que não passou - e essa é a regra inteira da peça"* |
-| A3 | **profundidade por ordem de filho** | `z_index` é relativo ao pai e `move_child` decide quem desenha na frente de quem. Nenhum vira declaração, e **um sprite invisível passa por todos os portões** - foi o que aconteceu com o fio de seda (defeito 2) |
+| # | o que a Sara não via | por que dói | estado |
+|---:|---|---|---|
+| A1 | **`pause()` / `play()` num Tween** | ela vê a propriedade e o dono, não o fato de o relógio ter parado. Uma bomba presa para sempre, com o tween pausado, é indistinguível de uma que está queimando | **entrou** |
+| A2 | **`set_speed_scale` num Tween** | ela modela quem *anima* a propriedade, não o relógio com que anima. Aqui não é detalhe: *"um pavio que passou a queimar na metade da velocidade é indistinguível de um que não passou - e essa é a regra inteira da peça"* | **entrou** |
+| A3 | **profundidade por ordem de filho** | `z_index` é relativo ao pai e `move_child` decide quem desenha na frente de quem. Nenhum vira declaração, e **um sprite invisível passa por todos os portões** - foi o que aconteceu com o fio de seda (defeito 2) | aberta |
 
-A A2 é a mais forte das seis. O `set_speed_scale` **é** a regra da peça depois do conserto:
+**A1 e A2 entraram em 28/08/2026, juntas, porque são o mesmo mecanismo: o relógio do
+Tween.** `pause`, `play`, `stop` e `set_speed_scale` passam a virar declaração; o contrato
+de compatibilidade declara as quatro; e a capacidade resolve a variável de laço, que era a
+forma em que o caso de origem estava escrito. Ela **só declara** - nenhum diagnóstico novo -,
+como a ADR 0010 entrou.
+
+O confronto com o corpus está na nota 1 de [`USO-PESSOAL.md`](USO-PESSOAL.md), e o resultado
+importante dele é o que puxa contra: **0 declarações novas nos quatro projetos parados.** A
+capacidade não produz ruído e ainda não se mostrou generalizável.
+
+**A3 continua aberta**, e é a única das três que pegou um defeito por conta própria. Ela não
+entrou junto porque não é da mesma família - ordem de desenho é eixo próprio -, e misturar
+os dois no mesmo commit tornaria impossível dizer qual mexeu no corpus.
+
+A A2 era a mais forte das seis. O `set_speed_scale` **é** a regra da peça depois do conserto:
 a teia não para o pavio, ela o lentifica. Quer dizer que a Sara varreu 1142 arquivos, contou
 302 declarações e deu saída 0 sobre um mecanismo cuja regra central mora numa chamada de
 Tween que ela não modela. Isso é um limite nomeado do inventário, não um limite do método.

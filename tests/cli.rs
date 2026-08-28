@@ -192,6 +192,58 @@ fn godot_inventories_tweens_with_fluent_configuration() {
     );
 }
 
+/// O relógio do Tween, nascido do caso da aranha (28/08/2026).
+///
+/// A Sara declarava alvo, propriedade e dono, e nenhuma das três muda quando alguém
+/// pausa ou desacelera a trajetória -- enquanto o que acontece na tela muda inteiro.
+/// A capacidade entra **declarando**, sem diagnóstico novo, como a ADR 0010 entrou.
+#[test]
+fn godot_inventories_who_controls_the_tween_clock() {
+    let (code, report, _) = json_report("godot_animation_clock_control_green", &[]);
+    assert_eq!(code, 0);
+    let claims = report["claims"].as_array().unwrap();
+    let relogio = |operacao: &str| -> Vec<&serde_json::Value> {
+        claims
+            .iter()
+            .filter(|item| item["operation"] == operacao)
+            .collect()
+    };
+
+    for operacao in ["Tween.pause", "Tween.play", "Tween.set_speed_scale"] {
+        assert!(
+            !relogio(operacao).is_empty(),
+            "{operacao} não virou declaração: {report:#}"
+        );
+    }
+
+    // A forma em que o caso de origem estava escrita: `for animacao in [a, b]:`.
+    // Uma capacidade que não vê o próprio caso de origem não foi construída.
+    let pelo_laco = relogio("Tween.set_speed_scale")
+        .into_iter()
+        .filter(|item| item["owner"].as_str().unwrap().ends_with("lentificar_o_pavio"))
+        .count();
+    assert_eq!(
+        pelo_laco, 2,
+        "a variável de laço precisa valer pelos dois Tweens da lista: {report:#}"
+    );
+
+    // O limite, e é ele que separa esta regra de uma que inventa: `play()` num
+    // AudioStreamPlayer tem o mesmo nome e não é Tween nenhum. Uma regra "boa demais"
+    // reprova aqui.
+    assert!(
+        !claims.iter().any(|item| {
+            item["operation"] == "Tween.play" && item["owner"].as_str().unwrap().contains("soltar")
+                && item["span"]["line"].as_u64() == Some(33)
+        }),
+        "declarou relógio para um objeto que não é Tween: {report:#}"
+    );
+
+    assert!(
+        report["diagnostics"].as_array().unwrap().is_empty(),
+        "a capacidade entra sem diagnóstico novo: {report:#}"
+    );
+}
+
 #[test]
 fn godot_input_needs_one_owner_or_explicit_consumption() {
     let (red_code, red, _) = json_report("godot_input_red", &[]);

@@ -56,6 +56,28 @@ pub const CONSTRUCTS: &[Construct] = &[
         axis: Axis::Animation,
         token: "kill",
     },
+    // O relógio da trajetória. Nenhuma destas toca a propriedade animada, e todas
+    // mudam o que acontece na tela.
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Animation,
+        token: "pause",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Animation,
+        token: "play",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Animation,
+        token: "stop",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Animation,
+        token: "set_speed_scale",
+    },
     Construct {
         engine: Engine::Godot,
         axis: Axis::Input,
@@ -161,6 +183,7 @@ const GDSCRIPT_BLOCKS: common::BlockSyntax = common::BlockSyntax {
 
 fn animation_claims(source: &ParsedSource, output: &mut AdapterOutput) {
     let assignments = tween_assignments(source);
+    let mut trajetorias: Vec<OwnershipClaim> = Vec::new();
     let naked_tween =
         Regex::new(r"([A-Za-z_][A-Za-z0-9_]*)\s*\.\s*tween_property\s*\(").expect("regex válida");
     for call in &source.calls {
@@ -233,8 +256,153 @@ fn animation_claims(source: &ParsedSource, output: &mut AdapterOutput) {
                 "o alvo ou a propriedade do Tween",
             ));
         }
-        output.claims.push(claim);
+        trajetorias.push(claim);
     }
+    clock_claims(source, &assignments, &trajetorias, output);
+    output.claims.append(&mut trajetorias);
+}
+
+/// Métodos que mexem no relógio de um Tween sem tocar na propriedade animada.
+///
+/// A Sara declarava alvo, propriedade e dono, e nenhuma destas três coordenadas muda
+/// quando alguém pausa ou desacelera a trajetória. O resultado na tela muda inteiro:
+/// uma bomba parada para sempre com o Tween pausado é indistinguível de uma queimando,
+/// e um pavio que passou a queimar na metade da velocidade é indistinguível de um que
+/// não passou.
+const CLOCK_METHODS: &[&str] = &["pause", "play", "stop", "set_speed_scale"];
+
+/// Declara quem mexe no relógio de uma trajetória já declarada.
+///
+/// **Só declara, e de propósito.** Pela ADR 0012 §3 uma capacidade generalizável é
+/// confrontada com o corpus antes de virar regra; abrir o olho e reclamar no mesmo
+/// commit impede saber qual das duas coisas produziu o ruído. Foi assim que a ADR 0010
+/// entrou: as declarações invisíveis apareceram primeiro, sem um único diagnóstico novo.
+fn clock_claims(
+    source: &ParsedSource,
+    assignments: &BTreeMap<(String, String), String>,
+    trajetorias: &[OwnershipClaim],
+    output: &mut AdapterOutput,
+) {
+    if trajetorias.is_empty() {
+        return;
+    }
+    // Um Tween guardado em campo do nó é criado numa função e pausado em outra -- que é
+    // justamente o caso interessante. Resolver só por (função, variável) perderia todos
+    // eles, então o nome também resolve sozinho, e apenas quando ele é único no arquivo.
+    let mut por_variavel: BTreeMap<&str, Option<&str>> = BTreeMap::new();
+    for ((_, variavel), controlador) in assignments {
+        por_variavel
+            .entry(variavel.as_str())
+            .and_modify(|atual| {
+                if *atual != Some(controlador.as_str()) {
+                    *atual = None;
+                }
+            })
+            .or_insert(Some(controlador.as_str()));
+    }
+
+    let laços = tween_loop_bindings(source);
+    for call in &source.calls {
+        let Some((prefixo, metodo)) = call.callee.rsplit_once('.') else {
+            continue;
+        };
+        if !CLOCK_METHODS.contains(&metodo) {
+            continue;
+        }
+        let variavel = prefixo.strip_prefix("self.").unwrap_or(prefixo);
+        let diretos = assignments
+            .get(&(call.owner.clone(), variavel.to_owned()))
+            .map(String::as_str)
+            .or_else(|| por_variavel.get(variavel).copied().flatten())
+            .map(|controlador| vec![controlador])
+            .unwrap_or_default();
+        let controladores = if diretos.is_empty() {
+            // Sem saber qual Tween é, não há o que declarar -- salvo quando o nome é a
+            // variável de um laço sobre uma lista de Tweens conhecidos, que foi como o
+            // caso que originou esta capacidade estava escrito.
+            laços.get(&(call.owner.clone(), variavel.to_owned())).map_or_else(
+                Vec::new,
+                |nomes| {
+                    nomes
+                        .iter()
+                        .filter_map(|nome| {
+                            assignments
+                                .get(&(call.owner.clone(), nome.clone()))
+                                .map(String::as_str)
+                                .or_else(|| por_variavel.get(nome.as_str()).copied().flatten())
+                        })
+                        .collect()
+                },
+            )
+        } else {
+            diretos
+        };
+        let mut vistos = BTreeSet::new();
+        for controlador in controladores {
+            for trajetoria in trajetorias
+                .iter()
+                .filter(|item| item.controller == controlador)
+            {
+                if !vistos.insert(trajetoria.resource.clone()) {
+                    continue;
+                }
+                output.claims.push(OwnershipClaim {
+                    resource: trajetoria.resource.clone(),
+                    owner: format!("{}::{}", source.path, call.owner),
+                    span: call.span.clone(),
+                    confidence: Confidence::Proven,
+                    operation: format!("Tween.{metodo}"),
+                    controller: controlador.to_owned(),
+                    flow: call.control_path.clone(),
+                });
+            }
+        }
+    }
+}
+
+/// Variáveis de laço que percorrem uma lista literal de Tweens, por função.
+///
+/// `for animacao: Tween in [_caminhada, _espera]:` faz `animacao` valer pelos dois, e
+/// sem isto a chamada de relógio dentro do laço não se liga a trajetória nenhuma. É a
+/// forma exata em que o `set_speed_scale` que motivou esta capacidade estava escrito --
+/// uma capacidade que não vê o próprio caso de origem não foi construída, foi anunciada.
+fn tween_loop_bindings(source: &ParsedSource) -> BTreeMap<(String, String), Vec<String>> {
+    let laço = Regex::new(
+        r"(?m)^[ 	]*for[ 	]+([A-Za-z_][A-Za-z0-9_]*)(?:[ 	]*:[ 	]*[A-Za-z_][A-Za-z0-9_.]*)?[ 	]+in[ 	]*\[([^\]
+]*)\][ 	]*:",
+    )
+    .expect("regex válida");
+    let mut ligações = BTreeMap::new();
+    for captures in laço.captures_iter(&source.source) {
+        let linha = source.source[..captures.get(0).unwrap().start()]
+            .bytes()
+            .filter(|byte| *byte == b'\n')
+            .count() as u32
+            + 1;
+        let dono = source
+            .functions
+            .iter()
+            .find(|function| linha >= function.start_line && linha <= function.end_line)
+            .map(|function| function.name.clone())
+            .unwrap_or_else(|| "<arquivo>".to_owned());
+        let nomes = captures[2]
+            .split(',')
+            .map(|item| {
+                let limpo = item.trim();
+                limpo.strip_prefix("self.").unwrap_or(limpo).to_owned()
+            })
+            .filter(|item| {
+                !item.is_empty()
+                    && item
+                        .chars()
+                        .all(|letra| letra.is_alphanumeric() || letra == '_')
+            })
+            .collect::<Vec<_>>();
+        if !nomes.is_empty() {
+            ligações.insert((dono, captures[1].to_owned()), nomes);
+        }
+    }
+    ligações
 }
 
 fn tween_assignments(source: &ParsedSource) -> BTreeMap<(String, String), String> {
@@ -274,6 +442,9 @@ fn diagnose_animations(
         item.resource.engine == Engine::Godot
             && item.resource.kind == ResourceKind::AnimationProperty
             && item.confidence == Confidence::Proven
+            // Controle de relógio não é uma segunda trajetória, e parear as duas
+            // produziria o aviso errado com o texto de outra regra.
+            && item.operation == "Tween.tween_property"
     }) {
         groups
             .entry(claim.resource.clone())
