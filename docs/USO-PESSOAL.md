@@ -40,26 +40,21 @@ decisão entre manter privado, congelar ou propor nova ADR, e essa decisão é d
 proprietário. Este arquivo agora carrega a evidência que ela precisa julgar, e não a
 conclusão.
 
-> ### ⚠️ E há uma contradição escrita que decide se a contagem vale
+> ### A contradição do critério, resolvida em 28/08/2026
 >
-> O [`RESULTADO-0.1.0.md`](RESULTADO-0.1.0.md), de 23/08, diz: *"O Marco 6 exige dez
-> mudanças relevantes **em pelo menos dois projetos**"*. **As treze são todas do porte.**
+> O [`RESULTADO-0.1.0.md`](RESULTADO-0.1.0.md), de 23/08, exigia as dez mudanças **"em
+> pelo menos dois projetos"**. As treze são todas do porte.
 >
-> Este arquivo e o [`ROTEIRO.md`](ROTEIRO.md) dizem outra coisa: "dez mudanças reais em
-> projetos Godot", sem exigir que se espalhem. E o ROTEIRO vai além — desde 24/08 ele
-> registra, de propósito, que *"as dez mudanças virão todas do porte, e isso é ao mesmo
-> tempo a força e o risco do marco"*. Ou seja: o alvo único foi aceito por escrito, depois
-> da frase que exige dois projetos.
+> **A frase foi corrigida, e a leitura tardia governa.** O [`ROTEIRO.md`](ROTEIRO.md)
+> registrou em 24/08, de propósito e sabendo do risco, que *"as dez mudanças virão todas
+> do porte, e isso é ao mesmo tempo a força e o risco do marco"* — depois de a ADR 0005
+> deixar um único projeto Godot em desenvolvimento ativo. A exigência de espalhamento era
+> contradição não riscada, não critério vivo.
 >
-> **A leitura tardia governa, e por isso a contagem está registrada como atingida.** Mas a
-> frase antiga nunca foi riscada, e a diferença não é de redação:
->
-> - pela leitura do ROTEIRO, o critério está cumprido e o portão está aberto;
-> - pela leitura do `RESULTADO-0.1.0.md`, ele **não** está — falta um segundo projeto com
->   mudança real, e nenhum dos três parados se mexeu desde 24/08.
->
-> Riscar uma das duas é decisão do proprietário, não conserto de redação, porque ela
-> decide se o portão pode ser julgado agora ou se a data de 20/09 volta a mandar.
+> **O que ela protegia não sumiu: virou limitação declarada do julgamento.** Treze
+> mudanças de um projeto só não são treze projetos. O portão julga uma série de um jogo, e
+> isso pesa contra a generalização — a segunda das duas linhas de evidência que a
+> [ADR 0012 §5](decisoes/0012-sara-e-corpus-coevoluem.md) mandou medir.
 
 **Um único projeto em desenvolvimento ativo, e as treze mudanças vieram todas dele.**
 Desde 24/08/2026 o porte do BomberBoom para Godot é o único que se mexe; Gods, Boomlitude
