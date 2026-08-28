@@ -24,11 +24,11 @@ A coluna que era "Regra ausente" virou **"Capacidade ausente"**: hoje é regra e
 posse, amanhã pode ser observação de runtime, entrada, determinismo ou estado visual.
 
 Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança em projeto
-Defold não conta para a contagem. Nenhum uso registrado até aqui é Defold — os dois são
+Defold não conta para a contagem. Nenhum uso registrado até aqui é Defold — os três são
 do porte, que é Godot —, então a regra ainda não excluiu nada; ela vale para os que
 vierem.
 
-**Estado atual:** 2 de 10 mudanças; prazo aberto até 20/09/2026.
+**Estado atual:** 3 de 10 mudanças; prazo aberto até 20/09/2026.
 
 **Um único projeto em desenvolvimento ativo.** Desde 24/08/2026, o porte do BomberBoom
 para Godot é o único que se mexe; Gods, Boomlitude e MineBoom ficam parados. As dez
@@ -44,7 +44,7 @@ um em movimento — eles são corpus de falso positivo, e é isso que continuam 
 |---:|---|---|---|---|---:|---|---|---|---|
 | 1 | 2026-08-23 | `2603b30` | porte BomberBoom (Godot) | bomba visual com Tween configurado em cadeia fluente | < 1 s | nenhum após correção | nenhum aviso; a primeira execução omitiu 2 declarações | sim, para comparar o inventário com o diff | parser perdia `tween_property` seguido de `set_trans`/`set_ease`; fixture adicionada |
 | 2 | 2026-08-23 | `f1f4d5f` | porte BomberBoom (Godot) | `emulate_mouse_from_touch=false`: toque e mouse caíam no mesmo `_dedo` | < 1 s | erro comprovado, corrigido | 0 falsos | não, o diagnóstico bastou | nenhuma; a regra acabara de nascer pela ADR 0010 |
-| 3 | | | | | | | | | |
+| 3 | 2026-08-28 | `f1f4d5f` | porte BomberBoom (Godot) | a aranha que rouba a bomba (D-046/D-047): `RoboNaTela` vira subclasse de `BichoNaTela`, mais `AranhaNaTela`, `NinhoNaTela`, as duas entradas, e a teia que lentifica o pavio | < 1 s | nenhum | 0 úteis / 0 falsos | sim, e ela decidiu o caso: dos nove defeitos, portão pegou um e o autor achou dois — jogando | três, e as três dentro da família que a Sara já modela: `pause()`/`play()`, `set_speed_scale` e profundidade por ordem de filho. Ver [CASO-DA-ARANHA.md](CASO-DA-ARANHA.md) |
 | 4 | | | | | | | | | |
 | 5 | | | | | | | | | |
 | 6 | | | | | | | | | |
@@ -82,6 +82,61 @@ motor fabricasse o segundo.
 Uma fitness function que acha defeito no minuto em que entra apareceu três vezes neste
 projeto: a F5 com as extensões, a F7 com as construções, e agora a ADR 0010 com o canal
 físico. É o argumento mais forte a favor de escrever a regra antes de precisar dela.
+
+## O uso 3, e as três capacidades que ele nomeou
+
+A leitura inteira do caso está em [`CASO-DA-ARANHA.md`](CASO-DA-ARANHA.md). Aqui fica só o
+que pertence ao marco.
+
+**A Sara não achou nada, e não é silêncio de rotina.** Saída 0, 302 claims em 1142
+arquivos, zero aviso. O caso teve nove defeitos, e a distribuição é o dado:
+
+| quem achou | quantos |
+|---|---:|
+| portão (o de cena, um erro de parse) | 1 |
+| instrumento escrito na hora e olhado por olho humano | 3 |
+| teste da própria sessão, ou raciocínio ao escrever | 3 |
+| **o autor, jogando** | **2** |
+
+Os dois do autor eram a peça inteira: o mecanismo nunca se completava, em condição nenhuma,
+e os nós ficavam presos na tela para sempre. Os outros sete eram engrenagem.
+
+**As três capacidades ausentes são de animação, que é a família que a Sara já modela** — e
+por isso valem mais que hipótese sobre eixo novo. Foram nomeadas pelo diário do próprio
+porte, nas linhas 11, 12 e 13 de `.sara/USOS.md`:
+
+1. **`pause()`/`play()` num Tween não entra no inventário.** A Sara vê a propriedade e o
+   dono, não o fato de o relógio ter parado. Uma bomba presa para sempre, com o tween
+   pausado, é indistinguível de uma que está queimando.
+2. **`set_speed_scale` também não.** A Sara modela quem *anima* uma propriedade, não o
+   relógio com que ela anima. E aqui isso não é detalhe: *"um pavio que passou a queimar na
+   metade da velocidade é indistinguível de um que não passou — e essa é a regra inteira
+   da peça."*
+3. **Profundidade por ordem de filho.** `z_index` é relativo ao pai e `move_child` decide
+   quem desenha na frente de quem; nenhum dos dois vira declaração. **Um sprite invisível
+   passa por todos os portões**, e foi o que aconteceu com o fio de seda.
+
+As três são estáticas, são de Godot, e cabem no recorte da
+[ADR 0001](decisoes/0001-validar-mecanismos-antes-da-engine-completa.md). Nenhuma foi
+confrontada com o corpus, então nenhuma está decidida: a
+[ADR 0012 §3](decisoes/0012-sara-e-corpus-coevoluem.md) exige o confronto antes da
+incorporação.
+
+### Uma discrepância que precisa de decisão, e não de conserto meu
+
+O diário do porte, em `.sara/USOS.md`, tem **13 linhas** — as três últimas são desta mesma
+sessão. Este registro tem 3. Pelo critério escrito no topo daqui — *"uma linha para cada
+mudança em que animação ou entrada possa ter mudado"* —, as dez linhas intermediárias do
+porte também qualificariam: todas rodaram `sara check`, todas mexeram em animação, e sete
+delas declaram inspeção humana necessária.
+
+Ou este registro está dez linhas atrás, ou o Marco 6 tem um critério mais estreito que o
+que está escrito. As duas leituras mudam o portão: pela primeira, o marco já estaria
+fechado por conclusão; pela segunda, o critério precisa ser escrito antes de a data chegar.
+
+**Fica como pergunta, e não como número corrigido.** Quem move o contador de um portão é o
+proprietário, e inventar aqui qual das duas leituras vale seria decidir o desfecho do marco
+por descuido de redação.
 
 ## Baselines que não contam como mudança
 
