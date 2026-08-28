@@ -14,7 +14,9 @@ que se candidata a virar capacidade.
 A pergunta que o organiza é a do autor, e é a pergunta central deste projeto: **o que
 poderia ter sido visto antes de precisar dele.**
 
-O caso está registrado como **uso 3 do Marco 6** em [`USO-PESSOAL.md`](USO-PESSOAL.md).
+O caso está registrado como **uso 13 do Marco 6** em [`USO-PESSOAL.md`](USO-PESSOAL.md) —
+o último, porque a leitura dele levou o proprietário a reconhecer as dez mudanças de 24 a
+26/08 que estavam só no diário do porte.
 
 ---
 
@@ -328,10 +330,12 @@ racionalização.
 - **Não decide capacidade nenhuma.** A1, A2 e A3 são limites nomeados do inventário; C1, C2
   e C3 são hipóteses sobre eixo novo. Nenhuma das seis foi confrontada com o corpus, e a
   ADR 0012 §3 exige o confronto antes da incorporação.
-- **Não resolve a discrepância do diário.** O caso entrou como uso 3 do Marco 6, mas o
-  diário do próprio porte tem 13 linhas contra as 3 daqui, e as duas leituras possíveis
-  mudam o desfecho do portão. Está registrada como pergunta em
-  [`USO-PESSOAL.md`](USO-PESSOAL.md), onde o número mora.
+- **Não julga o portão do Marco 6.** A leitura deste caso destravou a contagem — ela foi
+  de 2 para 13 —, e com isso a coleta de evidência do marco terminou. Mas atingir a
+  contagem não é decidir entre manter privado, congelar ou propor nova ADR, e uma
+  contradição sobre o critério continua aberta: o `RESULTADO-0.1.0.md` exige as dez
+  mudanças **em pelo menos dois projetos**, e as treze são todas do porte. Está registrada
+  em [`USO-PESSOAL.md`](USO-PESSOAL.md), onde o número mora.
 - **Não conclui sobre o recorte da Sara.** A previsão datada de 25/08 continua de pé e
   este caso a alimenta em vez de a substituir: dois defeitos novos na classe "só olho
   humano acha", nenhum coberto.
