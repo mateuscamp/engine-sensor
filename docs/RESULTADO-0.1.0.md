@@ -90,15 +90,20 @@ declarações; o critério precisa continuar sendo medido nas próximas mudança
 
 O risco dominante deixou de ser incompatibilidade do parser e passou a ser utilidade
 cotidiana: regras conservadoras podem avisar demais no Defold ou cobrir pouco código
-dinâmico. O Marco 6 exige dez mudanças relevantes em pelo menos dois projetos, com o
+dinâmico. O Marco 6 exige dez mudanças relevantes em projetos Godot, com o
 registro em [`USO-PESSOAL.md`](USO-PESSOAL.md). Baselines e instalação não contam como mudanças de uso.
 
-**Atualização de 28/08/2026:** a medição corrente saiu de uma para **treze mudanças
-reais**, e o registro vive em [`USO-PESSOAL.md`](USO-PESSOAL.md) — é lá que ele deve ser
-lido, e não aqui. As treze são todas do porte do BomberBoom, o que colide com a exigência
-de "pelo menos dois projetos" escrita no parágrafo acima. A frase fica de pé, sem conserto,
-porque riscá-la é decisão do proprietário: ela decide se o portão do Marco 6 pode ser
-julgado agora.
+**Correção de 28/08/2026.** Este parágrafo dizia "dez mudanças relevantes **em pelo menos
+dois projetos**". A exigência de espalhamento foi revogada pelo
+[`ROTEIRO.md`](ROTEIRO.md), que em 24/08 registrou de propósito o contrário — *"as dez
+mudanças virão todas do porte, e isso é ao mesmo tempo a força e o risco do marco"* —
+depois de a [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md) deixar um único
+projeto Godot em desenvolvimento ativo. A leitura tardia governa, e a frase antiga era
+contradição não riscada, não critério vivo.
+
+A medição corrente saiu de uma para **treze mudanças reais**, todas do porte. O que a
+exigência de dois projetos protegia continua valendo, e passou de critério a **limitação
+declarada do julgamento**: mediu-se a Sara acompanhando um jogo, não um corpus.
 
 Se houver falso bloqueio, necessidade recorrente de inspeção humana ou ausência de
 uso voluntário, o encerramento legítimo é manter apenas o kit AI-first ou congelar a

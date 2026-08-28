@@ -74,13 +74,20 @@ de que uma engine completa seja necessária ou economicamente viável. Por isso,
 projeto permanece deliberadamente na camada de verificação compatível com engines
 existentes.
 
-A prova em curso é o Marco 6: dez mudanças reais em projetos Godot, ou 20 de setembro de
-2026, o que vier primeiro. **Em 28/08/2026 o registro chegou a 13 mudanças** — todas do
-porte do BomberBoom —, e com isso a coleta de evidência terminou antes da data. Atingir a
-contagem não fecha o marco: o portão pede uma decisão entre manter privado, congelar ou
-propor nova ADR, e ela ainda não foi tomada. Há também uma contradição registrada sobre se
-o critério exige dois projetos; ela está em
-[`docs/USO-PESSOAL.md`](docs/USO-PESSOAL.md) e precisa ser resolvida antes do julgamento.
+**O Marco 6 encerrou em 28 de agosto de 2026, por conclusão**, com treze mudanças reais —
+todas do porte do BomberBoom — vinte e três dias antes do critério de parada. O portão
+decidiu **manter a Sara privada**, pela
+[ADR 0013](docs/decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md).
+
+É o desfecho que uma previsão datada de 25/08 antecipou, antes da evidência que o
+confirmaria: *"o recorte é pequeno demais para ser produto e grande o bastante para ser
+portão privado"*. Nenhuma das duas condições que ela listou como capazes de derrubá-la
+aconteceu.
+
+O que a série mostrou, e vale pelos dois lados: **1 aviso útil e 0 falsos em treze usos**,
+e um defeito que só a Sara achou — o mesmo que, na versão Defold, chegou ao jogador. Contra:
+**onze dos treze casos ainda exigiram inspeção humana**, que é o recurso escasso que o
+projeto existe para economizar. A ADR 0013 registra os dois.
 
 | ADR | Decisão |
 |---|---|
@@ -96,6 +103,7 @@ o critério exige dois projetos; ela está em
 | [0010](docs/decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md) | canal físico de entrada em Godot, sem exigir mapa de ações |
 | [0011](docs/decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) | o Marco 7 não começa sem comparação com ferramenta existente |
 | [0012](docs/decisoes/0012-sara-e-corpus-coevoluem.md) | Sara e corpus coevoluem; a evolução do instrumento é registrada |
+| [0013](docs/decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md) | manter a Sara privada ao fim do Marco 6 |
 
 ## Os artigos
 

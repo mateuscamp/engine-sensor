@@ -613,6 +613,32 @@ fn adr_0011_observe_exige_adr_de_comparacao() {
     );
 }
 
+// ---------------------------------------------------------------------------
+// ADR 0013 - a Sara permanece privada ao fim do Marco 6
+// ---------------------------------------------------------------------------
+
+/// O portão do Marco 6 concluiu manter privado. Publicar em registro é o passo
+/// irreversível que separa privado de público, e ele não pode acontecer por descuido
+/// de manifesto: `publish = false` some com uma linha e volta com um `cargo publish`.
+///
+/// Este teste não impede publicar um binário fora do Cargo, e a ADR 0013 declara isso
+/// como conformidade manual em vez de fingir cobertura.
+#[test]
+fn adr_0013_o_pacote_continua_privado() {
+    let manifesto = ler("Cargo.toml");
+    let privado = manifesto
+        .lines()
+        .map(str::trim)
+        .any(|linha| linha.replace(' ', "") == "publish=false");
+    assert!(
+        privado,
+        "o Cargo.toml perdeu `publish = false`. Pela ADR 0013 o portão do Marco 6 \
+         concluiu manter a Sara privada: publicação, código aberto, preço e marca \
+         continuam adiados e exigem decisão própria. Se a intenção é publicar, escreva \
+         a ADR que substitui a 0013 antes de mexer no manifesto."
+    );
+}
+
 #[test]
 fn adr_0007_apenas_binarios_autorizados() {
     let intrusos = binarios_declarados()
