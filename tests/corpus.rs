@@ -8,12 +8,15 @@ use sara_ai_first::{
 #[test]
 #[ignore = "depende do corpus pessoal local"]
 fn five_personal_projects_have_no_blocking_false_positive() {
+    // Caminhos corrigidos em 28/08/2026: os cinco tinham migrado de `~/Godot` para
+    // `~/godot`, e o porte mudou de nome. O teste é `#[ignore]`, então a defasagem
+    // ficou invisível -- e com ela o confronto com o corpus que a ADR 0012 §3 exige.
     let projects = [
-        "/home/mateus/defold/bomberboom",
-        "/home/mateus/Godot/port-gd-bomberboom",
-        "/home/mateus/Godot/boomlitude",
-        "/home/mateus/Godot/mineboom",
-        "/home/mateus/Godot/gods",
+        "/home/mateus/defold/bomberboom-df",
+        "/home/mateus/godot/bomberboom-gd",
+        "/home/mateus/godot/boomlitude",
+        "/home/mateus/godot/mineboom",
+        "/home/mateus/godot/gods",
     ];
     for project in projects {
         let path = PathBuf::from(project);

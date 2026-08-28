@@ -18,6 +18,10 @@ sentidos: o documento não promete o que o código não faz, nem cala o que ele 
 |---|---|---|
 | Godot | animação | `tween_property` |
 | Godot | animação | `kill` |
+| Godot | animação | `pause` |
+| Godot | animação | `play` |
+| Godot | animação | `stop` |
+| Godot | animação | `set_speed_scale` |
 | Godot | entrada | `_input` |
 | Godot | entrada | `_unhandled_input` |
 | Godot | entrada | `_gui_input` |
