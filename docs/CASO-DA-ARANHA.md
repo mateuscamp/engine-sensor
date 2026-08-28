@@ -14,6 +14,8 @@ que se candidata a virar capacidade.
 A pergunta que o organiza é a do autor, e é a pergunta central deste projeto: **o que
 poderia ter sido visto antes de precisar dele.**
 
+O caso está registrado como **uso 3 do Marco 6** em [`USO-PESSOAL.md`](USO-PESSOAL.md).
+
 ---
 
 ## 1. A sessão, em uma frase
@@ -179,8 +181,33 @@ escrita - só não estava marcada como pendente.
 
 ## 5. O que a Sara poderia ter visto sozinha
 
-Três candidatos. Nenhum está decidido: pela [ADR 0012 §3](decisoes/0012-sara-e-corpus-coevoluem.md),
-capacidade generalizável só entra depois de confrontada com o corpus, e nenhum deles foi.
+Seis candidatos, em dois grupos muito diferentes. Nenhum está decidido: pela
+[ADR 0012 §3](decisoes/0012-sara-e-corpus-coevoluem.md), capacidade generalizável só entra
+depois de confrontada com o corpus, e nenhum deles foi.
+
+### 5.1 As três que o próprio porte nomeou - e são da família que a Sara já modela
+
+Estas valem mais que as outras três, e a diferença é de natureza: **não pedem eixo novo.**
+São todas de posse de animação em Godot, que é exatamente o que a Sara faz hoje. Foram
+escritas pela sessão, na hora, nas linhas 11 a 13 do `.sara/USOS.md` do porte.
+
+| # | o que a Sara não vê | por que dói |
+|---:|---|---|
+| A1 | **`pause()` / `play()` num Tween** | ela vê a propriedade e o dono, não o fato de o relógio ter parado. Uma bomba presa para sempre, com o tween pausado, é indistinguível de uma que está queimando |
+| A2 | **`set_speed_scale` num Tween** | ela modela quem *anima* a propriedade, não o relógio com que anima. Aqui não é detalhe: *"um pavio que passou a queimar na metade da velocidade é indistinguível de um que não passou - e essa é a regra inteira da peça"* |
+| A3 | **profundidade por ordem de filho** | `z_index` é relativo ao pai e `move_child` decide quem desenha na frente de quem. Nenhum vira declaração, e **um sprite invisível passa por todos os portões** - foi o que aconteceu com o fio de seda (defeito 2) |
+
+A A2 é a mais forte das seis. O `set_speed_scale` **é** a regra da peça depois do conserto:
+a teia não para o pavio, ela o lentifica. Quer dizer que a Sara varreu 1142 arquivos, contou
+302 declarações e deu saída 0 sobre um mecanismo cuja regra central mora numa chamada de
+Tween que ela não modela. Isso é um limite nomeado do inventário, não um limite do método.
+
+O que as três têm em comum, e que sugere a forma da regra: as três são **modificações do
+relógio de um Tween** ou **da ordem de desenho**, e nenhuma modifica a propriedade animada.
+A Sara declara alvo, propriedade e dono; nenhuma das três aparece nessas três coordenadas.
+
+### 5.2 As três que pedem eixo novo
+
 O que segue é hipótese com discriminador e com risco escrito - não proposta de regra.
 
 ### C1 - parâmetro de tempo que nenhum caso exercita no valor de produção
@@ -261,9 +288,10 @@ caladas.** O caso da aranha não muda o tamanho da porta. Ele acrescenta uma med
 denominador: mais dois defeitos da classe "só olho humano acha", e a Sara não cobre
 nenhum dos dois.
 
-O que o caso sugere é que a peça que falta não é uma regra estática melhor - é a **verdade
-de design declarada** que a ADR 0012 nomeou e explicitamente deixou sem formato, sem lugar
-e sem dono. As §3.2 e §3.3 são as duas faces dela: uma lacuna declarada que nenhum portão
+O que o caso sugere é que a peça que falta **para este defeito** não é uma regra estática
+melhor - as três da §5.1 são regras estáticas e nenhuma delas o pegaria. É a **verdade de
+design declarada** que a ADR 0012 nomeou e explicitamente deixou sem formato, sem lugar e
+sem dono. As §3.2 e §3.3 são as duas faces dela: uma lacuna declarada que nenhum portão
 lê, e uma suposição que sustenta a peça e não está escrita em lugar nenhum que se confira.
 
 ---
@@ -297,11 +325,13 @@ racionalização.
 
 ## 8. O que este documento não conclui
 
-- **Não conta como uso do Marco 6.** A mudança é real e é Godot, e por isso *deveria*
-  entrar no diário como uso 3 - mas quem incrementa a contagem de um portão é o
-  proprietário, não este documento. A recomendação está feita e a decisão fica com ele.
-- **Não decide capacidade nenhuma.** C1, C2 e C3 são hipóteses sem confronto com o corpus,
-  e a ADR 0012 §3 exige o confronto antes da incorporação.
+- **Não decide capacidade nenhuma.** A1, A2 e A3 são limites nomeados do inventário; C1, C2
+  e C3 são hipóteses sobre eixo novo. Nenhuma das seis foi confrontada com o corpus, e a
+  ADR 0012 §3 exige o confronto antes da incorporação.
+- **Não resolve a discrepância do diário.** O caso entrou como uso 3 do Marco 6, mas o
+  diário do próprio porte tem 13 linhas contra as 3 daqui, e as duas leituras possíveis
+  mudam o desfecho do portão. Está registrada como pergunta em
+  [`USO-PESSOAL.md`](USO-PESSOAL.md), onde o número mora.
 - **Não conclui sobre o recorte da Sara.** A previsão datada de 25/08 continua de pé e
   este caso a alimenta em vez de a substituir: dois defeitos novos na classe "só olho
   humano acha", nenhum coberto.
@@ -322,4 +352,5 @@ racionalização.
 | o caso que faltava, depois do conserto | `tests/aranhas_spec.gd:105` - `O PAVIO QUEIMA DURANTE O ROUBO INTEIRO` |
 | o teto que fez o roubo existir | `tests/aranhas_spec.gd:213`, e o commit `28330eb` |
 | a medição 0/36 e 12/36 | saída do `conta_temporaria.gd`, citada no fecho da sessão |
-| a Sara usada | `sara check` no porte: saída 0, 258 claims, 0 diagnostics |
+| as três capacidades ausentes, nomeadas na hora | `.sara/USOS.md` do porte, linhas 11, 12 e 13 |
+| a Sara usada | `f1f4d5f`; `sara check` no porte com saída 0, 302 claims em 1142 arquivos |
