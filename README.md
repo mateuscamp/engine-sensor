@@ -62,6 +62,11 @@ projeto contra as duas referências, os oito achados, as fitness functions de go
 e o plano final de implementação. O desenho está em
 [docs/arquitetura.svg](docs/arquitetura.svg).
 
+**[docs/CASO-DA-ARANHA.md](docs/CASO-DA-ARANHA.md)** - uma sessão de trabalho real lida
+inteira: nove defeitos, quem achou cada um, e por que os dois que importavam passaram por
+303 casos verdes, pela Sentinela e pelo `sara check`. É matéria-prima de decisão, não
+decisão.
+
 ## A decisão atual
 
 Há evidência de uma lacuna em verificabilidade para agentes. Ainda não há evidência
