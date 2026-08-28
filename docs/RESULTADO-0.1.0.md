@@ -17,7 +17,7 @@ marca, SDK, runtime e engine própria continuam fora do escopo.
 |---|---:|---:|
 | testes unitários | 5 aprovados | todos aprovados |
 | cenários CLI e fixtures | 16 aprovados | todos aprovados |
-| fitness functions de governança | 14 aprovadas | toda ADR com conformidade executável |
+| fitness functions de governança | 15 aprovadas | toda ADR com conformidade executável |
 | projetos reais analisados | 5 de 5 | 5 de 5 |
 | arquivos do corpus aceitos ou recusados explicitamente | 694 de 694 | sem omissão silenciosa |
 | erros bloqueantes no corpus | 0 | zero falso positivo bloqueante |

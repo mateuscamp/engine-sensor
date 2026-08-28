@@ -25,14 +25,14 @@ do Marco 7.
 
 ## 0. O que foi executado
 
-Tudo verificado: 33 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
+Tudo verificado: 35 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
 build de release ligando só contra `libc` e `libgcc`, execução em namespace sem rede
 terminando em código 0.
 
 | Item | Achado | Resultado |
 |---|---|---|
 | `common::action_branches` recebe `BlockSyntax` em vez de `godot: bool` | A1 | `src/adapters/common.rs` não menciona nenhuma engine |
-| `tests/governanca.rs` com treze fitness functions | A1, A2, A5, A6, A7 | 33 testes no total, contra 19 antes |
+| `tests/governanca.rs` com quinze fitness functions | A1, A2, A5, A6, A7 | 35 testes no total, contra 19 antes |
 | ADR 0005 - foco em Godot, Defold congelado | A4 | matriz ponderada retirada do `ROTEIRO.md` |
 | ADR 0006 - contrato estrito de relatório e códigos de saída | A6 | forma do JSON congelada por teste |
 | ADR 0007 - `sara observe` como binário separado | A5 | `sara` permanece um quantum offline |
@@ -305,7 +305,7 @@ de ser só uma lista de proibições.
 
 Todas locais, todas em `cargo test`, nenhuma depende de rede.
 
-Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Treze testes.
+Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Quinze testes.
 
 | # | Governa | Reprova quando |
 |---|---|---|
@@ -317,6 +317,7 @@ Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Treze tes
 | F6 | ADR 0005, Defold congelado | some qualquer uma das quatro fixtures ou dos dois cenários históricos |
 | F7 | A7, fonte única | adapter e `COMPATIBILIDADE.md` divergem sobre as construções reconhecidas, em qualquer um dos dois sentidos; token declarado que não existe no fonte; a lista do Defold cresce |
 | F8 | ADR 0011, freio do Marco 7 | o binário `sara-observe` aparece sem existir a ADR que compara o spike contra as ferramentas que já entregam a mesma unidade de evidência |
+| F9 | ADR 0012, série histórica | a tabela de usos perde a coluna `Sara`, ou um uso preenchido não declara qual instrumento respondeu a ele |
 
 F3 é a que merece explicação. Ela não proíbe variação por engine: declara a lista dos
 lugares onde ela pode existir e falha quando a lista cresce em silêncio. É a diferença
@@ -338,7 +339,7 @@ ponderada fora do `ROTEIRO.md` e o diagrama. Ver seção 0.
 
 ### Fase 1 - fronteira - CONCLUÍDA
 
-`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 33 testes
+`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 35 testes
 verdes, clippy sem aviso.
 
 ### Fase 2 - Marco 6, só Godot, sem nada em paralelo
@@ -346,8 +347,17 @@ verdes, clippy sem aviso.
 7. Dez mudanças reais em projetos Godot, ou a data. O que vier primeiro. Pela ADR
    0005, mudança em BomberBoom Defold não conta mais; o projeto continua no corpus de
    falso positivo.
-8. Nenhuma regra nova durante o marco, salvo quando uma mudança real **ou uma
-   baseline de integração em projeto real** expuser regra ausente. A primeira metade é
+8. **REVISTO em 28/08/2026 pela [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md).**
+   O gatilho escrito na ADR 0009 disparou: o terceiro caso não era uma regra, era um modo
+   de trabalho — desenvolver a Sara junto com os testes, porque o domínio é novo. A
+   obrigação deixou de ser "não altere o instrumento" e passou a ser "não altere sem
+   deixar evidência de por que mudou, o que mudou e o que aconteceu no corpus". As dez
+   mudanças e a medição de utilidade continuam; o diário ganhou a coluna da versão usada,
+   e toda capacidade generalizável é confrontada com o corpus antes de entrar. O texto
+   congelado abaixo fica como registro do que valia até aquela data.
+
+   *Texto anterior:* nenhuma regra nova durante o marco, salvo quando uma mudança real
+   **ou uma baseline de integração em projeto real** expuser regra ausente. A primeira metade é
    como a fixture da cadeia fluente do `tween_property` apareceu; a segunda foi
    acrescentada pela [ADR 0009](decisoes/0009-baseline-em-projeto-real-expoe-regra-ausente.md),
    quando a baseline do `gods` mostrou que o padrão de dono centralizado — a própria

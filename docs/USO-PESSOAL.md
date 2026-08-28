@@ -13,6 +13,16 @@ O que vier primeiro encerra o marco. Chegar à data com menos de dez mudanças �
 resultado, não um atraso: significa que a ferramenta não está no caminho do trabalho
 real, e o encerramento legítimo passa a ser manter só o kit ou congelar a ferramenta.
 
+**A Sara muda durante o marco, e isso é o método — não um descuido.** Pela
+[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md), a obrigação deixou de ser "não
+altere o instrumento" e passou a ser "não altere o instrumento sem deixar evidência". Por
+isso a coluna **Sara** existe: ela diz qual instrumento respondeu a cada caso, e os dez
+não são uma série controlada. Quando um caso alterar a ferramenta, uma nota numerada
+abaixo da tabela registra o que faltava, o que mudou e o efeito no corpus inteiro.
+
+A coluna que era "Regra ausente" virou **"Capacidade ausente"**: hoje é regra estática de
+posse, amanhã pode ser observação de runtime, entrada, determinismo ou estado visual.
+
 Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança em projeto
 Defold não conta para a contagem. Nenhum uso registrado até aqui é Defold — os dois são
 do porte, que é Godot —, então a regra ainda não excluiu nada; ela vale para os que
@@ -30,18 +40,18 @@ O risco de ter um alvo só está registrado aqui para não ser descoberto no fim
 porte parar, o marco para junto, e a data decide. Três projetos parados não substituem
 um em movimento — eles são corpus de falso positivo, e é isso que continuam sendo.
 
-| # | Data | Projeto | Mudança | Tempo | Conflito | Aviso útil/falso | Inspeção humana necessária | Regra ausente |
-|---:|---|---|---|---:|---|---|---|---|
-| 1 | 2026-08-23 | porte BomberBoom (Godot) | bomba visual com Tween configurado em cadeia fluente | < 1 s | nenhum após correção | nenhum aviso; a primeira execução omitiu 2 declarações | sim, para comparar o inventário com o diff | parser perdia `tween_property` seguido de `set_trans`/`set_ease`; fixture adicionada |
-| 2 | 2026-08-23 | porte BomberBoom (Godot) | `emulate_mouse_from_touch=false`: toque e mouse caíam no mesmo `_dedo` | < 1 s | erro comprovado, corrigido | 0 falsos | não, o diagnóstico bastou | nenhuma; a regra acabara de nascer pela ADR 0010 |
-| 3 | | | | | | | | |
-| 4 | | | | | | | | |
-| 5 | | | | | | | | |
-| 6 | | | | | | | | |
-| 7 | | | | | | | | |
-| 8 | | | | | | | | |
-| 9 | | | | | | | | |
-| 10 | | | | | | | | |
+| # | Data | **Sara** | Projeto | Mudança | Tempo | Conflito | Aviso útil/falso | Inspeção humana necessária | Capacidade ausente |
+|---:|---|---|---|---|---:|---|---|---|---|
+| 1 | 2026-08-23 | `2603b30` | porte BomberBoom (Godot) | bomba visual com Tween configurado em cadeia fluente | < 1 s | nenhum após correção | nenhum aviso; a primeira execução omitiu 2 declarações | sim, para comparar o inventário com o diff | parser perdia `tween_property` seguido de `set_trans`/`set_ease`; fixture adicionada |
+| 2 | 2026-08-23 | `f1f4d5f` | porte BomberBoom (Godot) | `emulate_mouse_from_touch=false`: toque e mouse caíam no mesmo `_dedo` | < 1 s | erro comprovado, corrigido | 0 falsos | não, o diagnóstico bastou | nenhuma; a regra acabara de nascer pela ADR 0010 |
+| 3 | | | | | | | | | |
+| 4 | | | | | | | | | |
+| 5 | | | | | | | | | |
+| 6 | | | | | | | | | |
+| 7 | | | | | | | | | |
+| 8 | | | | | | | | | |
+| 9 | | | | | | | | | |
+| 10 | | | | | | | | | |
 
 O Sara pode permanecer privado ao final. Nova etapa pública exige nova decisão;
 não é continuação automática deste registro.

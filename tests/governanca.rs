@@ -314,6 +314,61 @@ fn adr_0005_lista_de_construcoes_do_defold_esta_congelada() {
 }
 
 // ---------------------------------------------------------------------------
+// ADR 0012 - a evolução do instrumento é registrada
+// ---------------------------------------------------------------------------
+
+/// Pela ADR 0012 a Sara muda durante o Marco 6, e a obrigação passou a ser deixar
+/// evidência de qual instrumento respondeu a cada caso. Uso sem versão declarada
+/// devolve a série ao problema que a coluna existe para resolver: dez casos que
+/// fingem ter usado a mesma ferramenta.
+#[test]
+fn adr_0012_diario_declara_a_versao_usada() {
+    let diario = ler("docs/USO-PESSOAL.md");
+    let cabecalho = diario
+        .lines()
+        .find(|linha| linha.starts_with("| # | Data |"))
+        .expect("a tabela de usos sumiu de docs/USO-PESSOAL.md");
+    assert!(
+        cabecalho.contains("Sara"),
+        "a tabela de usos perdeu a coluna `Sara`. Pela ADR 0012 cada caso declara qual \
+         instrumento respondeu a ele; sem a coluna, os dez casos voltam a fingir que \
+         usaram a mesma ferramenta."
+    );
+    let coluna = cabecalho
+        .trim_matches('|')
+        .split('|')
+        .position(|celula| celula.contains("Sara"))
+        .expect("coluna Sara");
+
+    let mut sem_versao = Vec::new();
+    for linha in diario.lines() {
+        let limpa = linha.trim();
+        if !limpa.starts_with('|') || limpa.contains("---") || limpa.starts_with("| # |") {
+            continue;
+        }
+        let celulas = limpa
+            .trim_matches('|')
+            .split('|')
+            .map(str::trim)
+            .collect::<Vec<_>>();
+        if celulas.len() <= coluna {
+            continue;
+        }
+        // Linha de uso é a que tem número e mudança descrita; linha em branco não conta.
+        let numero = celulas[0];
+        let preenchida = celulas.iter().skip(1).any(|celula| !celula.is_empty());
+        if numero.parse::<u32>().is_ok() && preenchida && celulas[coluna].is_empty() {
+            sem_versao.push(numero.to_owned());
+        }
+    }
+    assert!(
+        sem_versao.is_empty(),
+        "usos sem versão da Sara declarada: {sem_versao:?}. Pela ADR 0012, alterar o \
+         instrumento é permitido e não declarar qual instrumento respondeu ao caso não é."
+    );
+}
+
+// ---------------------------------------------------------------------------
 // ADR 0005 - Defold congelado como corpus de regressão
 // ---------------------------------------------------------------------------
 

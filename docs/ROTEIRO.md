@@ -29,6 +29,12 @@ Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança e
 Defold não conta para o marco. O BomberBoom Defold permanece no corpus de falso positivo
 bloqueante e suas duas regressões históricas continuam sendo o Portão 0.
 
+**Desde 28 de agosto de 2026 a Sara muda durante o marco.** A
+[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) reviu a Fase 2: os dez casos deixam
+de ser uma série controlada e passam a ser uma série histórica, com a versão usada
+declarada em cada um. A medição de utilidade continua, e ganha uma segunda ao lado — se o
+que nasce num projeto generaliza para o corpus.
+
 **Desde 24 de agosto de 2026 há um único projeto Godot em desenvolvimento ativo:** o
 porte do BomberBoom. Gods, Boomlitude e MineBoom ficam parados como corpus de regressão.
 As dez mudanças virão todas do porte, e isso é ao mesmo tempo a força e o risco do marco.
