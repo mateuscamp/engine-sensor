@@ -25,14 +25,14 @@ do Marco 7.
 
 ## 0. O que foi executado
 
-Tudo verificado: 35 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
+Tudo verificado: 36 testes verdes, `cargo clippy` sem aviso, `cargo fmt` aplicado,
 build de release ligando só contra `libc` e `libgcc`, execução em namespace sem rede
 terminando em código 0.
 
 | Item | Achado | Resultado |
 |---|---|---|
 | `common::action_branches` recebe `BlockSyntax` em vez de `godot: bool` | A1 | `src/adapters/common.rs` não menciona nenhuma engine |
-| `tests/governanca.rs` com quinze fitness functions | A1, A2, A5, A6, A7 | 35 testes no total, contra 19 antes |
+| `tests/governanca.rs` com quinze fitness functions | A1, A2, A5, A6, A7 | 36 testes no total, contra 19 antes |
 | ADR 0005 - foco em Godot, Defold congelado | A4 | matriz ponderada retirada do `ROTEIRO.md` |
 | ADR 0006 - contrato estrito de relatório e códigos de saída | A6 | forma do JSON congelada por teste |
 | ADR 0007 - `sara observe` como binário separado | A5 | `sara` permanece um quantum offline |
@@ -339,7 +339,7 @@ ponderada fora do `ROTEIRO.md` e o diagrama. Ver seção 0.
 
 ### Fase 1 - fronteira - CONCLUÍDA
 
-`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 35 testes
+`common::BlockSyntax` no lugar do booleano, F3 guardando a fronteira, 36 testes
 verdes, clippy sem aviso.
 
 ### Fase 2 - Marco 6, só Godot, sem nada em paralelo
