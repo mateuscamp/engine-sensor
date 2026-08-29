@@ -334,6 +334,15 @@ Nenhuma fitness function foi escrita para esses dois. Pelo precedente da
   vieram `com`**. Se em 20/09 a série ainda for curta, ou majoritariamente `sem`, o formato
   não pegou e a revisão é entre insistir e revogar. Hoje ela tem **um carimbo, `com`** — o da
   própria tarefa que a implementou, o que é o ponto de partida de uma série e não uma série.
+- **A série tem uma exclusão conhecida, medida em 29/08/2026.** O portão só grava a linha do
+  `registro.txt` quando a branch tem commit **fora de `docs/carimbos`**, pela razão que ele
+  declara de si: *"uma branch so com o carimbo ainda pode virar `antes`; grava-la cedo seria
+  carimbar de errado uma coisa que ainda vai acontecer"*. A consequência é que **tarefa cujo
+  produto é só documento não entra na coluna**, ainda que traga os três campos — e o segundo
+  carimbo no formato novo, o da conferência de 29/08, é exatamente um desses. Quem fizer a
+  conta em 20/09 conta os carimbos que **passaram pelo portão**, e não os que existem; se a
+  série vier curta, esta exclusão é a primeira coisa a descontar antes de concluir que o
+  formato não pegou.
 - **Contrária:** se um carimbo fechar com todos os itens de `FORA` classificados `adia` e a
   peça não funcionar, a classe não fez o trabalho e o formato cai. Cair é um resultado.
 - **A favor:** se um item `bloqueia` segurar um merge ao menos uma vez, o mecanismo se pagou —
@@ -366,5 +375,10 @@ Nenhuma fitness function foi escrita para esses dois. Pelo precedente da
   `FORA` do passo 4 e a coluna própria. O primeiro carimbo no formato novo é o daquela
   tarefa, e ele registra que três rodadas saíram verdes com o portão desligado antes de o
   erro aparecer — o caso da aranha em miniatura, dentro da tarefa que existe para
-  consertá-lo.
-- Última alteração: 28 de agosto de 2026
+  consertá-lo. **Mergeada na `main` daquele repositório em 29/08/2026, pelo PR #33.**
+  A branch continua existindo, e nomeá-la sem o merge já custou uma leitura: em 29/08 uma
+  conferência independente rodou os `grep` desta seção contra uma cópia local da `main` três
+  merges atrasada, não achou nenhuma das duas peças e concluiu que a "Conformidade" acima
+  prometia a mais. As peças estavam lá. **Instrumento citado por branch se lê como
+  instrumento possivelmente encalhado** — é o registro que faltava, e é barato.
+- Última alteração: 29 de agosto de 2026
