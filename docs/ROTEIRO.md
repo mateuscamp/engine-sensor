@@ -57,16 +57,33 @@ Defold, e o Sara não a via porque o eixo de entrada exigia mapa de ações.
 O risco: um alvo só. Se o porte parar, o marco para junto e a data decide sozinha. Isso
 não muda o critério, muda o que a data significa quando chegar.
 
-## O Marco 7 foi cancelado em 28/08/2026
+## O Marco 7 já tinha acontecido, e ninguém tinha percebido
 
 O [ADR 0004](decisoes/0004-spike-de-visao-instrumentada-em-godot.md) autorizava, após o
 Marco 6, um único experimento adicional — o spike de visão instrumentada em Godot. Ele
-**não vai acontecer**, e o segundo binário `sara-observe` não nasce.
+**não vai ser construído**, e o segundo binário `sara-observe` não nasce.
+
+**Não porque foi recusado: porque foi feito.** A Sentinela e o portão de cena do
+`bomberboom-gd` são a unidade de evidência da ADR 0004 — `imagem + estado + entradas +
+instante + logs` —, entregue por uma linha de comando headless, com dependência nenhuma, e
+rodando como portão desde 26/08/2026. Cinco das sete fitness functions estão satisfeitas,
+uma é parcial e uma continua aberta; o balanço item a item está no adendo de 29/08 da
+[ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md).
+
+Ele nasceu da pressão de um jogo real, sem ADR que o planejasse — e a
+[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) já dizia isso em 28/08, na frase que
+levou um dia para ser lida pelo que ela afirmava: *"o sentinela é um aparelho de observação
+**mais completo** que o spike que a ADR 0004 especifica"*.
+
+O portão que a ADR 0004 previa ao terminar — *encerrar, manter como ferramenta privada ou
+propor incorporação ao Sara* — **já se realizou na segunda saída**: a Sentinela é ferramenta
+privada do porte, e é lá que ela vale.
 
 A [ADR 0011](decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) exigiu uma
 comparação antes de começar. A comparação é a
 [ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md), e ela
-concluiu por cancelar. Em resumo, contra as sete fitness functions da ADR 0004:
+concluiu por não construir — **por dois motivos, e o de dentro de casa é o mais forte.** O de
+fora, contra as sete fitness functions da ADR 0004:
 
 - **cinco já estavam entregues** por ferramentas de terceiros — e a v0.12.0 do `godot-agent`,
   de 27/08/2026, traz recibo de captura ligando sessão, cena, estado e hash da saída, que é a

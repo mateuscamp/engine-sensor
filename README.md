@@ -93,7 +93,7 @@ projeto existe para economizar. A ADR 0013 registra os dois.
 | [0001](docs/decisoes/0001-validar-mecanismos-antes-da-engine-completa.md) | validar mecanismos antes de uma engine completa |
 | [0002](docs/decisoes/0002-lancamento-interno-e-foco-adaptativo.md) | lançamento interno e foco adaptativo de engine |
 | [0003](docs/decisoes/0003-sara-como-nome-provisorio.md) | Sara como nome provisório da camada |
-| [0004](docs/decisoes/0004-spike-de-visao-instrumentada-em-godot.md) | ~~spike de visão instrumentada em Godot~~ — cancelado pela 0014 |
+| [0004](docs/decisoes/0004-spike-de-visao-instrumentada-em-godot.md) | ~~spike de visão instrumentada em Godot~~ — a Sentinela já o entregava (0014) |
 | [0005](docs/decisoes/0005-foco-em-godot-com-defold-congelado.md) | foco em Godot, com Defold congelado como corpus de regressão |
 | [0006](docs/decisoes/0006-contrato-estrito-de-relatorio-e-codigos-de-saida.md) | contrato estrito de relatório e códigos de saída |
 | [0007](docs/decisoes/0007-observe-como-binario-separado.md) | `sara observe` nasce como binário separado |
@@ -103,7 +103,7 @@ projeto existe para economizar. A ADR 0013 registra os dois.
 | [0011](docs/decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) | o Marco 7 não começa sem comparação com ferramenta existente — cumprida |
 | [0012](docs/decisoes/0012-sara-e-corpus-coevoluem.md) | Sara e corpus coevoluem; a evolução do instrumento é registrada |
 | [0013](docs/decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md) | manter a Sara privada ao fim do Marco 6 |
-| [0014](docs/decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) | cancelar o spike do Marco 7 e preservar a pergunta 7 |
+| [0014](docs/decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) | não construir o spike do Marco 7 — a Sentinela já o entregava — e preservar a pergunta 7 |
 
 ## Os artigos
 
