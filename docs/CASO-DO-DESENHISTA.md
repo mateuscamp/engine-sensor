@@ -365,9 +365,10 @@ dos 34 pontos de entrada do porte caem nelas, com saída 0. **É o outro sentido
 o documento não promete o que o código não faz, e agora também não cala o limite que a medição
 achou. Nenhuma capacidade foi aberta.
 
-**E há uma segunda redação proposta, esta ainda não aplicada**, para o `Critério de revisão`
-da [ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) — a ADR é do
-proprietário e foi aprovada por ele, então ela fica escrita aqui e a decisão é dele:
+**E o limite da §5 entrou no `Critério de revisão` da
+[ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md)**, a pedido do
+proprietário, em 29/08/2026 — na seção que já carrega duas outras adições datadas. Ele não
+muda formato nem dono; acrescenta uma pergunta à conta de 20/09:
 
 > - **O laço tem um elo fora dele, medido em 29/08/2026.** Os três campos e a frase de
 >   correção conferem a **releitura** do pedido, e não o pedido. Quando ele chega como

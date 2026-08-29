@@ -343,6 +343,14 @@ Nenhuma fitness function foi escrita para esses dois. Pelo precedente da
   conta em 20/09 conta os carimbos que **passaram pelo portão**, e não os que existem; se a
   série vier curta, esta exclusão é a primeira coisa a descontar antes de concluir que o
   formato não pegou.
+- **O laço tem um elo fora dele, medido em 29/08/2026.** Os três campos e a frase de correção
+  conferem a **releitura** do pedido, e não o pedido. Quando ele chega como artefato produzido
+  por uma ferramenta — o desenho do [desenhista](../CASO-DO-DESENHISTA.md) é o primeiro —, o
+  elo `tela → texto emitido` fica fora do laço: releitura fiel e correção fiel a um texto que
+  não é o que o autor viu. Não muda formato nem dono. Em 20/09 isto acrescenta uma pergunta à
+  conta: quantos pedidos chegaram por esse caminho, e se algum chegou torto — **zero até
+  aqui**, com dois quase, o `unexpand` e as aspas da NOTA. *(Acrescentado em 29/08/2026, a
+  pedido do proprietário, depois da leitura do caso do desenhista.)*
 - **Contrária:** se um carimbo fechar com todos os itens de `FORA` classificados `adia` e a
   peça não funcionar, a classe não fez o trabalho e o formato cai. Cair é um resultado.
 - **A favor:** se um item `bloqueia` segurar um merge ao menos uma vez, o mecanismo se pagou —
