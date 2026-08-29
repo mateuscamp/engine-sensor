@@ -91,8 +91,12 @@ fora, contra as sete fitness functions da ADR 0004:
 - **uma falhou quando medida, e falhou em silêncio.** Apontar o nó ou propriedade causal é
   precisamente onde a ferramenta genérica errou no porte: ela leu uma propriedade que o motor
   publica e que **não desenha nada**, e reportou verde;
-- **uma sobrevive**, e é a única que produz conhecimento: *imagem mais estado diagnostica
-  melhor que imagem isolada?* Ela foi preservada como pergunta e **não precisa de binário**.
+- **uma sobrevivia**, e é a única que produz conhecimento: *imagem mais estado diagnostica
+  melhor que imagem isolada?* Ela **foi respondida em 29/08/2026**, sem binário nenhum, com a
+  medição que o caso da aranha já tinha produzido sem saber — ver
+  [`PERGUNTA-7.md`](PERGUNTA-7.md). A resposta é sim, como **contrafactual** e não como
+  fitness function cumprida, e ela vem com um limite maior que ela mesma: **nenhum dos quatro
+  instrumentos detectou primeiro.** Os dois defeitos foram achados pelo autor, jogando.
 
 E havia um defeito no próprio critério de aceitação, que o [caso da aranha](CASO-DA-ARANHA.md)
 expôs: **as sete fitness functions têm todas forma de regressão** — algo que estava certo e
