@@ -2,6 +2,27 @@
 
 **Status:** auditoria concluída; Fase 0 e Fase 1 executadas e verificadas; A7 fechado por inteiro
 **Data:** 23 de agosto de 2026
+
+> **Nota de 29/08/2026, acrescentada sem tocar no texto abaixo.** Duas coisas que esta
+> auditoria trata como futuro já aconteceram, e o texto fica intacto porque análise datada
+> que se corrige depois deixa de ser análise.
+>
+> - **O achado A5 — "o Marco 7 muda o quantum arquitetural" — não se realizou, e por um
+>   motivo que a auditoria não podia prever: o marco não foi construído.** Ele aconteceu
+>   sozinho, como a Sentinela do porte, e o quantum do `sara` nunca mudou. Ver a
+>   [ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) e o
+>   adendo dela. A decisão de empacotamento que a §5 previa "antes do Marco 7" não é mais
+>   devida.
+> - **A Fase 2 foi revista em 28/08** pela [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md),
+>   que trocou "não altere o instrumento" por "não altere sem deixar evidência". O gatilho
+>   que obrigou a revisão estava escrito na ADR 0009, e ele funcionou.
+> - **O Marco 6 encerrou em 28/08 por conclusão**, com treze mudanças, e o portão decidiu
+>   manter privado ([ADR 0013](decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md)).
+>   A linha "data de parada: 20/09/2026" da tabela de achados descreve um critério que não
+>   chegou a mandar.
+>
+> A fitness function F8, o freio da ADR 0011, continua de pé e passou a ser satisfeita: a ADR
+> de comparação existe.
 **Escopo:** conformidade do Sara `0.1.0` com o método declarado em
 [`METODO-ARQUITETURAL.md`](METODO-ARQUITETURAL.md), medida contra as duas referências
 **Referências:** Richards e Ford, *Fundamentals of Software Architecture* (FSA);
