@@ -188,6 +188,12 @@ já esteve certa"*. Isso é a **verdade de design declarada**, que a
 
 Esta ADR não a decide. Registra que ela é pré-condição da pergunta 7, e não o contrário.
 
+Quem a decide é a [ADR 0015](0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md), do
+mesmo dia, que fixa formato, lugar e dono e escreve a **redação exata da pergunta 8**. Ela
+mantém esta decisão inteira: a pergunta 8 não vira oitava fitness function da ADR 0004 —
+acrescentar critério a um experimento cancelado seria escrever critério que ninguém roda, e o
+texto de 23/08 fica intacto como esta ADR prometeu.
+
 ### 4. O que fica escrito sobre as ferramentas, para não ser redescoberto
 
 - **Elas resolvem infraestrutura e não resolvem cegueira.** A lista de propriedades que o

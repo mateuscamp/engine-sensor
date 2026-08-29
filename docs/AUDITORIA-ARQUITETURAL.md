@@ -305,7 +305,7 @@ de ser só uma lista de proibições.
 
 Todas locais, todas em `cargo test`, nenhuma depende de rede.
 
-Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Quinze testes.
+Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Dezessete testes.
 
 | # | Governa | Reprova quando |
 |---|---|---|
@@ -318,6 +318,8 @@ Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Quinze te
 | F7 | A7, fonte única | adapter e `COMPATIBILIDADE.md` divergem sobre as construções reconhecidas, em qualquer um dos dois sentidos; token declarado que não existe no fonte; a lista do Defold cresce |
 | F8 | ADR 0011, freio do Marco 7 | o binário `sara-observe` aparece sem existir a ADR que compara o spike contra as ferramentas que já entregam a mesma unidade de evidência |
 | F9 | ADR 0012, série histórica | a tabela de usos perde a coluna `Sara`, ou um uso preenchido não declara qual instrumento respondeu a ele |
+| F10 | ADR 0013, o pacote privado | o `Cargo.toml` perde `publish = false`, que é o passo irreversível entre privado e público |
+| F11 | ADR 0015, registro intacto | a lista de fitness functions da ADR 0004 deixa de ter sete itens — o registro cancelado editado depois, ou o oitavo critério parafusado nele em vez de morar na ADR 0015 §5 |
 
 F3 é a que merece explicação. Ela não proíbe variação por engine: declara a lista dos
 lugares onde ela pode existir e falha quando a lista cresce em silêncio. É a diferença
