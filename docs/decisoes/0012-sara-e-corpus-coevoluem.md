@@ -127,6 +127,10 @@ das duas pega o que ninguém pensou em afirmar, e nenhuma julga estética.
 Esta ADR **não decide** o formato, o lugar nem o dono da verdade de design. Registra que
 ela é a peça que faltava nomear, e que decidir sobre ela exige decisão própria.
 
+*A decisão própria é a [ADR 0015](0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md),
+de 28/08/2026, escrita depois do [caso da aranha](../CASO-DA-ARANHA.md). Este parágrafo fica
+como está: ele continua descrevendo o que esta ADR decidiu e o que não decidiu.*
+
 ## Consequências
 
 ### Positivas

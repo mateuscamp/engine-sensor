@@ -85,7 +85,12 @@ decisão que ainda não fora executada.
 
 Responder essa objeção exige a **verdade de design declarada**, que a
 [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) nomeou e deixou sem formato, lugar e
-dono. A ADR 0014 registra que ela é pré-condição da pergunta que sobrou, e não o contrário.
+dono. A ADR 0014 registra que ela é pré-condição da pergunta que sobrou, e não o contrário;
+a [ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md), do mesmo dia,
+decide os três — **três campos no passo 2 do carimbo**, no repositório de quem constrói, e um
+deles impede o fecho da tarefa. Ela fixa também a redação exata da pergunta 8, que **não**
+entra na ADR 0004: as sete daquela ADR medem um instrumento, e a oitava pergunta contra o que
+o instrumento é conferido.
 
 A [ADR 0007](decisoes/0007-observe-como-binario-separado.md) continua sendo o freio efetivo:
 `sara-observe` não está na lista de binários autorizados, e acrescentá-lo exige uma ADR que

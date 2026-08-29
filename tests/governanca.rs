@@ -639,6 +639,52 @@ fn adr_0013_o_pacote_continua_privado() {
     );
 }
 
+// ---------------------------------------------------------------------------
+// ADR 0015 - a verdade de design, e o oitavo critério que não mora na 0004
+// ---------------------------------------------------------------------------
+
+/// A ADR 0004 foi cancelada pela 0014, que declarou manter o texto dela **intacto**,
+/// "como registro do que foi decidido em 23/08". Registro que se edita depois deixa
+/// de ser registro, e nada guardava essa promessa.
+///
+/// Guarda também a §5 da ADR 0015. As sete fitness functions da 0004 têm todas forma
+/// de regressão — algo que estava certo e ficou errado —, e o reparo óbvio seria
+/// acrescentar um oitavo item: "o instrumento detecta uma peça que nunca esteve
+/// certa". Ele **não vem para cá**. As sete medem um instrumento; o oitavo pergunta
+/// contra o que o instrumento é conferido, e por isso é pré-condição da pergunta 7,
+/// com redação exata na ADR 0015 §5. Acrescentá-lo a um experimento cancelado seria
+/// escrever critério que ninguém vai rodar.
+#[test]
+fn adr_0015_as_sete_fitness_functions_da_0004_continuam_sete() {
+    let adr = ler("docs/decisoes/0004-spike-de-visao-instrumentada-em-godot.md");
+    let inicio = adr
+        .find("\n## Fitness functions")
+        .expect("a seção '## Fitness functions' sumiu da ADR 0004");
+    let resto = &adr[inicio + 1..];
+    let fim = resto[3..]
+        .find("\n## ")
+        .map(|pos| pos + 3)
+        .unwrap_or(resto.len());
+
+    let itens = resto[..fim]
+        .lines()
+        .filter(|linha| {
+            linha
+                .split_once(". ")
+                .is_some_and(|(numero, _)| numero.parse::<u32>().is_ok())
+        })
+        .count();
+
+    assert_eq!(
+        itens, 7,
+        "a lista de fitness functions da ADR 0004 tem {itens} itens, e não sete. A ADR 0004 \
+         está cancelada pela 0014, que manteve o texto dela intacto como registro do que foi \
+         decidido em 23/08/2026 — editá-lo agora apaga o registro. Se a intenção era \
+         acrescentar o critério da peça que nunca esteve certa, ele já tem lugar e redação \
+         exata na ADR 0015 §5, como pré-condição da pergunta 7 e não como oitavo item aqui."
+    );
+}
+
 #[test]
 fn adr_0007_apenas_binarios_autorizados() {
     let intrusos = binarios_declarados()
