@@ -61,6 +61,10 @@ projeto contra as duas referências, os oito achados, as fitness functions de go
 e o plano final de implementação. O desenho está em
 [docs/arquitetura.svg](docs/arquitetura.svg).
 
+**[docs/PERGUNTA-7.md](docs/PERGUNTA-7.md)** - a última fitness function do Marco 7, a única
+que produzia conhecimento: imagem mais estado diagnostica melhor que imagem isolada? Sim — e o
+limite que a resposta trouxe é maior que ela.
+
 **[docs/CASO-DA-ARANHA.md](docs/CASO-DA-ARANHA.md)** - uma sessão de trabalho real lida
 inteira: nove defeitos, quem achou cada um, e por que os dois que importavam passaram por
 303 casos verdes, pela Sentinela e pelo `sara check`. É matéria-prima de decisão, não

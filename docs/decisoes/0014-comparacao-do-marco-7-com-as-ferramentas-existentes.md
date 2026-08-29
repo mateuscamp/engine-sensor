@@ -241,7 +241,7 @@ e o toque vai por `Input.parse_input_event` de propósito, para exercitar evento
 | 4 | dez repetições idênticas, ou a variação identificada | **satisfaz, e está medido** | uso 12: `--fixed-fps 60` levou 9 capturas instáveis para 0, três rodadas comparadas byte a byte; e a GPU fica anotada no `sentinela.txt`, que é variação **identificada** |
 | 5 | manifesto, imagens, estado, entradas e logs sem arquivo oculto | **satisfaz** | 54 PNGs versionados em `docs/capturas/` mais o `sentinela.txt` com assinatura e GPU. Nada mora fora do repositório |
 | 6 | execução mediana abaixo de 30 s | **não conferido** | não medi: rodar o portão **escreve** as capturas e regrava a assinatura, e há outra sessão trabalhando naquele repositório. Fica declarado como não medido em vez de estimado |
-| 7 | imagem mais estado diagnostica melhor que imagem isolada | **ninguém responde** | a mesma das ferramentas externas, e a mesma de sempre |
+| 7 | imagem mais estado diagnostica melhor que imagem isolada | **respondida em 29/08, como contrafactual** | ver [`PERGUNTA-7.md`](../PERGUNTA-7.md): o caso da aranha tinha os quatro instrumentos e ninguém os montou para comparar. Não é a fitness function cumprida — falta a cláusula "previamente definido" |
 
 **E ela faz isso com dependência nenhuma.** Sem addon, sem autoload, sem daemon, sem Python,
 sem Node, sem processo em segundo plano — que é exatamente o acoplamento que a seção *"Por que
