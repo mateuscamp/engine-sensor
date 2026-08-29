@@ -107,5 +107,8 @@ declarada do julgamento**: mediu-se a Sara acompanhando um jogo, não um corpus.
 
 Se houver falso bloqueio, necessidade recorrente de inspeção humana ou ausência de
 uso voluntário, o encerramento legítimo é manter apenas o kit AI-first ou congelar a
-ferramenta privada. O spike visual Godot foi autorizado pelo ADR 0004, mas continua
-condicionado à conclusão do Marco 6 e não autoriza SDK ou runtime.
+ferramenta privada. O spike visual Godot, autorizado pelo ADR 0004, foi **cancelado em
+28/08/2026** pela [ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md):
+cinco das sete fitness functions dele já estavam entregues por ferramentas de terceiros, uma
+falhou em silêncio quando medida, e a única que produzia conhecimento foi preservada como
+pergunta sem precisar de binário.

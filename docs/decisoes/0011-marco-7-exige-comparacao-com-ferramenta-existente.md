@@ -1,6 +1,8 @@
 # ADR 0011 - O Marco 7 não começa sem comparação com ferramenta existente
 
-**Status:** Aceita
+**Status:** **Cumprida** — a ADR de comparação que ela exigiu é a
+[0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md), de 28/08/2026, e ela
+concluiu por cancelar o spike. Este freio custou uma ADR e nenhuma hora de implementação.
 **Data:** 26 de agosto de 2026
 **Decisor:** proprietário do Sara
 **Escopo:** pré-condição do Marco 7; restringe a [ADR 0004](0004-spike-de-visao-instrumentada-em-godot.md)
