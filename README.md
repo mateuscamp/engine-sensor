@@ -70,6 +70,11 @@ inteira: nove defeitos, quem achou cada um, e por que os dois que importavam pas
 303 casos verdes, pela Sentinela e pelo `sara check`. É matéria-prima de decisão, não
 decisão.
 
+**[docs/CASO-DO-DESENHISTA.md](docs/CASO-DO-DESENHISTA.md)** - a primeira ferramenta do
+corpus que carrega intenção em vez de relatar, e a medição que ela permitiu: dos 33 pontos
+de entrada do porte, a Sara declara 2. Os outros 31 são tecla e sinal de botão, e quatro
+deles vão ao aparelho.
+
 ## A decisão atual
 
 Há evidência de uma lacuna em verificabilidade para agentes. Ainda não há evidência
