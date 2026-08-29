@@ -26,10 +26,21 @@ O desenhista é uma cena própria do porte onde o autor escolhe o andar, escolhe
 numa paleta e pinta as células com o dedo ou o mouse. Ao lado, um índice diz o que cada
 sinal significa — e o índice não é uma lista copiada: a ferramenta monta um desenho inteiro
 de cada caractere e pergunta à `Arena` se ele passa, então símbolo novo no domínio aparece
-na paleta sozinho. O botão COPIAR devolve o bloco `PackedStringArray` pronto para colar em
-`game/content/boca_da_mina.gd`.
+na paleta sozinho. O botão COPIAR devolve o bloco `PackedStringArray` daquele andar.
 
-A moldura é do autor, e é ela que faz o caso valer a leitura:
+**E o destino desse bloco é a ideia central da ferramenta, e é a correção que o autor fez a
+esta leitura:**
+
+> não vira conteúdo do jogo de forma alguma, é uma camada de interação com você, o agente de
+> IA, é como se eu tivesse transformando um prompt em desenho
+
+O carimbo da ferramenta diz que o bloco sai *"pronto para colar em `boca_da_mina.gd`"*, e foi
+essa frase que me fez escrever, na primeira versão da §5, que o desenho entra no jogo. **Não
+entra.** O texto vai para a conversa; quem escreve `boca_da_mina.gd` continua sendo a agente.
+Os mesmos bytes, dois destinos possíveis, e a diferença não é cosmética: um deles é código, e
+código tem diff, revisão e portão; o outro é **fala**, e fala não tem nenhum dos três.
+
+A moldura, também do autor, é o que faz o caso valer a leitura:
 
 > achei que essa ferramenta era um meio termo entre prompt e interface gráfica de engine,
 > facilitando comunicação de maneira simplificada
@@ -183,21 +194,36 @@ entradas apontam para o mesmo eixo que falta, e nenhuma das três o nomeia.
 
 ## 5. Por que isto pesa mais aqui do que pesava no console
 
-O console tem 16 dos 29 sítios e é mais antigo. A diferença não é de tamanho, é de função.
+O console tem 16 dos 29 sítios e é mais antigo. A diferença não é de tamanho, é de destino.
 
 **Ferramenta que relata erra para menos.** Se um botão do console mentir, o autor lê um
-número errado sobre o jogo e o jogo continua o que era. **Ferramenta que especifica erra para
-mais:** se um botão do desenhista mentir, o desenho que o autor pensa ter feito não é o
-desenho que sai no `PackedStringArray` — e o que entra em `boca_da_mina.gd`, e portanto no
-jogo, é o texto, não a tela. Com `--desenho` isso vale nas duas direções.
+número errado sobre o jogo, e o jogo continua o que era.
 
-**O caso já tem um defeito exatamente dessa forma, e está no carimbo.** O conversor de
-indentação trocou por TAB os espaços de dentro de quatro textos da tela, e o cabeçalho saiu
-como `andar 2 —Cereja em Cadeia(hoje: com recorte)`. A suíte ficou verde nos 338 casos, a
-Sara ficou verde, e quem viu foi o autor olhando a captura. Numa ferramenta que relata isso é
-feiura. Num canal que carrega intenção, um rótulo que mente é defeito **na especificação** —
-a mesma classe da "tela que nasceu errada" que criou a `sonda_de_tira` em 28/08, e a mesma
-forma da pergunta 8: prova regressiva não pega o que nunca esteve certo.
+**Ferramenta que fala erra para mais, e erra onde não existe portão.** Se um botão do
+desenhista mentir, o desenho que o autor pensa ter feito não é o que sai no bloco — e o bloco
+é o pedido. A agente recebe uma instrução errada e a implementa corretamente. **Não há diff
+para revisar, porque a corrupção acontece antes do diff:** a suíte, a Sentinela, o carimbo e o
+`sara check` vão todos olhar uma implementação fiel de um pedido errado, e os quatro vão
+aprovar — com razão. Com `--desenho` isso vale nas duas direções.
+
+É a pergunta 8 um degrau acima. Lá, prova de forma regressiva não pega a peça que nunca
+esteve certa; aqui a peça nem está em questão — o que nunca esteve certo é o **pedido**, e
+nenhum instrumento deste projeto olha para pedido.
+
+**E o caso já tem um defeito exatamente dessa forma.** O conversor de indentação trocou por
+TAB os espaços de dentro de quatro textos da tela, e o cabeçalho saiu como
+`andar 2 —Cereja em Cadeia(hoje: com recorte)`. A suíte ficou verde nos 338 casos, a Sara
+ficou verde, e quem viu foi o autor olhando a captura. Numa ferramenta que relata, isso é
+feiura. Numa superfície de fala, um rótulo que mente sobre qual andar está aberto faz o autor
+desenhar sobre a coisa errada e **pedir** a coisa errada — e é a mesma classe da "tela que
+nasceu errada" que criou a `sonda_de_tira` em 28/08.
+
+**E é aqui que a camada some do mapa de todo mundo, por construção.** O desenhista não toca
+`game/`, `main/`, `assets/` nem `project.godot`, então a Sentinela não acusa nada — e está
+certa. `ferramentas/*` está no `exclude_filter` do export, então nada disso embarca. Não é
+conteúdo, não é código do jogo e não vai ao aparelho: **é o único artefato do projeto cujo
+produto inteiro é uma fala, e não há portão nenhum para fala.** Vinte e cinco dos 29 sinais
+calados da §3 moram nessa zona; os outros 4 são do jogo e embarcam.
 
 Vale registrar o tamanho da camada: **51 dos 166 arquivos `.gd` da branch estão em
 `ferramentas/`** — mais que os 24 de `main/`. Ela produz 4 das 53 declarações, e as 4 saem de
@@ -278,6 +304,9 @@ explícito é decisão do proprietário.
   aqui é sobre **para onde o instrumento aponta**, não sobre quem o usou.
 - **Não decide se `ferramentas/` deve ser varrido.** É a mesma família da anotação sobre
   `.claude/worktrees/` no `USO-PESSOAL.md`: escolha de contrato.
+- **Não propõe que a Sara verifique fala.** Nomear a classe não é propor regra. O que este
+  caso mostra é que ela existe, que é onde a intenção do autor entra no trabalho, e que hoje
+  ela não tem dono nenhum.
 - **Não conclui sobre o recorte da Sara.** Alimenta a previsão de 25/08 em vez de a
   substituir, e desta vez do lado de dentro do eixo declarado — que é o que a distingue do
   caso da aranha.
