@@ -57,46 +57,39 @@ Defold, e o Sara não a via porque o eixo de entrada exigia mapa de ações.
 O risco: um alvo só. Se o porte parar, o marco para junto e a data decide sozinha. Isso
 não muda o critério, muda o que a data significa quando chegar.
 
-## Continuação aprovada, fora da versão 0.1.0
+## O Marco 7 foi cancelado em 28/08/2026
 
-O [ADR 0004](decisoes/0004-spike-de-visao-instrumentada-em-godot.md) autoriza, após
-o Marco 6, um único experimento adicional:
+O [ADR 0004](decisoes/0004-spike-de-visao-instrumentada-em-godot.md) autorizava, após o
+Marco 6, um único experimento adicional — o spike de visão instrumentada em Godot. Ele
+**não vai acontecer**, e o segundo binário `sara-observe` não nasce.
 
-| Marco | Entrega | Fitness function | Decisão ao terminar |
-|---|---|---|---|
-| 7 | spike de visão instrumentada em Godot | agente detecta três regressões e localiza suas causas sem inspeção humana | encerrar, manter como ferramenta privada ou propor incorporação ao Sara |
+A [ADR 0011](decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) exigiu uma
+comparação antes de começar. A comparação é a
+[ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md), e ela
+concluiu por cancelar. Em resumo, contra as sete fitness functions da ADR 0004:
 
-O Marco 7 combina captura visual, estado da cena, entradas e logs. Ele não inclui
-Defold, Android, SDK, runtime nem API pública e não conta como parte do lançamento
-`0.1.0`.
+- **cinco já estavam entregues** por ferramentas de terceiros — e a v0.12.0 do `godot-agent`,
+  de 27/08/2026, traz recibo de captura ligando sessão, cena, estado e hash da saída, que é a
+  unidade de evidência da ADR 0004 com mais rigor do que ela pediu;
+- **uma falhou quando medida, e falhou em silêncio.** Apontar o nó ou propriedade causal é
+  precisamente onde a ferramenta genérica errou no porte: ela leu uma propriedade que o motor
+  publica e que **não desenha nada**, e reportou verde;
+- **uma sobrevive**, e é a única que produz conhecimento: *imagem mais estado diagnostica
+  melhor que imagem isolada?* Ela foi preservada como pergunta e **não precisa de binário**.
 
-### As duas perguntas que o Marco 7 precisa responder antes de começar
+E havia um defeito no próprio critério de aceitação, que o [caso da aranha](CASO-DA-ARANHA.md)
+expôs: **as sete fitness functions têm todas forma de regressão** — algo que estava certo e
+ficou errado. A aranha nunca esteve certa, e o spike, como estava especificado, teria passado
+nela. É o mesmo ponto cego que a Sentinela tem por construção, reproduzido dentro de uma
+decisão que ainda não fora executada.
 
-A primeira é da [ADR 0011](decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md):
-a unidade de evidência que a ADR 0004 manda construir já existe pronta, e o spike não começa
-sem a ADR que compara.
+Responder essa objeção exige a **verdade de design declarada**, que a
+[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) nomeou e deixou sem formato, lugar e
+dono. A ADR 0014 registra que ela é pré-condição da pergunta que sobrou, e não o contrário.
 
-**A segunda nasceu do [caso da aranha](CASO-DA-ARANHA.md), em 28/08/2026, e é sobre o
-próprio critério de aceitação.** As sete fitness functions da ADR 0004 têm todas a forma de
-**regressão** — três regressões visuais injetadas, detectadas, com a causa localizada. Regressão
-é algo que estava certo e ficou errado.
-
-A aranha nunca esteve certa. O mecanismo foi construído, passou por 303 casos verdes, pela
-Sentinela, pelo portão de cena e pelo `sara check`, e **não funcionava em condição nenhuma**.
-Nenhuma das sete fitness functions pergunta se a peça alguma vez existiu, e por isso **o
-spike, exatamente como está especificado, teria passado nele.**
-
-É o mesmo ponto cego que a Sentinela tem por construção — referência pega tela que estava
-certa e ficou errada — reproduzido dentro de uma decisão que ainda não foi executada. Fica
-escrito antes de o spike ser construído, porque depois vira racionalização.
-
-Isto **não altera a ADR 0004**: acrescenta uma pergunta ao momento em que ela for revista
-pela ADR 0011. Quem escrever a ADR de comparação responde as duas juntas.
-
-Pela [ADR 0007](decisoes/0007-observe-como-binario-separado.md), `observe` nasce como um
-segundo binário, `sara-observe`, e não como subcomando de `sara`. O binário `sara`
-continua sendo um quantum único, offline, sem exigir Godot instalado; essa propriedade
-está medida e não pode degradar por causa de um experimento.
+A [ADR 0007](decisoes/0007-observe-como-binario-separado.md) continua sendo o freio efetivo:
+`sara-observe` não está na lista de binários autorizados, e acrescentá-lo exige uma ADR que
+substitua a 0014.
 
 ## O que fica adiado
 

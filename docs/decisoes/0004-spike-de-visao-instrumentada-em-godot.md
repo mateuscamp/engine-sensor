@@ -1,12 +1,29 @@
 # ADR 0004 - Spike de visão instrumentada em Godot
 
-**Status:** Aceita
+**Status:** **Substituída por [0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md)**
 **Data:** 23 de agosto de 2026
 **Decisor:** proprietário do Sara
 **Escopo:** experimento posterior ao Marco 6
 **Restringida por:** [ADR 0011](0011-marco-7-exige-comparacao-com-ferramenta-existente.md) — o
 Marco 7 não começa sem uma ADR que compare este spike contra as ferramentas existentes.
 Esta ADR não lista opções consideradas, e a ferramenta existente era alternativa viva.
+
+> ## ⚠️ O spike foi CANCELADO em 28/08/2026
+>
+> A comparação que a ADR 0011 exigiu foi feita e concluiu por **cancelar**. Cinco das sete
+> fitness functions abaixo já estavam entregues por ferramentas de terceiros, com recibo e
+> hash que esta ADR nem pediu; a sexta — apontar o nó ou propriedade causal — **falhou
+> quando medida**, e falhou em silêncio; e a sétima, a única que produz conhecimento, foi
+> preservada como pergunta e não precisa de binário nenhum.
+>
+> Há ainda um defeito no critério de aceitação desta ADR que só apareceu depois: **as sete
+> fitness functions têm todas forma de regressão** — algo que estava certo e ficou errado.
+> Ver o [caso da aranha](../CASO-DA-ARANHA.md), que é uma peça que nunca esteve certa e
+> pela qual este spike teria passado.
+>
+> O texto abaixo fica **intacto**, como registro do que foi decidido em 23/08 e do que a
+> comparação encontrou depois. Ver a
+> [ADR 0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md).
 
 ## Contexto
 
