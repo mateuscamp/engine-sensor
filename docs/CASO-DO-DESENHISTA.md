@@ -110,10 +110,37 @@ As quatro do desenhista são o que a linha 15 do diário do porte registra, e es
 `_dedo`, o aperto, e `_tocar`, a célula.
 
 **E o desenhista não tem uma única animação.** Zero ocorrências de `Tween` em
-`ferramentas/desenhista/` e `ferramentas/menu/`. O eixo em que a Sara é forte não tem nada
-para medir aqui, e a capacidade mais nova dela — o relógio do Tween, `a3fe810` — não poderia
-acrescentar nem uma declaração a este caso, o que torna irrelevante para ele o fato de o
-binário de `dist/` estar em `f1f4d5f`.
+`ferramentas/desenhista/` e `ferramentas/menu/` — e zero de `z_index` e `move_child`, que é o
+eixo de profundidade. Os dois eixos em que a Sara é forte não têm nada para medir aqui.
+
+**Isso foi conferido, e não suposto, porque o binário de `dist/` está atrás do `src/`.** Ele
+foi construído em `f1f4d5f`; desde então entraram o relógio do Tween (`fae1485`) e a
+profundidade de desenho (`346b7e7`). Construído o binário do `src` atual e rodado na mesma
+árvore:
+
+| instrumento | arquivos | declarações | animação | entrada | profundidade |
+|---|---:|---:|---:|---:|---:|
+| `dist/`, `f1f4d5f` | 164 | 53 | 47 | **6** | — |
+| `src` atual, `346b7e7` | 164 | **59** | 50 | **6** | 3 |
+
+Zero declarações perdidas, seis novas, **e nenhuma delas de entrada**: as três de
+profundidade caem em `main/`, e as três de animação são o relógio do Tween resolvendo a
+variável de laço em `bomba_na_tela.gd`. **No desenhista, os dois instrumentos dizem as mesmas
+4.** O achado deste caso não depende de qual versão da Sara respondeu — é o mesmo nos dois.
+
+Fica anotado o que a diferença implica para quem lê números entre usos: **as 53 do carimbo do
+porte e da linha 15 do diário saem do binário de `dist/`, que é o que o README manda usar, e o
+`src` já diz 59.** A coluna `Sara` da [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md)
+mantém o registro correto, porque ela nomeia o instrumento; o que não existe é portão que
+avise da distância — nenhum teste confere `dist/` contra `src/`.
+
+**Remedido quatro commits depois, e o número não se mexeu.** Entre a leitura e este parágrafo
+a branch ganhou o `--desenho`, o `SALVAR O DESENHO` — que grava em `docs/desenhos/` porque a
+área de transferência é volátil — e a **NOTA**, um campo de texto onde o autor escreve o que
+quer daquele desenho. No commit `4feffce`: **164 arquivos, 53 declarações, 0 diagnósticos, e
+as mesmas 6 de entrada, nas mesmas seis linhas.** Os pontos de entrada foram de 33 para 34; os
+declarados continuam 2. A ferramenta ganhou uma ponta de laço, um botão e um campo de texto
+livre, e o relatório da Sara é o mesmo.
 
 Sobra a frase inteira do caso: **a Sara viu a única parte do desenhista que se comporta como
 jogo** — um dedo numa superfície, com a posição dividida por 42 para virar célula. Todo o
@@ -123,8 +150,8 @@ resto da ferramenta é comando, e comando ela não vê.
 
 ## 3. O que ela não viu, medido
 
-Contados todos os pontos de entrada do projeto — os quatro callbacks de entrada crua e todo
-`connect` de sinal de widget (`pressed`, `toggled`, `item_selected`, `value_changed`,
+Contados todos os pontos de entrada do projeto em `3ba88af` — os quatro callbacks de entrada
+crua e todo `connect` de sinal de widget (`pressed`, `toggled`, `item_selected`, `value_changed`,
 `text_submitted`, `gui_input`, `button_up`, `button_down`, `text_changed`, `tab_changed`,
 `confirmed`) em `main`, `game`, `ferramentas`, `tests` e `tools`:
 
@@ -218,6 +245,18 @@ feiura. Numa superfície de fala, um rótulo que mente sobre qual andar está ab
 desenhar sobre a coisa errada e **pedir** a coisa errada — e é a mesma classe da "tela que
 nasceu errada" que criou a `sonda_de_tira` em 28/08.
 
+**E a NOTA é o caso limpo da classe, quatro commits depois.** O campo nasceu porque *"a
+figura sozinha não diz o que se quer dela"* — aberto duas semanas depois, um desenho salvo não
+distingue *"faz o andar 3 assim"* de *"compara com o de hoje"* de *"quanto isso custa?"*, e as
+três pedem trabalhos diferentes. É a intenção viajando junto com a forma, que é a definição do
+pedido. Ele é um `TextEdit` lido por consulta (`_nota.text`): não é só que a Sara não o
+declara — **não há nem sítio de conexão para declarar**. E o defeito que a sessão do porte já
+achou nele é exatamente desta classe: uma nota que fale do `"pescoço"` tem aspas, e num
+arquivo de figura crua as aspas ligariam o modo bloco e as onze linhas do desenho, que não têm
+aspas, sumiriam **todas, em silêncio**. O pedido chegaria vazio com o texto certo por cima.
+Quem pegou foi um caso em `tests/desenhista_spec.gd`, escrito pela sessão que construiu — a
+mesma categoria que o caso da aranha chamou de *instrumento escrito na hora*.
+
 **E é aqui que a camada some do mapa de todo mundo, por construção.** O desenhista não toca
 `game/`, `main/`, `assets/` nem `project.godot`, então a Sentinela não acusa nada — e está
 certa. `ferramentas/*` está no `exclude_filter` do export, então nada disso embarca. Não é
@@ -245,9 +284,17 @@ Ela **não** está decidida aqui. A [ADR 0012 §3](decisoes/0012-sara-e-corpus-c
 exige o confronto com o corpus antes da incorporação, e ele não foi feito.
 
 **A previsão, escrita antes de medir**, porque depois vira racionalização: esta capacidade
-**generaliza**, ao contrário do relógio do Tween, que entrou achando 3 declarações no porte e
-**0** em Gods, Boomlitude, MineBoom e no Defold. Todo projeto Godot com menu tem botão ligado
-por sinal.
+**generaliza**. Há dois precedentes, e eles deram resultados opostos — o que torna a previsão
+falsificável em vez de retórica:
+
+| capacidade | no projeto que a motivou | nos parados |
+|---|---:|---|
+| relógio do Tween (`fae1485`) | +3 | **0** em Gods, Boomlitude, MineBoom e Defold |
+| profundidade de desenho (`346b7e7`) | +2 | **+18**: Gods +12, Boomlitude +6 |
+
+A primeira provou não fazer ruído e não mostrou que generaliza; a segunda achou 18
+declarações em dois projetos que não a motivaram. **A previsão é que o sinal de widget se
+pareça com a segunda**, e o denominador abaixo é a razão.
 
 ### O denominador, medido depois da previsão
 
@@ -263,11 +310,11 @@ corpus, contados com o mesmo `grep` da §3, fora de `.claude/` e `.godot/`.
 | MineBoom | 51 | **4** | 1 |
 | **total** | **760** | **89** | **11** |
 
-**Oito vezes mais sítios de sinal do que de callback, e nenhum projeto com zero.** É o oposto
-exato do que o relógio do Tween encontrou, e é a diferença que importa para a segunda linha
-de evidência da [ADR 0012 §5](decisoes/0012-sara-e-corpus-coevoluem.md): lá a capacidade só
-existia no projeto que a motivou; aqui a construção está nos quatro, inclusive nos três
-parados desde 24/08.
+**Oito vezes mais sítios de sinal do que de callback, e nenhum projeto com zero.** É a forma
+do caso da profundidade e não a do relógio do Tween, e é o que importa para a segunda linha de
+evidência da [ADR 0012 §5](decisoes/0012-sara-e-corpus-coevoluem.md): a construção está nos
+quatro projetos, inclusive nos três parados desde 24/08 — e Gods, que foi onde a profundidade
+mais achou, é também onde há mais sinais.
 
 **Duas ressalvas honestas, e as duas apertam o número:**
 
@@ -322,6 +369,7 @@ explícito é decisão do proprietário.
 | o carimbo, com a classificação feita na hora | `docs/carimbos/2026-08-29-desenhista.md`, no porte |
 | a linha do diário do porte | `.sara/USOS.md`, linha 15 |
 | a Sara usada | `f1f4d5f`, o binário de `dist/`, `sha256 1769280b…4751eb` |
+| a Sara conferida contra | o `src` em `346b7e7`, construído para esta leitura: 59 declarações, as mesmas 6 de entrada, as mesmas 4 no desenhista |
 | a medição | `git archive 3ba88af` exportado para `/tmp`, depois `sara check`: saída 0, 53 declarações em 164 arquivos, 0 diagnósticos |
 | por que exportada | a sessão do porte editava `desenhista.gd` durante a leitura; a árvore suja deu 30 sítios de sinal contra os 29 do commit |
 | o denominador do corpus | mesmo `grep`, em `~/godot/{gods,boomlitude,mineboom,bomberboom-gd}`, fora de `.claude/` e `.godot/` |
