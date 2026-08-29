@@ -220,7 +220,12 @@ fn godot_inventories_who_controls_the_tween_clock() {
     // Uma capacidade que não vê o próprio caso de origem não foi construída.
     let pelo_laco = relogio("Tween.set_speed_scale")
         .into_iter()
-        .filter(|item| item["owner"].as_str().unwrap().ends_with("lentificar_o_pavio"))
+        .filter(|item| {
+            item["owner"]
+                .as_str()
+                .unwrap()
+                .ends_with("lentificar_o_pavio")
+        })
         .count();
     assert_eq!(
         pelo_laco, 2,
@@ -232,7 +237,8 @@ fn godot_inventories_who_controls_the_tween_clock() {
     // reprova aqui.
     assert!(
         !claims.iter().any(|item| {
-            item["operation"] == "Tween.play" && item["owner"].as_str().unwrap().contains("soltar")
+            item["operation"] == "Tween.play"
+                && item["owner"].as_str().unwrap().contains("soltar")
                 && item["span"]["line"].as_u64() == Some(33)
         }),
         "declarou relógio para um objeto que não é Tween: {report:#}"
