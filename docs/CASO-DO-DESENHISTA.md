@@ -275,6 +275,29 @@ um arquivo só. (Os 164 varridos são esses 166 menos os 2 do portão em `.sara/
 pula junto com `.git`, `.godot`, `dist` e `target`. `.claude/` não está nessa lista, e é daí
 que vem o ruído de contagem já anotado no `USO-PESSOAL.md`.)
 
+### O limite da ADR 0015, e é o segundo dela
+
+A [ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) já decidiu quem
+confere o pedido, e decidiu bem: o agente escreve os três campos **antes de abrir qualquer
+arquivo do jogo**, e *"o autor corrige por uma frase"* — seis palavras contra uma hora de
+construção. **Não falta dono.** O que este caso mostra é onde o laço não fecha.
+
+**Ele fecha quando o pedido é prosa numa mensagem.** Aí o autor compara a releitura do agente
+contra o que quis dizer, lendo: os dois lados estão no mesmo meio. **Quando o pedido é um
+desenho emitido por uma ferramenta, aparece um elo a mais, e nenhum dos dois olha para ele —
+`tela → texto emitido`.** O agente relê o texto com fidelidade, o autor confere a releitura e
+confirma, e os dois são fiéis a uma figura que o autor não desenhou. Foi essa a forma do
+defeito do `unexpand`: o cabeçalho na tela dizia `andar 2 —Cereja em Cadeia(hoje: com
+recorte)`, e tudo a jusante teria sido fiel a ele.
+
+**É a forma da quarta raiz, do outro lado do balcão.** Lá, uma taxonomia certa foi reusada
+para uma pergunta que ela não responde, e nenhum tipo pega isso porque o tipo está certo.
+Aqui, um mecanismo certo de conferir pedido é reusado para um pedido cujo meio ele não
+previa — e nenhum campo do carimbo pega isso, porque os campos estão certos.
+
+Isto não é argumento contra a ADR 0015. **É o limite dela, o segundo, medido em 29/08/2026**,
+e é informação melhor que uma promessa.
+
 ---
 
 ## 6. O que este caso propõe, sem decidir
@@ -332,13 +355,35 @@ mais achou, é também onde há mais sinais.
   congelado da [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md) não confirma
   nem desmente esta previsão.
 
-**A linha de contrato que falta, e que é escolha de escopo e não conserto:** hoje o
-[`COMPATIBILIDADE.md`](COMPATIBILIDADE.md) lista `_gui_input` entre as construções
-reconhecidas e não diz, em "Fora do contrato", que sinal de widget não é entrada. A redação
-proposta é *"conexão de sinal de widget (`pressed`, `toggled`, `item_selected`) não é
-reconhecida como canal de entrada; interface construída por botão não produz declaração"*.
-Não foi aplicada: o contrato não promete o que o código não faz, e acrescentar um limite
-explícito é decisão do proprietário.
+**A linha de contrato que faltava, e que foi aplicada.** O
+[`COMPATIBILIDADE.md`](COMPATIBILIDADE.md) listava `_gui_input` entre as construções
+reconhecidas e calava, em "Fora do contrato", sobre o sinal de widget — o efeito não é neutro,
+porque `_gui_input` cobre o `Control` que trata evento cru e o sinal é como se escreve UI em
+Godot, então a interface **parecia** coberta. Entraram três linhas — sinal de widget,
+`InputEventKey` e campo de texto lido por consulta — e o parágrafo que diz que são medidas: 32
+dos 34 pontos de entrada do porte caem nelas, com saída 0. **É o outro sentido do achado A7:**
+o documento não promete o que o código não faz, e agora também não cala o limite que a medição
+achou. Nenhuma capacidade foi aberta.
+
+**E há uma segunda redação proposta, esta ainda não aplicada**, para o `Critério de revisão`
+da [ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) — a ADR é do
+proprietário e foi aprovada por ele, então ela fica escrita aqui e a decisão é dele:
+
+> - **O laço tem um elo fora dele, medido em 29/08/2026.** Os três campos e a frase de
+>   correção conferem a **releitura** do pedido, e não o pedido. Quando ele chega como
+>   artefato produzido por uma ferramenta — o desenho do desenhista é o primeiro —, o elo
+>   `tela → texto emitido` fica fora do laço: releitura fiel e correção fiel a um texto que
+>   não é o que o autor viu. Não muda formato nem dono. Em 20/09 isto acrescenta uma pergunta
+>   à conta: quantos pedidos chegaram por esse caminho, e se algum chegou torto — **zero até
+>   aqui**, com dois quase, o `unexpand` e as aspas da NOTA.
+
+**E não há ADR a escrever aqui, por ora.** Uma ADR sobre *quem confere o pedido* responderia
+uma pergunta que já tem dono desde 28/08. O que existe é o limite acima, com zero casos
+realizados. O gatilho que tornaria a ADR devida está nomeado: o primeiro pedido corrompido que
+vire trabalho, ou a primeira proposta de **construir** alguma coisa para isso — que é quando a
+decisão é forçada, e é o padrão da
+[ADR 0011](decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md), cujo freio
+custou uma ADR e nenhuma hora de código.
 
 ---
 
