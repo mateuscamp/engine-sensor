@@ -158,6 +158,12 @@ inventado por simetria:
 | `SUPONHO` | uma linha por pergunta que o autor não respondeu e o agente decidiu sozinho, com o `arquivo:linha` onde a escolha mora | [§3.3](../CASO-DA-ARANHA.md) |
 | `FORA` | uma linha por medição ou verificação não feita, cada uma com **classe**: `bloqueia` ou `adia` | [§3.2](../CASO-DA-ARANHA.md) |
 
+**`FORA` aparece duas vezes: no passo 2 e de novo no passo 4**, e o portão lê os dois. No
+passo 2 vai o que já se sabia que não seria medido; no passo 4, o que a construção
+descobriu — e é lá que estava o da aranha. Ler só o passo 2 deixaria passar exatamente o
+caso que originou esta decisão. *(Corrigido em 28/08/2026, ao implementar: o texto original
+desta seção falava só do passo 2.)*
+
 **`ACONTECE` exige o valor de produção porque extremo isola, e isolar é o hábito certo
 aplicado à pergunta errada.** Os 18 casos da aranha rodavam com `pavio = 999.0` ou
 `pavio = 0.01`; com 999 o roubo sempre vence, com 0,01 a bomba sempre vence, e **nos dois
@@ -201,14 +207,24 @@ em prosa no próprio carimbo ([§3.2](../CASO-DA-ARANHA.md)).
 
 ### 4. Só uma coisa bloqueia, e ela é estreita
 
-**Um item classificado `bloqueia` no campo `FORA` impede o carimbo de ir a `FECHADO`.** Ele
+**Um item de `FORA` que não esteja marcado `adia` impede o carimbo de ir a `FECHADO`.** Ele
 barra o **fecho da tarefa**, não a escrita de código: o carimbo `ABERTO` continua verde, que é
 o estado normal de trabalho em andamento e que o portão de carimbos já trata assim de propósito.
 
+**Item sem classe barra**, e é a regra que faz a classificação valer: o padrão é o lado
+seguro, e dizer `adia` vira ato explícito, escrito, datado e com dono. *(Acrescentado em
+28/08/2026, ao implementar: sem isso, deixar de classificar seria mais barato que
+classificar, e a palavra vira opcional.)*
+
 Tudo o mais é gravado, não barrado. **Ausência do bloco inteiro é gravada**: o portão escreve
-`sem-verdade` no `registro.txt`, ao lado de `antes`, `junto`, `fecho` e `sozinho`, e o número
-responde no tempo — que é a regra que aquele arquivo já estabeleceu para si: *"Um carimbo
-escrito no fecho e um acidente; tres em cinco e um processo que nao esta funcionando."*
+`com` ou `sem` numa **coluna própria** do `registro.txt`, e o número responde no tempo — que é
+a regra que aquele arquivo já estabeleceu para si: *"Um carimbo escrito no fecho e um
+acidente; tres em cinco e um processo que nao esta funcionando."*
+
+A coluna é própria, e não um quinto veredito ao lado de `antes`, `junto`, `fecho` e
+`sozinho`, porque **ordem e presença são duas medições**: um carimbo pode nascer `antes` e
+não trazer verdade nenhuma, e uma coluna só o obrigaria a declarar uma das duas.
+*(Corrigido em 28/08/2026, ao implementar: o texto original desta seção dizia "ao lado de".)*
 
 **O portão lê campo, não parágrafo, e não julga o que está escrito.** Isso não é limitação
 descoberta agora: é o que o `carimbos_spec.gd` já declara de si mesmo. Os três campos não
@@ -266,9 +282,14 @@ adiada do [`ROTEIRO.md`](../ROTEIRO.md#o-que-fica-adiado) não encurta em uma li
 ### Negativas
 
 - **Decidido aqui, conferido lá.** O formato governa um documento em outro repositório, cujo
-  portão o `cargo test` deste não enxerga. Enquanto o `carimbos_spec.gd` não ler os três
-  campos, **isto é decisão no papel** — que é, um andar acima, o mesmo defeito que ela
-  conserta. Quem ler esta ADR procurando o argumento contra ela deve ler esta linha primeiro.
+  portão o `cargo test` deste não enxerga — e continua não enxergando. Quem ler esta ADR
+  procurando o argumento contra ela deve ler esta linha primeiro.
+
+  *O risco de ela ficar no papel foi fechado no mesmo dia: o portão passou a ler os três
+  campos em `bomberboom-gd`, verificado injetando o defeito nas cinco combinações, e o
+  primeiro carimbo no formato novo é o daquela própria tarefa. Mas isto é registro de um
+  fato, não conserto da negativa: as duas metades continuam em repositórios diferentes, e
+  nada aqui reprova se aquele portão for removido.*
 - **O portão lê a classe, não a verdade.** Uma palavra — `adia` no lugar de `bloqueia` — passa
   qualquer coisa. A falha se desloca de *"ninguém escreveu"* para *"alguém escreveu a palavra
   errada"*. A segunda é visível e atribuível; não é impedida.
@@ -294,10 +315,10 @@ de 23/08 **intacto**. Registro que se edita depois deixa de ser registro.
 
 **Declarado manual, porque não há como automatizar daqui sem fingir:**
 
-- **que os três campos são escritos, e que um item `bloqueia` impede o fecho.** Isso mora em
+- **que os três campos são escritos, e que um item sem `adia` impede o fecho.** Isso mora em
   `bomberboom-gd/tests/carimbos_spec.gd`, e o CI deste repositório não vê aquele. A evidência
   que fica é o `docs/carimbos/registro.txt` de lá, que já grava uma linha por carimbo e passa a
-  gravar `sem-verdade`;
+  gravar a coluna `verdade`;
 - **que um `bloqueia` não foi classificado `adia` para passar.** Nenhum portão lê a verdade de
   uma classe. O que existe é rastro: a classe fica escrita, datada e versionada, e quem lê o
   carimbo depois vê quem escreveu qual palavra.
@@ -308,12 +329,11 @@ Nenhuma fitness function foi escrita para esses dois. Pelo precedente da
 ## Critério de revisão
 
 - **Data: 20 de setembro de 2026** — a mesma da [ADR 0013](0013-manter-a-sara-privada-ao-fim-do-marco-6.md).
-  Se até lá o `carimbos_spec.gd` não estiver lendo os três campos, esta decisão ficou no papel,
-  e a revisão honesta é entre implementá-la e revogá-la. **Formato decidido e não implementado
-  é pior que formato ausente: ele é acreditado** — que é a forma do que a
-  [ADR 0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) escreveu sobre o
-  instrumento cego: *"Uma ferramenta que responde errado sem avisar é pior que ferramenta
-  ausente, porque a ausência não é acreditada."*
+  O portão foi escrito em 28/08, então o que a data pergunta deixou de ser *"foi
+  implementado?"* e passou a ser **quantos carimbos passaram pela coluna `verdade`, e quantos
+  vieram `com`**. Se em 20/09 a série ainda for curta, ou majoritariamente `sem`, o formato
+  não pegou e a revisão é entre insistir e revogar. Hoje ela tem **um carimbo, `com`** — o da
+  própria tarefa que a implementou, o que é o ponto de partida de uma série e não uma série.
 - **Contrária:** se um carimbo fechar com todos os itens de `FORA` classificados `adia` e a
   peça não funcionar, a classe não fez o trabalho e o formato cai. Cair é um resultado.
 - **A favor:** se um item `bloqueia` segurar um merge ao menos uma vez, o mecanismo se pagou —
@@ -339,4 +359,12 @@ Nenhuma fitness function foi escrita para esses dois. Pelo precedente da
 - Instrumento citado: skill `carimbador` e `tests/carimbos_spec.gd`, ambos em
   `bomberboom-gd`, lidos em 28/08/2026; carimbo
   `docs/carimbos/2026-08-28-conceito-da-aranha.md` do mesmo repositório.
+- **Implementada em 28/08/2026**, em `bomberboom-gd`, na branch `verdade-de-design`: os três
+  campos no `modelo.md` e na skill, o portão lendo-os em `tests/carimbos_spec.gd`, a coluna
+  `verdade` no `registro.txt`, e 307 casos com 0 falhas. Conferido injetando o defeito em
+  cinco combinações. **Duas correções a esta ADR saíram de lá e estão marcadas no texto**: o
+  `FORA` do passo 4 e a coluna própria. O primeiro carimbo no formato novo é o daquela
+  tarefa, e ele registra que três rodadas saíram verdes com o portão desligado antes de o
+  erro aparecer — o caso da aranha em miniatura, dentro da tarefa que existe para
+  consertá-lo.
 - Última alteração: 28 de agosto de 2026
