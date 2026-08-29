@@ -78,10 +78,21 @@ está congelada: ela não cresce enquanto o foco for Godot.
 - C#, GDExtension, extensões nativas Defold e código gerado;
 - animações alteradas em runtime por reflexão ou nomes inteiramente dinâmicos;
 - macOS, Windows e distribuição pública;
-- qualquer inferência silenciosa quando o parser não entende um arquivo.
+- qualquer inferência silenciosa quando o parser não entende um arquivo;
+- conexão de sinal de widget (`pressed`, `toggled`, `item_selected` e afins) como canal de
+  entrada: interface construída por botão não produz declaração nenhuma;
+- classe de evento de teclado (`InputEventKey`), e campo de texto lido por consulta
+  (`TextEdit.text`): nem um nem outro vira declaração.
 
 Construção relevante que não possa ser resolvida recebe `SAR-PARSE-001`. Erro de
 sintaxe ou árvore incompleta encerra a execução com código 2.
+
+**As duas últimas linhas são medidas, e não hipóteses.** `_gui_input` está entre as
+construções reconhecidas e cobre o `Control` que trata evento cru — não a interface ligada
+por sinal, que é como se escreve UI em Godot. No porte do BomberBoom, **32 dos 34 pontos de
+entrada caem nelas**, e a execução termina com saída 0 e nenhum diagnóstico: o silêncio aqui
+não é `SAR-PARSE-001`, é ausência de regra. A medição está em
+[`CASO-DO-DESENHISTA.md`](CASO-DO-DESENHISTA.md).
 
 Identificadores Unicode válidos do GDScript são normalizados apenas durante o parsing
 porque a gramática comunitária aceita identificadores ASCII. A substituição preserva
