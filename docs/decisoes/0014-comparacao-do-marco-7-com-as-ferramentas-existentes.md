@@ -203,6 +203,76 @@ texto de 23/08 fica intacto como esta ADR prometeu.
   são onze quadros.
 - **Nenhuma vai ao Android.** O veto do aparelho continua sem instrumento.
 
+## Adendo de 29/08/2026 — o Marco 7 já tinha sido executado, e ninguém tinha percebido
+
+Esta ADR concluiu por cancelar com o argumento *"outros já construíram"*. O argumento está
+certo e é o mais fraco dos dois disponíveis. **O forte é que este projeto já construiu — e
+o registro dizia isso, no dia em que esta ADR foi escrita.**
+
+A [ADR 0012](0012-sara-e-corpus-coevoluem.md), de 28/08/2026, tem a frase inteira:
+
+> O **sentinela**, construído no `bomberboom-gd`, é um aparelho de observação **mais completo
+> que o spike que a ADR 0004 especifica**: relógio fixo, 25 telas com tabela de delta por
+> tela, memória por assinatura dos arquivos que desenham, detecção de troca de driver, e
+> cinco famílias de afirmação conferidas **injetando o defeito**. Ele não foi planejado por
+> nenhuma ADR. Ele nasceu da pressão de um jogo real.
+
+Ela foi lida na escrita desta ADR e o laço não fechou. O proprietário o fechou em 29/08.
+
+### A Sentinela e o portão de cena contra as sete fitness functions da ADR 0004
+
+O portão é uma linha, e ela está no `CLAUDE.md` do porte:
+
+```text
+godot --headless --path . --script res://ferramentas/capturar.gd --fixed-fps 60
+```
+
+`capturar.gd` se descreve como *"prova a cena SEM ninguém olhar a janela: instancia o
+tabuleiro, empurra um toque de verdade pelo sistema de entrada e guarda o antes e o depois"* —
+e o toque vai por `Input.parse_input_event` de propósito, para exercitar evento, viewport,
+`_unhandled_input` e conversão de ponto em célula. **É `imagem + estado + entradas + instante
++ logs`, que é a unidade de evidência da ADR 0004, palavra por palavra.**
+
+| # | fitness function da ADR 0004 | a Sentinela + o portão de cena | evidência |
+|---:|---|---|---|
+| 1 | um comando, sem uma pessoa olhar a cena | **satisfaz** | a linha acima, `CLAUDE.md:152` do porte |
+| 2 | regressões injetadas detectadas, corrigidas passam | **satisfaz** | cinco famílias conferidas por injeção do defeito (ADR 0012); a marca de arte provisória e o alarme de erro de runtime também foram conferidos injetando |
+| 3 | aponta o nó ou propriedade causal | **parcial** | ela aponta **qual tela** e **que fração de pixels** — pegou o fio da aranha passando 48 px sobre o HUD, 0,01% dos pixels — e a assinatura aponta **quais arquivos que desenham** mudaram. Estreita até o arquivo, não até o nó |
+| 4 | dez repetições idênticas, ou a variação identificada | **satisfaz, e está medido** | uso 12: `--fixed-fps 60` levou 9 capturas instáveis para 0, três rodadas comparadas byte a byte; e a GPU fica anotada no `sentinela.txt`, que é variação **identificada** |
+| 5 | manifesto, imagens, estado, entradas e logs sem arquivo oculto | **satisfaz** | 54 PNGs versionados em `docs/capturas/` mais o `sentinela.txt` com assinatura e GPU. Nada mora fora do repositório |
+| 6 | execução mediana abaixo de 30 s | **não conferido** | não medi: rodar o portão **escreve** as capturas e regrava a assinatura, e há outra sessão trabalhando naquele repositório. Fica declarado como não medido em vez de estimado |
+| 7 | imagem mais estado diagnostica melhor que imagem isolada | **ninguém responde** | a mesma das ferramentas externas, e a mesma de sempre |
+
+**E ela faz isso com dependência nenhuma.** Sem addon, sem autoload, sem daemon, sem Python,
+sem Node, sem processo em segundo plano — que é exatamente o acoplamento que a seção *"Por que
+não adotar"* usou para recusar as ferramentas externas. A objeção contra elas não se aplica a
+ela, porque ela não é uma ferramenta acoplada ao jogo: **é o jogo provando a própria cena.**
+
+### O que muda, e o que não muda
+
+**A decisão não muda.** Cancelar continua sendo a conclusão, e agora por dois motivos em vez
+de um — e o segundo é mais forte: não se constrói o que já está construído, rodando como
+portão desde 26/08/2026 e sem custo de dependência.
+
+**O status do Marco 7 muda de nome.** Ele não foi *cancelado antes de acontecer*: **foi
+executado sem ter sido planejado**, pela pressão de um jogo real, e o resultado está medido.
+O portão que a ADR 0004 previa ao terminar — *"encerrar, manter como ferramenta privada ou
+propor incorporação ao Sara"* — já se realizou de fato na segunda saída: a Sentinela é
+ferramenta privada, do porte, e é lá que ela vale.
+
+**E o resultado do Marco 7 inclui o limite dele, que também está medido.** O
+[caso da aranha](../CASO-DA-ARANHA.md) é a prova de aceitação mais dura que este aparelho já
+recebeu, e ele **passou verde sobre um mecanismo que nunca funcionou**. Não por defeito: por
+construção. Referência pega tela que estava certa e ficou errada; a aranha nasceu errada. É a
+pergunta 8, e a [ADR 0015](0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) decidiu o
+que fazer com ela.
+
+Então o balanço honesto do Marco 7, agora que se sabe que ele aconteceu: **cinco das sete
+entregues, uma parcial, uma aberta, custo de dependência zero — e um ponto cego nomeado, com
+decisão própria já escrita.** Nenhuma ferramenta externa entrega esse balanço, e nenhuma delas
+teria produzido a pergunta 8, porque nenhuma delas foi usada num jogo por tempo suficiente
+para falhar de um jeito interessante.
+
 ## Consequências
 
 ### Positivas
