@@ -145,13 +145,94 @@ o que a motivou, e essa é precisamente a segunda linha de evidência da
    anotado e não fica consertado:** decidir se `.claude/` sai da varredura é escolha de
    contrato, não conserto, e vale para todo projeto que use worktrees.
 
-### O que ficou de fora, e é a terceira capacidade
+### Nota 2 — o uso 13 alterou a Sara de novo: a profundidade de desenho
 
-**Profundidade por ordem de filho** — `z_index` relativo ao pai e `move_child` — continua
-sem declaração. É a que pegou o fio de seda invisível, e **um sprite invisível continua
-passando por todos os portões**. Ela não entrou aqui porque não é da família de posse de
-animação: é ordem de desenho, um eixo próprio, e misturá-la ao relógio no mesmo commit
-tornaria impossível dizer qual das duas mexeu no corpus.
+A terceira e última das capacidades que o caso da aranha nomeou, e a única das três que
+pegou um defeito por conta própria. Entra sozinha, num commit próprio, pelo motivo que a
+nota 1 registrou ao deixá-la de fora: ordem de desenho é eixo próprio, e misturá-la ao
+relógio do Tween tornaria impossível dizer qual das duas mexeu no corpus.
+
+**O que faltava.** A Sara modelava quem **anima** uma propriedade. Não modelava quem
+**desenha na frente de quem** — e um sprite invisível passava por todos os portões. Foi o
+defeito 2 do caso: o fio de seda com `z_index = -1` não apareceu em quadro nenhum, porque
+`z_index` é relativo ao pai e o pai morava em `$Gemas` junto com as 99 gemas do tabuleiro.
+Nenhum teste, nenhum portão e nenhuma captura da Sentinela viram; quem viu foi uma sonda
+quadro a quadro escrita na hora e jogada fora.
+
+**O que mudou.** `z_index` e `move_child` viram declaração num eixo novo,
+`profundidade`, com espécie de recurso própria (`draw_order`). Os dois decidem o mesmo
+resultado na tela sem se conhecerem, então entram como **dois controladores do mesmo
+recurso** — `z_index` e `ordem_de_filho`, com as operações `CanvasItem.z_index` e
+`Node.move_child`. É a forma que a Sara já usa para duas fontes de verdade sobre uma
+coordenada; ela só não a enxergava aqui. O contrato em
+[`COMPATIBILIDADE.md`](COMPATIBILIDADE.md) declara as duas construções e os quatro
+limites, nos dois sentidos que o achado A7 exige.
+
+**Ela só declara. Não há diagnóstico novo** — como a ADR 0010 e o relógio do Tween
+entraram. Se profundidade decidida duas vezes merece aviso, é decisão própria com outra
+rodada de evidência.
+
+**E ela não inventa.** Quatro limites, e os quatro existem hoje no corpus pessoal:
+
+| o que fica invisível | onde isso existe hoje |
+|---|---|
+| `z_index` dentro de comentário | `aranha_na_tela.gd:165` no porte, mais três lugares no Gods |
+| leitura e comparação (`var z = outro.z_index`, `a.z_index == b.z_index`) | `test_axe_meter.gd` e `test_overlay_acima_da_mao.gd`, no Gods |
+| alvo dinâmico (`_cards_ui[i].z_index`) | `hand_ui.gd:125`, no Gods — 1 das 11 escritas do projeto |
+| `remove_child`, que termina com o mesmo texto | seis chamadas, nos três projetos Godot |
+
+A fixture tem os quatro, e o teste afirma o **número** de declarações: uma regra boa
+demais reprova ali. Cinco mutações foram conferidas — declarar alvo ambíguo, não separar
+leitura de escrita, casar `move_child` por sufixo, usar um controlador só e separar o
+recurso por mecanismo —, e as cinco reprovam o teste.
+
+**O efeito no corpus, medido nos cinco projetos antes e depois**, com as duas rodadas em
+sequência e comparando conjuntos de declaração, não totais:
+
+| projeto | declarações perdidas | declarações novas | diagnósticos |
+|---|---:|---:|---|
+| porte BomberBoom (Godot) | 0 | **2** | idênticos |
+| Gods (Godot) | 0 | **12** | idênticos |
+| Boomlitude (Godot) | 0 | **6** | idênticos |
+| MineBoom (Godot) | 0 | 0 | idênticos |
+| BomberBoom (Defold) | 0 | 0 | idênticos |
+
+**E aqui o resultado transversal é o oposto do da nota 1, o que é o achado que mais
+importa.** O relógio do Tween não encontrou nada nos projetos parados: provou não fazer
+ruído e não mostrou que generaliza. Esta encontrou **18 declarações em dois projetos que
+não a motivaram** — e o Gods, que tem 31 menções a `z_index`, é onde a ordem de desenho já
+é assunto escrito em comentário: `hand_ui.gd` ergue a carta selecionada por `z_index`, e
+`battle_overlay_controller.gd` precisa ficar acima disso. Hoje o que liga os dois arquivos
+é um parágrafo. O MineBoom deu 0 porque não tem `z_index` nem `move_child` em lugar nenhum
+— ausência, não cegueira.
+
+**O que puxa contra, e é preciso escrever.**
+
+1. **Ela não teria pego o defeito que a nomeou.** O fio tinha **um** dono, não dois: a
+   declaração diria "`_pendurar` decide a profundidade de `_fio`", e nada nessa frase diz
+   que o resultado está errado. O que ela faz é pôr a coordenada no inventário, que é
+   exatamente o que a nota 1 registrou para o relógio do Tween. Prometer mais seria
+   confundir enxergar com julgar.
+2. **Nenhum nó do corpus tem os dois mecanismos.** A forma que a capacidade existe para
+   expor — duas fontes de verdade sobre a profundidade do mesmo nó — não ocorre em
+   nenhum dos cinco projetos hoje; no porte ela existiu e sumiu, porque o
+   `z_index = -1` foi trocado pelo `move_child(_fio, 0)` que o consertou. Fora da fixture,
+   a capacidade é inventário puro.
+3. **O pai continua fora.** `z_index` é relativo ao pai, e o pai é informação de cena
+   (`.tscn`), que a Sara não lê. Por isso cada declaração é sobre **um** nó e nunca sobre
+   a comparação entre dois — que é a pergunta "quem aparece na frente de quem". Ler
+   `.tscn` seria expandir o contrato de extensões, e isso é decisão própria.
+
+**Uma coisa de higiene, e ela é uma remoção.** Uma passagem que apagava comentários antes
+da busca foi escrita, medida e **removida**: contra os 2137 arquivos do corpus pessoal ela
+não mudou uma declaração sequer, e nenhum caso da fixture a reprovava. Quem bloqueia
+comentário é a regra de prefixo — o `#` cai dentro do prefixo, e prefixo que não termina
+em ponto não é escrita nesta propriedade. Código que nenhuma mutação mata não é defesa: é
+uma segunda explicação para o mesmo fato, e ela envelhece sozinha.
+
+**As três capacidades do caso da aranha estão fechadas.** A1 e A2 entraram em 28/08/2026
+pela nota 1; A3 entra aqui. O que sobra do caso são as três hipóteses da §5.2, que pedem
+eixo novo e continuam sem confronto com o corpus.
 
 O Sara pode permanecer privado ao final. Nova etapa pública exige nova decisão;
 não é continuação automática deste registro.

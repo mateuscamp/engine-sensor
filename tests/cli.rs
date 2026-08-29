@@ -250,6 +250,94 @@ fn godot_inventories_who_controls_the_tween_clock() {
     );
 }
 
+/// A profundidade de desenho, nascida do caso da aranha (28/08/2026).
+///
+/// A terceira das tres capacidades que o caso nomeou, e a unica que pegou um defeito
+/// por conta propria: o fio de seda com `z_index = -1` nao apareceu em quadro nenhum e
+/// nenhum teste, portao ou captura viu. `z_index` e a ordem entre irmaos decidem a
+/// mesma coisa na tela sem se conhecerem, e nenhum dos dois virava declaracao.
+///
+/// Entra **declarando**, sem diagnostico novo, como a ADR 0010 e o relogio do Tween.
+#[test]
+fn godot_inventories_who_decides_draw_order() {
+    let (code, report, _) = json_report("godot_draw_order_green", &[]);
+    assert_eq!(code, 0);
+    let claims = report["claims"].as_array().unwrap();
+    let profundidade = claims
+        .iter()
+        .filter(|item| item["resource"]["kind"] == "draw_order")
+        .collect::<Vec<_>>();
+
+    // Tres, e o numero e a assertiva: a fixture tem QUATRO armadilhas que uma regra
+    // boa demais transformaria em declaracao.
+    assert_eq!(
+        profundidade.len(),
+        3,
+        "declarou profundidade a mais ou a menos: {report:#}"
+    );
+
+    // Os dois mecanismos caem no MESMO recurso, com um controlador cada. E isso que
+    // torna visivel a coisa que o caso nomeou: duas fontes de verdade sobre a mesma
+    // coordenada, e nenhuma delas sabe da outra.
+    let fio = profundidade
+        .iter()
+        .filter(|item| item["resource"]["target"] == "_fio")
+        .collect::<Vec<_>>();
+    assert_eq!(
+        fio.len(),
+        2,
+        "o fio precisa dos dois mecanismos: {report:#}"
+    );
+    assert_eq!(
+        fio[0]["resource"], fio[1]["resource"],
+        "os dois mecanismos precisam cair no mesmo recurso: {report:#}"
+    );
+    let mecanismos = fio
+        .iter()
+        .map(|item| item["controller"].as_str().unwrap())
+        .collect::<std::collections::BTreeSet<_>>();
+    assert_eq!(
+        mecanismos,
+        ["ordem_de_filho", "z_index"].into_iter().collect(),
+        "os dois mecanismos precisam ser controladores distintos: {report:#}"
+    );
+    let operacoes = fio
+        .iter()
+        .map(|item| item["operation"].as_str().unwrap())
+        .collect::<std::collections::BTreeSet<_>>();
+    assert_eq!(
+        operacoes,
+        ["CanvasItem.z_index", "Node.move_child"]
+            .into_iter()
+            .collect(),
+        "as operacoes saem com o nome publico da API: {report:#}"
+    );
+
+    // A forma exata do porte: `z_index = 1` sem prefixo, no proprio no.
+    assert!(
+        profundidade.iter().any(|item| {
+            item["resource"]["target"] == "self"
+                && item["owner"].as_str().unwrap().ends_with("_montar")
+        }),
+        "a escrita sem prefixo e no proprio no, e ela some se a regra exigir alvo escrito: {report:#}"
+    );
+
+    // As quatro armadilhas, e todas existem HOJE no corpus pessoal: `z_index` dentro
+    // de comentario (tres vezes no Gods e uma no porte), leitura, comparacao e alvo
+    // dinamico (`_cards_ui[i]`, hand_ui.gd). Nenhuma pode virar declaracao.
+    assert!(
+        !profundidade
+            .iter()
+            .any(|item| item["owner"].as_str().unwrap().ends_with("_limites")),
+        "declarou profundidade a partir de comentario, leitura, comparacao ou alvo dinamico: {report:#}"
+    );
+
+    assert!(
+        report["diagnostics"].as_array().unwrap().is_empty(),
+        "a capacidade entra sem diagnostico novo: {report:#}"
+    );
+}
+
 #[test]
 fn godot_input_needs_one_owner_or_explicit_consumption() {
     let (red_code, red, _) = json_report("godot_input_red", &[]);

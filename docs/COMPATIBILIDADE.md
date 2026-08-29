@@ -22,6 +22,8 @@ sentidos: o documento não promete o que o código não faz, nem cala o que ele 
 | Godot | animação | `play` |
 | Godot | animação | `stop` |
 | Godot | animação | `set_speed_scale` |
+| Godot | profundidade | `z_index` |
+| Godot | profundidade | `move_child` |
 | Godot | entrada | `_input` |
 | Godot | entrada | `_unhandled_input` |
 | Godot | entrada | `_gui_input` |
@@ -43,6 +45,26 @@ testada no ramo, que é o que permite enxergar jogo de toque sem mapa de ações
 mouse chegando ao mesmo efeito é conflito no perfil android, porque lá um toque entrega
 os dois eventos; `pointing/emulate_mouse_from_touch=false` desfaz isso e é a única saída
 provável pelo texto.
+
+A profundidade de desenho é eixo próprio, e não uma propriedade de animação: `z_index`
+e a ordem entre irmãos decidem o mesmo resultado na tela sem se conhecerem, então as duas
+entram como controladores distintos (`z_index` e `ordem_de_filho`) do mesmo recurso, com
+as operações `CanvasItem.z_index` e `Node.move_child`. Quatro limites são deliberados e
+valem como contrato:
+
+- **a declaração é sobre um nó, nunca sobre a comparação entre dois.** `z_index` é
+  relativo ao pai, e o pai é informação de cena (`.tscn`), que esta ferramenta não lê.
+  Dizer qual de dois nós aparece na frente exigiria a árvore, e foi exatamente essa
+  relatividade que produziu o defeito de origem;
+- **alvo que não resolve não vira declaração e não vira aviso.** `_cartas[i].z_index`
+  fica invisível de propósito: sem saber qual nó é, não há profundidade a declarar, e
+  aqui não há `SAR-PARSE-001` porque a capacidade entra só declarando;
+- **`add_child` não entra.** Toda inserção estabelece uma ordem inicial, mas dizer
+  profundidade não é o propósito dela; declará-la inundaria o inventário. `move_child` é
+  a única afirmação explícita de ordem entre irmãos;
+- **a escrita de `z_index` não carrega caminho de controle.** Ela não é um sítio de
+  chamada, então o campo `flow` sai vazio em vez de um ramo inventado — `Node.move_child`
+  carrega o seu normalmente.
 
 O adapter Godot reconhece `tween_property` tanto encadeado quanto isolado, e emite a
 operação com o nome público `Tween.tween_property`. O cancelamento é reconhecido tanto

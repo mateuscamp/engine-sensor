@@ -17,6 +17,7 @@ use crate::{
 pub enum Axis {
     Animation,
     Input,
+    Depth,
 }
 
 impl Axis {
@@ -25,6 +26,7 @@ impl Axis {
         match self {
             Axis::Animation => "animação",
             Axis::Input => "entrada",
+            Axis::Depth => "profundidade",
         }
     }
 }

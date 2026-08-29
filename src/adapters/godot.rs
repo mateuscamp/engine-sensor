@@ -10,7 +10,9 @@ use regex::Regex;
 use crate::{
     adapters::{AdapterOutput, Axis, Construct, common},
     config::Profile,
-    model::{Confidence, Diagnostic, Engine, OwnershipClaim, ResourceKey, ResourceKind, Severity},
+    model::{
+        Confidence, Diagnostic, Engine, OwnershipClaim, ResourceKey, ResourceKind, Severity, Span,
+    },
     parser::ParsedSource,
 };
 
@@ -23,6 +25,7 @@ pub fn analyze(
     let mut output = AdapterOutput::default();
     for source in sources {
         animation_claims(source, &mut output);
+        depth_claims(source, &mut output);
         input_claims(source, &declared_actions, &mut output);
     }
     // O conflito de canal físico só existe onde toque e mouse são o mesmo dedo. Pelo
@@ -77,6 +80,18 @@ pub const CONSTRUCTS: &[Construct] = &[
         engine: Engine::Godot,
         axis: Axis::Animation,
         token: "set_speed_scale",
+    },
+    // Profundidade de desenho. Os dois decidem quem aparece na frente de quem, e
+    // nenhum é propriedade animada: são mecanismos independentes com o mesmo efeito.
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Depth,
+        token: "z_index",
+    },
+    Construct {
+        engine: Engine::Godot,
+        axis: Axis::Depth,
+        token: "move_child",
     },
     Construct {
         engine: Engine::Godot,
@@ -429,6 +444,154 @@ fn tween_assignments(source: &ParsedSource) -> BTreeMap<(String, String), String
         );
     }
     assignments
+}
+
+/// Como o relatório publica o eixo de profundidade.
+///
+/// A propriedade nomeia o **efeito**, não a API: `z_index` e a ordem entre irmãos são
+/// coisas diferentes no motor e decidem a mesma coisa na tela. Nomeá-las igual é o que
+/// faz as duas caírem no mesmo recurso, com um controlador cada -- que é a forma que a
+/// Sara já usa para duas fontes de verdade sobre uma coordenada.
+const DEPTH_PROPERTY: &str = "profundidade";
+const DEPTH_BY_Z_INDEX: &str = "z_index";
+const DEPTH_BY_CHILD_ORDER: &str = "ordem_de_filho";
+
+/// Declara quem decide a profundidade de desenho de cada nó.
+///
+/// A terceira capacidade que o caso da aranha nomeou (`docs/CASO-DA-ARANHA.md` §5.1), e
+/// a única das três que pegou um defeito por conta própria: o fio de seda com
+/// `z_index = -1` não apareceu em quadro nenhum, e nenhum teste, portão ou captura viu.
+/// A Sara modelava quem **anima** uma propriedade; não modelava quem **desenha na
+/// frente de quem**, e um sprite invisível passava por todos os portões.
+///
+/// **Só declara, sem diagnóstico novo**, como a ADR 0010 e o relógio do Tween entraram.
+/// Se profundidade decidida duas vezes merece aviso, é decisão própria com outra rodada
+/// de evidência: abrir o olho e reclamar no mesmo commit impede saber qual das duas
+/// coisas produziu o ruído.
+///
+/// **O que ela não sabe, e não finge saber.** `z_index` é relativo ao pai, e o pai é
+/// informação de cena (`.tscn`), que esta ferramenta não lê. Por isso cada declaração é
+/// sempre sobre **um** nó -- quem decide a profundidade dele --, e nunca sobre a
+/// comparação entre dois nós, que é o que exigiria a árvore. Foi exatamente essa
+/// relatividade que produziu o defeito de origem; declarar mais do que isto seria
+/// inventar a árvore que falta.
+fn depth_claims(source: &ParsedSource, output: &mut AdapterOutput) {
+    // A busca é a linha inteira, comentário incluído -- e o comentário não escapa por
+    // descuido. O próprio caso de origem escreve ``[b]`z_index = -1` nao serve[/b]``
+    // dentro de um comentário, e o Gods repete a forma em três lugares: em todas, o `#`
+    // cai dentro do prefixo, e prefixo que não termina em ponto não é escrita nesta
+    // propriedade. Uma passagem que apagasse comentários foi escrita, medida contra os
+    // 2137 arquivos do corpus pessoal e removida: não mudou uma declaração sequer, e
+    // nenhum caso da fixture a reprovava.
+    let código = &source.source;
+    let escrita =
+        Regex::new(r"(?m)^[ \t]*([^=\r\n]*?)z_index[ \t]*(\+=|-=|=)").expect("regex válida");
+    for captures in escrita.captures_iter(código) {
+        let inteiro = captures.get(0).expect("captura 0");
+        // `z_index == 3` é leitura, não escrita. Sem look-around no `regex`, a
+        // distinção é feita aqui.
+        if código.as_bytes().get(inteiro.end()) == Some(&b'=') {
+            continue;
+        }
+        let prefixo = &captures[1];
+        // Prefixo vazio é `self`; prefixo que termina em ponto é o nó. Qualquer outro
+        // prefixo -- `var `, `push_error("` -- não é escrita nesta propriedade.
+        let alvo_bruto = if prefixo.is_empty() {
+            "self"
+        } else if let Some(sem_ponto) = prefixo.strip_suffix('.') {
+            sem_ponto
+        } else {
+            continue;
+        };
+        let (target, confidence) = common::normalized_expression(alvo_bruto);
+        if confidence != Confidence::Proven {
+            continue;
+        }
+        // O vão aponta para o começo da expressão do alvo, que é onde o tree-sitter
+        // põe o vão de uma chamada. Sem isto, a recuada da linha entraria no vão e as
+        // duas metades do mesmo eixo apontariam para colunas diferentes.
+        let início = captures.get(1).expect("captura 1").start();
+        let linha = código[..início]
+            .bytes()
+            .filter(|byte| *byte == b'\n')
+            .count() as u32
+            + 1;
+        let coluna = código[..início]
+            .rfind('\n')
+            .map_or(início, |quebra| início - quebra - 1) as u32
+            + 1;
+        let dono = enclosing_function(source, linha);
+        output.claims.push(OwnershipClaim {
+            resource: depth_resource(source, &dono, &target, ""),
+            owner: format!("{}::{dono}", source.path),
+            span: Span {
+                path: source.path.clone(),
+                line: linha,
+                column: coluna,
+            },
+            confidence: Confidence::Proven,
+            operation: "CanvasItem.z_index".to_owned(),
+            controller: DEPTH_BY_Z_INDEX.to_owned(),
+            // Vazio, e o motivo fica escrito: a escrita de propriedade não é um sítio de
+            // chamada, então não há caminho de controle a copiar. Inventar um ramo seria
+            // pior que declarar nenhum -- e uma regra futura que compare fluxos precisa
+            // saber que esta coordenada está em branco por limite, não por acaso.
+            flow: String::new(),
+        });
+    }
+
+    for call in &source.calls {
+        let método = call
+            .callee
+            .rsplit_once('.')
+            .map_or(call.callee.as_str(), |(_, nome)| nome);
+        // Igualdade exata, e ela importa: `remove_child` termina com o mesmo texto e
+        // não decide profundidade nenhuma.
+        if método != "move_child" || call.args.is_empty() {
+            continue;
+        }
+        let (target, confidence) = common::normalized_expression(&call.args[0]);
+        if confidence != Confidence::Proven {
+            continue;
+        }
+        output.claims.push(OwnershipClaim {
+            resource: depth_resource(source, &call.owner, &target, &call.control_path),
+            owner: format!("{}::{}", source.path, call.owner),
+            span: call.span.clone(),
+            confidence: Confidence::Proven,
+            operation: "Node.move_child".to_owned(),
+            controller: DEPTH_BY_CHILD_ORDER.to_owned(),
+            flow: call.control_path.clone(),
+        });
+    }
+}
+
+/// O recurso é o nó, e não o mecanismo: é isso que põe `z_index` e ordem de filho lado
+/// a lado quando os dois decidem a profundidade do mesmo nó.
+fn depth_resource(
+    source: &ParsedSource,
+    owner: &str,
+    target: &str,
+    control_path: &str,
+) -> ResourceKey {
+    ResourceKey {
+        engine: Engine::Godot,
+        kind: ResourceKind::DrawOrder,
+        scope: common::symbolic_scope(&source.path, owner, target, control_path),
+        target: target.to_owned(),
+        property: DEPTH_PROPERTY.to_owned(),
+        profile: None,
+    }
+}
+
+/// Função que contém uma linha, ou `<arquivo>` quando a escrita mora no corpo da classe.
+fn enclosing_function(source: &ParsedSource, line: u32) -> String {
+    source
+        .functions
+        .iter()
+        .find(|function| line >= function.start_line && line <= function.end_line)
+        .map(|function| function.name.clone())
+        .unwrap_or_else(|| "<arquivo>".to_owned())
 }
 
 fn diagnose_animations(
