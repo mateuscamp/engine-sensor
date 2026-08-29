@@ -320,9 +320,9 @@ fn clock_claims(
             // Sem saber qual Tween é, não há o que declarar -- salvo quando o nome é a
             // variável de um laço sobre uma lista de Tweens conhecidos, que foi como o
             // caso que originou esta capacidade estava escrito.
-            laços.get(&(call.owner.clone(), variavel.to_owned())).map_or_else(
-                Vec::new,
-                |nomes| {
+            laços
+                .get(&(call.owner.clone(), variavel.to_owned()))
+                .map_or_else(Vec::new, |nomes| {
                     nomes
                         .iter()
                         .filter_map(|nome| {
@@ -332,8 +332,7 @@ fn clock_claims(
                                 .or_else(|| por_variavel.get(nome.as_str()).copied().flatten())
                         })
                         .collect()
-                },
-            )
+                })
         } else {
             diretos
         };
