@@ -25,7 +25,7 @@ marca, SDK, runtime e engine própria continuam fora do escopo.
 | variação nas cinco varreduras | 0,64–0,74 s | registrar estabilidade |
 | JSON repetido | idêntico byte a byte | determinístico |
 | execução sem rede | código 0 em namespace sem rede | offline |
-| binário distribuível | 3.892.496 bytes | Linux x86_64, sem Python/Node |
+| binário distribuível | 3.927.632 bytes | Linux x86_64, sem Python/Node |
 | portão em projeto ativo | porte BomberBoom | `AGENTS.md` e `CLAUDE.md` ativos |
 | portões copiáveis | Godot e Defold | entrada ausente reprova explicitamente |
 
@@ -41,6 +41,16 @@ declarações são idênticas em todos, e a única mudança de diagnóstico em t
 é o aviso falso do `gods` desaparecendo. O `strip` que produz este tamanho vive em
 `[profile.release]` do `Cargo.toml` e em `tools/dist.sh`, em vez de depender de um passo
 manual lembrado.)*
+
+*(Atualizado em 29/08/2026: reconstruído de novo, e desta vez para **alcançar** o `src` — o
+relógio do Tween e a profundidade de desenho tinham entrado no código sem que o artefato
+acompanhasse. São 35.136 bytes a mais. A distância não apareceu por leitura: apareceu quando
+o mesmo projeto mediu 53 declarações pelo binário publicado e 59 pelo código, no
+[caso do desenhista](CASO-DO-DESENHISTA.md). Desde então há portão —
+`adr_0012_o_binario_publicado_responde_como_o_codigo` roda as duas versões sobre as 25
+fixtures e exige relatórios idênticos —, e foi ele que reprovou aqui, exatamente em
+`godot_animation_clock_control_green` e `godot_draw_order_green`, as fixtures das duas
+capacidades ausentes.)*
 
 O porte Godot recebeu `.sara/`, `sara.toml` e o portão curto tanto em `AGENTS.md`
 quanto em `CLAUDE.md`. A inicialização preservou as instruções e mudanças que já

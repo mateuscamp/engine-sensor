@@ -113,10 +113,10 @@ As quatro do desenhista são o que a linha 15 do diário do porte registra, e es
 `ferramentas/desenhista/` e `ferramentas/menu/` — e zero de `z_index` e `move_child`, que é o
 eixo de profundidade. Os dois eixos em que a Sara é forte não têm nada para medir aqui.
 
-**Isso foi conferido, e não suposto, porque o binário de `dist/` está atrás do `src/`.** Ele
-foi construído em `f1f4d5f`; desde então entraram o relógio do Tween (`fae1485`) e a
-profundidade de desenho (`346b7e7`). Construído o binário do `src` atual e rodado na mesma
-árvore:
+**Isso foi conferido, e não suposto, porque na hora desta leitura o binário de `dist/` estava
+atrás do `src/`.** Ele fora construído em `f1f4d5f`; depois dele entraram o relógio do Tween
+(`fae1485`) e a profundidade de desenho (`346b7e7`). Construído o binário do `src` e rodado na
+mesma árvore:
 
 | instrumento | arquivos | declarações | animação | entrada | profundidade |
 |---|---:|---:|---:|---:|---:|
@@ -128,11 +128,16 @@ profundidade caem em `main/`, e as três de animação são o relógio do Tween 
 variável de laço em `bomba_na_tela.gd`. **No desenhista, os dois instrumentos dizem as mesmas
 4.** O achado deste caso não depende de qual versão da Sara respondeu — é o mesmo nos dois.
 
-Fica anotado o que a diferença implica para quem lê números entre usos: **as 53 do carimbo do
-porte e da linha 15 do diário saem do binário de `dist/`, que é o que o README manda usar, e o
-`src` já diz 59.** A coluna `Sara` da [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md)
-mantém o registro correto, porque ela nomeia o instrumento; o que não existe é portão que
-avise da distância — nenhum teste confere `dist/` contra `src/`.
+**A diferença era um defeito de método, e foi consertada nesta mesma branch.** As 53 do
+carimbo do porte e da linha 15 do diário saem do binário de `dist/`, que é o que o README manda
+usar, enquanto o `src` já dizia 59. A coluna `Sara` da
+[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) mantinha o registro correto, porque nomeia
+o instrumento — o que não existia era portão que avisasse da distância. Agora existe:
+`adr_0012_o_binario_publicado_responde_como_o_codigo` roda as duas versões sobre as 25 fixtures
+e exige relatórios idênticos, e o `dist/` foi reconstruído. Conferido por mutação: devolvido o
+binário antigo, o portão reprova nomeando `godot_animation_clock_control_green` e
+`godot_draw_order_green` — as fixtures exatas das duas capacidades que faltavam. **A partir
+daqui os dois números são o mesmo: 59.**
 
 **Remedido quatro commits depois, e o número não se mexeu.** Entre a leitura e este parágrafo
 a branch ganhou o `--desenho`, o `SALVAR O DESENHO` — que grava em `docs/desenhos/` porque a
@@ -368,8 +373,9 @@ explícito é decisão do proprietário.
 | o branch lido | `desenhista`, em `3ba88af`, mais o `--desenho` ainda não commitado |
 | o carimbo, com a classificação feita na hora | `docs/carimbos/2026-08-29-desenhista.md`, no porte |
 | a linha do diário do porte | `.sara/USOS.md`, linha 15 |
-| a Sara usada | `f1f4d5f`, o binário de `dist/`, `sha256 1769280b…4751eb` |
-| a Sara conferida contra | o `src` em `346b7e7`, construído para esta leitura: 59 declarações, as mesmas 6 de entrada, as mesmas 4 no desenhista |
+| a Sara usada na medição | `f1f4d5f`, o binário de `dist/` como estava, `sha256 1769280b…4751eb` |
+| a Sara conferida contra | o `src` em `346b7e7`: 59 declarações, as mesmas 6 de entrada, as mesmas 4 no desenhista |
+| o que a conferência produziu | `dist/` reconstruído (`sha256 4c9ff12e…50677`) e o portão `adr_0012_o_binario_publicado_responde_como_o_codigo` |
 | a medição | `git archive 3ba88af` exportado para `/tmp`, depois `sara check`: saída 0, 53 declarações em 164 arquivos, 0 diagnósticos |
 | por que exportada | a sessão do porte editava `desenhista.gd` durante a leitura; a árvore suja deu 30 sítios de sinal contra os 29 do commit |
 | o denominador do corpus | mesmo `grep`, em `~/godot/{gods,boomlitude,mineboom,bomberboom-gd}`, fora de `.claude/` e `.godot/` |

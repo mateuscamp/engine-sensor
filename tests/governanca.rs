@@ -5,7 +5,12 @@
 //! seção de conformidade de cada ADR exige, no lugar de uma regra lembrada.
 //! Referência: `docs/AUDITORIA-ARQUITETURAL.md`, seção 4.
 
-use std::{collections::BTreeSet, fs, path::PathBuf};
+use std::{
+    collections::BTreeSet,
+    fs,
+    path::{Path, PathBuf},
+    process::Command,
+};
 
 use serde_json::Value;
 
@@ -365,6 +370,80 @@ fn adr_0012_diario_declara_a_versao_usada() {
         sem_versao.is_empty(),
         "usos sem versão da Sara declarada: {sem_versao:?}. Pela ADR 0012, alterar o \
          instrumento é permitido e não declarar qual instrumento respondeu ao caso não é."
+    );
+}
+
+/// Roda um binário sobre um projeto e devolve o par que o contrato da ADR 0006
+/// promete: código de saída e relatório.
+fn resposta(binario: &Path, projeto: &Path) -> (Option<i32>, String) {
+    let saida = Command::new(binario)
+        .arg("check")
+        .arg(projeto)
+        .arg("--format")
+        .arg("json")
+        .output()
+        .unwrap_or_else(|erro| panic!("{}: {erro}", binario.display()));
+    (
+        saida.status.code(),
+        String::from_utf8_lossy(&saida.stdout).into_owned(),
+    )
+}
+
+/// O artefato publicado tem de responder como o código publicado.
+///
+/// A ADR 0012 obriga a declarar qual instrumento respondeu a cada caso, e o
+/// diário nomeia a versão em cada linha. Isso protege quem **lê** a coluna, e não
+/// quem **roda**: o README distribui `dist/sara-linux-x86_64`, e um artefato
+/// atrasado escreve no diário números de um instrumento que o `src` não tem mais.
+///
+/// Aconteceu, e é o caso que este portão nasceu para não deixar repetir: entre
+/// `f1f4d5f` e `346b7e7` entraram o relógio do Tween e a profundidade de desenho,
+/// o `dist/` continuou em `f1f4d5f`, e o mesmo projeto media 53 declarações pelo
+/// binário publicado e 59 pelo código. Nenhum teste percebeu, porque nenhum
+/// olhava para o artefato.
+///
+/// O portão é **causal e não de metadado**: não compara datas nem commits, roda as
+/// duas versões sobre todas as fixtures e exige relatórios idênticos. Capacidade
+/// nova no `src` sem reconstruir o `dist/` derruba este teste, e a saída dele é o
+/// comando que conserta.
+#[test]
+fn adr_0012_o_binario_publicado_responde_como_o_codigo() {
+    let publicado = raiz().join("dist/sara-linux-x86_64");
+    assert!(
+        publicado.exists(),
+        "{} não existe, e é o caminho que o README manda usar.",
+        publicado.display()
+    );
+    let do_codigo = Path::new(env!("CARGO_BIN_EXE_sara"));
+
+    let mut fixtures: Vec<PathBuf> = fs::read_dir(raiz().join("tests/fixtures"))
+        .expect("tests/fixtures")
+        .map(|entrada| entrada.expect("fixture").path())
+        .filter(|caminho| caminho.is_dir())
+        .collect();
+    fixtures.sort();
+    assert!(!fixtures.is_empty(), "tests/fixtures ficou vazio");
+
+    let mut divergentes = Vec::new();
+    for fixture in &fixtures {
+        if resposta(do_codigo, fixture) != resposta(&publicado, fixture) {
+            divergentes.push(
+                fixture
+                    .file_name()
+                    .expect("nome da fixture")
+                    .to_string_lossy()
+                    .into_owned(),
+            );
+        }
+    }
+
+    assert!(
+        divergentes.is_empty(),
+        "o binário de dist/ responde diferente do código em {} de {} fixtures: {divergentes:?}. \
+         O artefato publicado ficou para trás do `src`, e quem seguir o README vai medir com \
+         uma Sara que não existe mais. Reconstrua com `tools/dist.sh`.",
+        divergentes.len(),
+        fixtures.len()
     );
 }
 
