@@ -41,6 +41,10 @@ pub enum Confidence {
 pub enum ResourceKind {
     AnimationProperty,
     InputEffect,
+    /// Quem decide a profundidade de desenho de um nó. É espécie própria e não
+    /// uma propriedade de animação: dois mecanismos independentes — `z_index` e a
+    /// ordem entre irmãos — decidem o mesmo resultado na tela sem se conhecerem.
+    DrawOrder,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
@@ -72,6 +76,7 @@ impl ResourceKey {
         let kind = match self.kind {
             ResourceKind::AnimationProperty => "animation",
             ResourceKind::InputEffect => "input",
+            ResourceKind::DrawOrder => "draw_order",
         };
         let profile = self
             .profile
