@@ -64,6 +64,9 @@ gerar uma imagem e olhar. Dois foram achados pelo autor.
 Cinco mecanismos, e nenhum deles é descuido. Todos são efeito de instrumentos corretos
 usados como foram desenhados.
 
+*Dois dias depois, outros três casos mostraram que estes mecanismos têm **raízes
+diferentes**. A nota de 29/08, logo abaixo da §3.5, as separa em quatro.*
+
 ### 3.1 O botão girado - e o hábito certo aplicado à pergunta errada
 
 A regra do jogo é uma **corrida entre dois relógios**: o pavio da bomba queima enquanto a
@@ -164,6 +167,149 @@ o pedido com a entrega *como a agente a observou*, e ela observou pelo mesmo ins
 furado da §3.1.
 
 ---
+
+## As quatro raízes, e elas se ordenam por profundidade — nota de 29/08/2026
+
+*Acrescentada dois dias depois, sem tocar em nada acima. A §3 explica os cinco
+mecanismos pelos quais **os defeitos da aranha** vazaram. Nas 48 horas seguintes
+apareceram mais três casos, e juntos eles mostram uma coisa que um caso sozinho não
+mostrava: **as cegueiras têm raízes diferentes, e achatá-las torna a lição inútil.***
+
+A objeção que produziu esta seção veio da sessão que construiu a ameba, e ela está
+certa: *"sem separar, a lição vira 'cuidado com portões' e não ensina nada."*
+
+| # | caso | o instrumento… | o que estava certo |
+|---:|---|---|---|
+| 1 | **a aranha, 0 de 36** | **desligou a condição de produção** | tudo o mais |
+| 2 | **as organelas da ameba** | **mediu um substituto que não acompanha a pergunta** | a condição |
+| 3 | **o `gda` e o `Control.scale`** | **leu o observável que existia, e não o que decidia** | a condição e a intenção da métrica |
+| 4 | **a ameba no vazio** | **afirmou exatamente o conceito, e a taxonomia estava certa para outro fim** | a condição, a métrica, o observável e o tipo |
+
+Elas descem uma camada por vez: **condição → métrica → observável → premissa.** E a
+última é a única que nenhum instrumento fecha, porque não há defeito nele.
+
+### 1. A condição foi desligada — a aranha
+
+Os 18 casos e a sonda rodavam com `bomba.pavio = 999.0` ou `0.01`. A corrida entre os
+dois relógios não existe em nenhum dos dois extremos, e o valor de produção, 2,20, não
+aparecia em caso nenhum. **Conserto:** um caso com o valor de produção. Está na §3.1.
+
+### 2. A métrica era um substituto ruim — as organelas
+
+A ameba teve uma primeira versão com **organelas** girando por dentro do corpo. A prova
+de cena mediu **6,20% na faixa viva contra 0,00% na de controle**, com piso de 1,00%, e
+**passou** — seis vezes o piso, com o controle limpo. O autor olhou e disse que a peça
+estava *"completamente parada"*.
+
+**A métrica conta área; a percepção usa borda.** Quatro graus de torção numa célula de
+72 px deslocam a borda ~5 px em 1,5 s: existe na medição e não existe no olho.
+
+**E o conserto não foi o limiar, o que é a parte transferível:** foi mudar a animação —
+torção de 4 para 10 graus e balanço do corpo, ou seja, **mexer a borda**. Piso mais alto
+teria reprovado a peça certa junto com a errada, porque as duas versões estão na mesma
+ordem de grandeza e o que as separa não é *quanto* mudou, é **onde**. Registro em
+`docs/MEDICOES.md` do porte.
+
+### 3. O observável disponível não era o que decidia — o `gda`
+
+Em Godot 4.7, `Control.scale` e `offset_transform_scale` são propriedades diferentes e
+**só a segunda aparece em `get_property_list()`** — e a família `offset_transform_*`
+**não desenha**. A ferramenta genérica leu a única que o motor oferece, que está ligada em
+nada, e respondeu verde com 30 quadros amostrados em JSON estruturado.
+
+**A diferença para a raiz 2 é quem escolheu.** Ali alguém escolheu um substituto e
+escolheu mal; aqui o motor ofereceu um observável só, e ele era falso. Nenhuma versão
+melhor da ferramenta conserta isso. Detalhe em
+[ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md).
+
+### 4. A premissa estava errada, e o instrumento a cumpriu — a ameba no vazio
+
+**É a mais funda, e a única em que o instrumento não tem defeito nenhum.**
+
+A ameba do andar 3 anda **por baixo do tabuleiro**, invisível. O comentário que fundou a
+regra dizia, em 29/08/2026:
+
+> POR BAIXO NADA BARRA: a ameba submersa passa sob a rocha, sob o espelho e **sob o
+> recorte do desenho**, porque ela não está no tabuleiro.
+
+**O comentário não estava mal escrito: ele descrevia com precisão o que fora decidido.**
+Quem o escreveu confirmou por escrito, e a correção dele é o conteúdo desta seção:
+
+> Eu escrevi `return grade.dentro(aqui)` de propósito [...] As três cláusulas eram
+> deliberadas, e a terceira estava errada pelo mesmo motivo que as outras duas estavam
+> certas.
+
+**O erro é de classificação, e é específico:** `Celula.Tipo.FORA` foi tratado como se
+fosse **peça**, igual a rocha e espelho. Não é. As três param quem anda *sobre* o
+tabuleiro, e é aí que a semelhança acaba — **rocha e espelho são tabuleiro com alguma
+coisa em cima; `FORA` é ausência de tabuleiro.** Debaixo de rocha há chão; debaixo de
+`FORA` não há nada de que estar debaixo.
+
+O `enum` as agrupa porque `Celula.fixa()` as agrupa, e **essa agrupação está certa para o
+propósito dela** — só não é a divisão que a ameba precisava. É uma taxonomia correta
+reusada para uma pergunta que ela não responde, e esse é um defeito que nenhum tipo pega,
+porque o tipo está certo.
+
+O autor viu na tela, na cerimônia de enterro: *"essa segunda tá onde? não tem gema nenhuma
+ali."*
+
+#### Por que nenhum portão podia falar
+
+- **a suíte estava calada, não errada.** O caso que existia cobria **duas** das três
+  cláusulas — a rocha e a borda da grade. A única sem caso era a errada;
+- **a família Presença não tinha o que ver.** Ameba submersa não tem nó. Cena e estado
+  concordavam **perfeitamente**, e os dois estavam errados sobre o mundo. O par existe
+  para achar desencontro entre eles, e não havia desencontro;
+- **a Sentinela não a tem.** A ameba não está nas 25 telas;
+- **o Carimbador declara este limite na própria skill**: *"se os dois lados entenderam
+  errado a mesma coisa, o carimbo fecha verde. Ele separa culpas; não descobre o que
+  ninguém pensou."* Agora ele tem um caso datado.
+
+#### A frase que fecha, e ela é de quem cometeu o erro
+
+> As duas cláusulas que TINHAM caso eram as que eu podia imaginar errando, e a que não
+> tinha era a que eu não podia — porque para escrever o caso eu teria de já ter tido a
+> distinção que me faltava. **O teste que falta é o do conceito que falta.**
+
+**É por isso que "escreva mais casos" não conserta esta família.** A cobertura de teste é
+função do repertório de quem escreve, e o defeito mora exatamente fora dele. Aumentar o
+número de casos aumenta a densidade dentro do repertório e não move a fronteira dele.
+
+#### O que achou o defeito, e por que isso generaliza
+
+Não foi portão nenhum: foi **uma peça do jogo, feita para outro fim**. E a razão é mais
+geral que a cerimônia:
+
+> O enterro não achou o defeito por ser cerimônia — achou por ser **o único lugar onde a
+> posição da ameba vira pixel**. Ela é invisível por desenho: a posição existia só como
+> `Vector2i` num array, e **estado que nunca é desenhado não tem superfície onde um
+> defeito possa aparecer.**
+
+A forma transferível: **estado invisível precisa de uma superfície de renderização para
+ser depurável, e a superfície precisa existir antes de o estado ser confiado.**
+
+Aqui ela veio por sorte. O enterro existe para ser justo com o jogador, não para depurar —
+e se o autor tivesse decidido que a ameba não dá aviso nenhum, **o defeito atravessaria o
+lançamento**, silencioso, numa peça que caça a partir de uma célula que não existe.
+
+### O que a quarta raiz custa a este projeto
+
+As raízes 1 a 3 se fecham com instrumento melhor, e as três capacidades da §5.1 são disso.
+**A quarta não se fecha assim**, e é a que a [ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md)
+tenta atacar pelo outro lado — declarando a verdade de design antes de construir, para que
+a premissa fique escrita onde alguém possa discordar dela.
+
+Mas convém não prometer o que ela não dá: **a premissa da ameba estava escrita**, num
+comentário raciocinado, e ninguém discordou. O campo `ACONTECE` teria pedido o evento
+observável — e o evento (*"a ameba se enterra"*) acontecia. O que faltava era alguém
+perguntar *onde*.
+
+E o campo `SUPONHO` também não a pegaria, pelo motivo que a própria sessão nomeou: ele
+registra a escolha que o agente fez **sabendo** que escolhia. Aqui não houve escolha
+percebida — houve uma taxonomia reusada, e reuso de taxonomia certa não parece decisão.
+
+Isto não é argumento contra a ADR 0015. É o limite dela, medido três dias depois de ela
+ser escrita, e é informação melhor que uma promessa.
 
 ## 4. Como cada um poderia ter sido evitado
 
