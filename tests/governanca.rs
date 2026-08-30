@@ -13,6 +13,7 @@ use std::{
 };
 
 use serde_json::Value;
+use walkdir::WalkDir;
 
 fn raiz() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -828,4 +829,104 @@ fn adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine() {
          revisão alcançável a partir de `origin/main`. Se a intenção é desfazer a \
          separação, escreva a ADR que substitui a 0016 antes de trazer os arquivos."
     );
+}
+
+// ---------------------------------------------------------------------------
+// ADR 0017 - o portão do corpus roda na suíte padrão, e ausência é inconclusivo
+// ---------------------------------------------------------------------------
+
+/// `tests/corpus.rs` era o único `#[ignore]` desta árvore, e a conta chegou em
+/// 28/08/2026: os cinco caminhos do corpus tinham migrado de `~/Godot` para `~/godot`
+/// e um projeto mudara de nome, sem que nada reprovasse. Teste que só roda quando
+/// alguém lembra de invocá-lo à mão não avisa quando envelhece — ele envelhece junto,
+/// e leva o confronto que a ADR 0012 §3 exige.
+///
+/// Este portão não proíbe trabalho caro. Proíbe pular em silêncio: se algum dia um
+/// teste precisar mesmo de `#[ignore]`, isso é decisão arquitetural e vem com ADR,
+/// como veio esta.
+#[test]
+fn adr_0017_nenhum_teste_desta_arvore_espera_ser_lembrado() {
+    let mut ignorados = Vec::new();
+    for diretorio in ["tests", "src"] {
+        for entrada in WalkDir::new(raiz().join(diretorio))
+            .into_iter()
+            .filter_map(Result::ok)
+        {
+            let caminho = entrada.path();
+            if caminho.extension().is_none_or(|extensao| extensao != "rs") {
+                continue;
+            }
+            let fonte = fs::read_to_string(caminho).unwrap_or_default();
+            for (numero, linha) in fonte.lines().enumerate() {
+                // Só o atributo conta. Prosa que fala de `#[ignore]` — e este arquivo
+                // fala — não é um teste desligado.
+                if linha.trim_start().starts_with("#[ignore") {
+                    ignorados.push(format!(
+                        "{}:{}",
+                        caminho.strip_prefix(raiz()).unwrap_or(caminho).display(),
+                        numero + 1
+                    ));
+                }
+            }
+        }
+    }
+    ignorados.sort();
+    assert!(
+        ignorados.is_empty(),
+        "teste desligado por `#[ignore]`: {ignorados:?}. Pela ADR 0017 a suíte padrão \
+         roda tudo, inclusive o portão do corpus. Um teste que espera ser lembrado \
+         defasa junto com o que ele mediria, e foi assim que os cinco caminhos do \
+         corpus envelheceram invisíveis. Se o teste depende de ambiente que pode faltar, \
+         o desenho é o da ADR 0017: terceiro estado, não desligamento."
+    );
+}
+
+/// O arnês do Cargo tem dois estados e o portão do corpus precisa de três. Ausência
+/// de corpus não pode reprovar — falhar por ausência treina quem roda a ignorar o
+/// vermelho — nem aprovar, porque **não poder conferir não é ter conferido**.
+///
+/// Quem sustenta o terceiro estado é `tools/check_corpus.sh`, traduzindo o veredito
+/// em código de saída. Este teste guarda as duas pontas: o script continua existindo,
+/// continua sem depender da flag `--ignored` que a ADR 0017 aposentou, e continua
+/// separando o 2 do 0.
+#[test]
+fn adr_0017_o_portao_do_corpus_tem_tres_estados() {
+    let portao = ler("tools/check_corpus.sh");
+    assert!(
+        !portao.contains("--ignored"),
+        "`tools/check_corpus.sh` ainda invoca `--ignored`, e nenhum teste desta árvore \
+         é `#[ignore]` desde a ADR 0017. A flag faz o portão rodar zero teste e sair 0: \
+         aprovação por vacuidade, que é pior que a defasagem que ela substituiu."
+    );
+    for marca in ["aprovado", "reprovado", "inconclusivo", "exit 2"] {
+        assert!(
+            portao.contains(marca),
+            "`tools/check_corpus.sh` perdeu o estado `{marca}`. Pela ADR 0017 o portão \
+             tem três saídas — 0 aprovado, 1 reprovado, 2 inconclusivo — e o 2 é o que \
+             impede registrar corpus indisponível como aprovação implícita."
+        );
+    }
+
+    let teste = ler("tests/corpus.rs");
+    assert!(
+        teste.contains("SARA_CORPUS_VEREDITO") && portao.contains("SARA_CORPUS_VEREDITO"),
+        "o canal do veredito entre `tests/corpus.rs` e `tools/check_corpus.sh` se \
+         rompeu. Sem ele o script não distingue os três estados e volta a ter dois."
+    );
+    for variavel in [
+        "SARA_CORPUS_RAIZ",
+        "SARA_CORPUS_BOMBERBOOM_DF",
+        "SARA_CORPUS_BOMBERBOOM_GD",
+        "SARA_CORPUS_BOOMLITUDE",
+        "SARA_CORPUS_MINEBOOM",
+        "SARA_CORPUS_GODS",
+    ] {
+        assert!(
+            teste.contains(variavel),
+            "`tests/corpus.rs` não declara mais `{variavel}`. Pela ADR 0017 os cinco \
+             caminhos vêm do ambiente e os valores da máquina do proprietário são \
+             apenas o padrão documentado: literal como fonte foi o que deixou a \
+             migração de `~/Godot` para `~/godot` passar despercebida."
+        );
+    }
 }
