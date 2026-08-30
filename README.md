@@ -7,8 +7,9 @@ o pré-projeto de uma possível engine vive em repositório próprio, com série
 própria; a única ligação entre os dois é a matriz do legado, que mora lá e cita este por
 caminho e revisão.
 
-> **O remoto se chama `mateuscamp/engine-sensor`** desde 30/08/2026, e o nome do produto
-> que saiu de casa deixou de nomear este acervo. A pendência que a
+> **O remoto se chama `mateuscamp/engine-sensor`** — conferido em 30/08/2026 contra a API
+> do GitHub, e o nome do produto que saiu de casa deixou de nomear este acervo. Em que dia
+> o renome aconteceu não está registrado em lugar nenhum. A pendência que a
 > [ADR 0016 §6](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md)
 > registrou está cumprida. `mateuscamp/sara-engine` ainda resolve, pelo redirecionamento
 > que o GitHub mantém do nome antigo — quem clonar por ele chega aqui do mesmo jeito, e

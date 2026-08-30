@@ -17,7 +17,7 @@ os portões ainda não autorizaram.
 - O projeto e a CLI passam a se chamar **Sara**.
 - Sara é um nome provisório enquanto o produto for a opção B, a camada de verificação.
 - O repositório canônico é `mateuscamp/sara-engine`; o sufixo do repositório não muda
-  a natureza atual do produto. *(Em 30/08/2026 o canônico passou a ser
+  a natureza atual do produto. *(Em 30/08/2026 o canônico já era
   `mateuscamp/engine-sensor`. A frase acima fica como está: ela vale para o dia em que
   foi escrita, e a razão da mudança é outra — não a natureza do produto, mas o
   aparecimento de um segundo produto, na [ADR 0016 §6](0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md).)*
