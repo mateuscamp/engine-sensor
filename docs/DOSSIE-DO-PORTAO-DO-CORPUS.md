@@ -20,19 +20,22 @@ manda; nada aqui depende de ler o outro lado.
 |---|---|
 | Commit | `9b5cc587da3184b4528b422fedd6e59010fcafd5` |
 | Assunto | *O portao do corpus para de esperar ser lembrado, e ausencia vira inconclusivo* |
-| Branch | `claude/corpus-test-parametrize-4a8602`, publicada em `origin` em 30/08/2026 |
+| Branch | `claude/corpus-test-parametrize-4a8602`, mesclada em `main` pelo [#15](https://github.com/mateuscamp/engine-sensor/pull/15) em 30/08/2026 |
 | Árvore de trabalho | limpa antes e depois de cada execução (`git status --porcelain` vazio) |
 
-> **Limite desta revisão, dito antes que alguém a cite.** Em 30/08/2026 a branch está
-> publicada — `9b5cc58` é alcançável a partir de
-> `origin/claude/corpus-test-parametrize-4a8602` —, mas **ainda não a partir de
-> `origin/main`**, que segue em `f62cdbe`. Quem cita por revisão cita a branch, e branch
-> se apaga; a citação só fica estável quando isto entrar em `main`, e mesclar é ato do
-> proprietário. Confira antes de fechar o item:
+> **Esta revisão é citável.** Em 30/08/2026 `9b5cc58` passou a ser alcançável a partir de
+> `origin/main`, que ficou em `679d5c4`. A distinção importa porque branch se apaga e
+> commit de branch apagada some com ela; o que sobrevive é o que está no tronco. Quem
+> importar este dossiê confere por conta própria, e o comando é um só:
 >
 > ```bash
-> git merge-base --is-ancestor 9b5cc58 origin/main
+> git merge-base --is-ancestor 9b5cc587da3184b4528b422fedd6e59010fcafd5 origin/main
 > ```
+>
+> *(Este parágrafo já foi reescrito duas vezes em 30/08/2026: dizia "não sai de
+> `origin/main`", depois "a branch está publicada, `main` não", agora isto. Cada versão
+> ficou falsa em horas. É o argumento a favor de o dossiê carregar o **comando** em vez de
+> carregar a resposta — a resposta envelhece, o comando não.)*
 
 ### Máquina
 
@@ -78,6 +81,25 @@ perfis `desktop` e `android`:
 eixo de entrada da [ADR 0010](decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md)
 entrou no meio. O que as duas afirmam em comum, e é o que este portão julga, é a coluna de
 erros: zero, então como agora.*
+
+---
+
+## Reexecução de 30 de agosto de 2026, no topo de `main`
+
+A execução acima aconteceu em `9b5cc58`, que é um commit **dentro** do que foi mesclado.
+Depois dele entraram o dossiê e as quatro correções do inventário P-2, e um portão só vale
+onde ele está de fato. A reexecução confere isso.
+
+| | |
+|---|---|
+| Comando | `tools/check_corpus.sh` |
+| Revisão | `679d5c4` — `Merge pull request #15`, `origin/main` |
+| Máquina | a mesma da execução acima |
+| Resultado | **aprovado**, saída **0**, cinco projetos lidos, zero erro |
+
+Nenhuma das quatro correções do P-2 toca o verificador: elas mexem em manifesto, README,
+gabarito, três ADRs e um comentário, mais uma fitness function de gabarito. O resultado
+igual é o esperado, e medi-lo é o que separa esperar de saber.
 
 ---
 
@@ -160,8 +182,10 @@ copiado de documento.
 
 **Não fecha:**
 
-- A revisão ainda não sai de `origin/main`. A branch está publicada, o que já é mais do
-  que estava; a citação estável, porém, é a que sobrevive a apagar a branch.
+- ~~A revisão ainda não sai de `origin/main`.~~ **Fechado em 30/08/2026** pelo
+  [#15](https://github.com/mateuscamp/engine-sensor/pull/15). Fica riscado em vez de
+  apagado: o limite existiu, e um dossiê que some com os próprios limites depois de
+  resolvê-los ensina a confiar no que ele afirma hoje.
 - A parte manual da ADR 0012 §3 continua manual: **ler o diff de diagnóstico** é de quem lê,
   e nenhum teste prova leitura. Esta execução não a substitui — nesta mudança não há diff a
   ler, porque nenhuma regra, nenhum adapter e nenhum código de diagnóstico mudou.
@@ -171,7 +195,7 @@ copiado de documento.
 ## Como reproduzir
 
 ```bash
-git checkout 9b5cc587da3184b4528b422fedd6e59010fcafd5
+git checkout 679d5c4   # ou 9b5cc58, a revisão da primeira execução
 tools/check_corpus.sh; echo "saída: $?"
 ```
 
