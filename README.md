@@ -1,10 +1,17 @@
 # Sara — o sensor
 
 Verificador AI-first interno e estudo sobre desenvolvimento de jogos quando quem
-escreve o código é um agente. **Este repositório é o sensor**, e só ele: desde a
+escreve o código é um agente. **Este repositório é o sensor, e só ele.** Desde a
 [ADR 0016](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md)
 o pré-projeto de uma possível engine vive em repositório próprio, com série de decisões
-própria. **Sara é o nome provisório enquanto o projeto for esta camada de verificação**
+própria; a única ligação entre os dois é a matriz do legado, que mora lá e cita este por
+caminho e revisão.
+
+> **O remoto ainda se chama `sara-engine`** — o nome do produto que saiu de casa. Quem
+> clona por esse nome chega aqui, no sensor. Renomear é ato do proprietário e está
+> pendente, registrado na [ADR 0016 §6](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md).
+
+**Sara é o nome provisório enquanto o projeto for esta camada de verificação**
 ([ADR 0003](docs/decisoes/0003-sara-como-nome-provisorio.md)). Publicação e monetização
 permanecem adiadas.
 
@@ -32,7 +39,8 @@ Para experimentar sem instalação global:
 ```
 
 `sara init` cria o contrato em `.sara/`, fragmentos separados para `AGENTS.md` e
-`CLAUDE.md`, um portão executável da engine e `sara.toml`. Arquivos de instruções já
+`CLAUDE.md`, um portão executável que roda dentro da engine do jogo
+(`portao_ai_first.gd` ou `.lua`) e `sara.toml`. Arquivos de instruções já
 existentes nunca são sobrescritos: o agente ou a pessoa incorpora o fragmento
 correspondente de forma deliberada.
 
@@ -80,10 +88,14 @@ os outros 31 são tecla e sinal de botão, e quatro deles vão ao aparelho.
 
 ## A decisão atual
 
-Há evidência de uma lacuna em verificabilidade para agentes. Ainda não há evidência
-de que uma engine completa seja necessária ou economicamente viável. Por isso, o
-projeto permanece deliberadamente na camada de verificação compatível com engines
-existentes.
+Há evidência de uma lacuna em verificabilidade para agentes, e o sensor é a resposta
+que este repositório dá a ela: uma camada de verificação compatível com as engines que
+já existem, sem editor, sem renderizador, sem runtime e sem cadeia multiplataforma
+próprios ([ADR 0001](docs/decisoes/0001-validar-mecanismos-antes-da-engine-completa.md)).
+
+Se uma engine completa é necessária ou economicamente viável **continua sem evidência**.
+O que mudou é onde a pergunta se responde: desde 29 de agosto de 2026 ela não se decide
+aqui.
 
 **O Marco 6 encerrou em 28 de agosto de 2026, por conclusão**, com treze mudanças reais —
 todas do porte do BomberBoom — vinte e três dias antes do critério de parada. O portão
@@ -140,7 +152,7 @@ Leem-se em ordem, mas cada um se sustenta sozinho.
 | | Artigo | Sobre |
 |---|---|---|
 | 1 | [O Agente Não Vê](artigos/1-o-agente-nao-ve.html) | A versão de jogos do *Clean Code para agentes*, do Akita. O que muda quando o resultado do código é uma tela e não um valor de retorno. Termina num `CLAUDE.md` pronto para usar. |
-| 2 | [O Motor que Narra](artigos/2-o-motor-que-narra.html) | O projeto de uma engine cujo usuário principal é um processo. Cada regra do artigo 1 vira um mecanismo. Com API, arquitetura, riscos e roteiro. |
+| 2 | [O Motor que Narra](artigos/2-o-motor-que-narra.html) | O projeto de uma engine cujo usuário principal é um processo. Cada regra do artigo 1 vira um mecanismo. Com API, arquitetura, riscos e roteiro. **A engine que ele projeta é hoje outro produto, em repositório próprio** — o artigo continua sendo do acervo do sensor. |
 | 3 | [O Que Só Aparece Depois](artigos/3-o-que-so-aparece-depois.html) | Seis lições de quatro projetos com história — `gods`, `bomberboom`, `boomlitude`, `mineboom` — que um experimento de uma sessão não pode medir. |
 
 Os arquivos são HTML autocontido: abrir no navegador basta.
