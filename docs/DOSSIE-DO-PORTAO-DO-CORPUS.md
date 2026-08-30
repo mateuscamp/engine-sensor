@@ -20,15 +20,19 @@ manda; nada aqui depende de ler o outro lado.
 |---|---|
 | Commit | `9b5cc587da3184b4528b422fedd6e59010fcafd5` |
 | Assunto | *O portao do corpus para de esperar ser lembrado, e ausencia vira inconclusivo* |
-| Branch | `claude/corpus-test-parametrize-4a8602` |
+| Branch | `claude/corpus-test-parametrize-4a8602`, publicada em `origin` em 30/08/2026 |
 | Árvore de trabalho | limpa antes e depois de cada execução (`git status --porcelain` vazio) |
 
-> **Limite desta revisão, dito antes que alguém a cite.** Em 29/08/2026 este commit ainda
-> **não é alcançável a partir de `origin/main`**: ele vive na branch acima, e publicá-la é
-> ato do proprietário. Enquanto isso não acontecer, citá-lo por revisão é referência
-> quebrada para quem clona. Quem importar este dossiê antes disso importa uma execução
-> real numa revisão privada — o que é diferente de importar nada, e diferente de importar
-> uma revisão pública.
+> **Limite desta revisão, dito antes que alguém a cite.** Em 30/08/2026 a branch está
+> publicada — `9b5cc58` é alcançável a partir de
+> `origin/claude/corpus-test-parametrize-4a8602` —, mas **ainda não a partir de
+> `origin/main`**, que segue em `f62cdbe`. Quem cita por revisão cita a branch, e branch
+> se apaga; a citação só fica estável quando isto entrar em `main`, e mesclar é ato do
+> proprietário. Confira antes de fechar o item:
+>
+> ```bash
+> git merge-base --is-ancestor 9b5cc58 origin/main
+> ```
 
 ### Máquina
 
@@ -156,8 +160,8 @@ copiado de documento.
 
 **Não fecha:**
 
-- A revisão ainda não sai de `origin/main`. Até a branch ser publicada, a citação por
-  revisão é referência quebrada para quem clona.
+- A revisão ainda não sai de `origin/main`. A branch está publicada, o que já é mais do
+  que estava; a citação estável, porém, é a que sobrevive a apagar a branch.
 - A parte manual da ADR 0012 §3 continua manual: **ler o diff de diagnóstico** é de quem lê,
   e nenhum teste prova leitura. Esta execução não a substitui — nesta mudança não há diff a
   ler, porque nenhuma regra, nenhum adapter e nenhum código de diagnóstico mudou.
