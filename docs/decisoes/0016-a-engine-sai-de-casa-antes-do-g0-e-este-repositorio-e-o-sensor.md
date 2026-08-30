@@ -156,6 +156,13 @@ produto que saiu de casa. A [ADR 0003](0003-sara-como-nome-provisorio.md) regist
 sufixo do repositório não muda a natureza do produto; com dois produtos, ele passa a
 nomear o errado. Renomear o remoto é ato do proprietário e fica pendente.
 
+*(Conferido em 30/08/2026: o remoto **é** `mateuscamp/engine-sensor`, pela API do GitHub.
+A pendência está cumprida; em que dia ela foi cumprida, ninguém registrou — só se sabe que
+em 29/08 esta seção ainda a descrevia como pendente. O nome antigo continua resolvendo pelo
+redirecionamento do GitHub, o que é conveniência de quem já tinha o clone e não o nome do
+acervo — e é por isso que a divergência sobreviveu: pelos dois nomes tudo funciona. O
+`repository` do `Cargo.toml`, que ainda apontava para o antigo, foi junto.)*
+
 ### 7. O que isto não decide
 
 Nada aqui autoriza a engine, escolhe provider, adiciona dependência, resolve o nome do

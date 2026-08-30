@@ -165,6 +165,15 @@ O confronto com o corpus continua sendo `tools/check_corpus.sh` mais o diff de
 diagnóstico registrado à mão — não há como um teste provar que a comparação foi *lida*.
 Essa parte é conformidade manual, e está declarada como manual em vez de fingida.
 
+*(Acrescentado em 29/08/2026: o `tools/check_corpus.sh` deste parágrafo apontava para um
+teste `#[ignore]` com cinco caminhos literais já defasados, e o confronto que este item
+exige não acontecia havia dias sem que nada avisasse. A
+[ADR 0017](0017-o-portao-do-corpus-roda-sempre-e-ausencia-e-inconclusivo.md) tirou o
+`#[ignore]`, parametrizou os cinco caminhos por variável de ambiente e deu à ausência de
+corpus um terceiro estado — inconclusivo, código 2 — em vez de deixá-la passar por
+aprovação. A parte manual continua sendo esta, e continua sendo manual: ler o diff é de
+quem lê.)*
+
 ## Critério de revisão
 
 - Se o diário virar papelada que ninguém preenche, o método falhou e o congelamento

@@ -1,6 +1,9 @@
 # ADR NNNN - Título em voz ativa
 
-**Status:** Proposta | Aceita | Substituída por NNNN
+**Status:** Proposta | Aceita | Cumprida | Substituída por NNNN
+<!-- `Cumprida` é para decisão que era pré-condição e foi satisfeita: ela não governa
+     mais nada e não foi substituída por outra. Entrou no gabarito em 30/08/2026, porque
+     a ADR 0011 já a usava e um gabarito que a série contradiz não é gabarito. -->
 **Data:** AAAA-MM-DD
 **Decisor:**
 **Escopo:**

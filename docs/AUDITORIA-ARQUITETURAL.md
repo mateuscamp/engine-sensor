@@ -328,6 +328,17 @@ Todas locais, todas em `cargo test`, nenhuma depende de rede.
 
 Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Dezessete testes.
 
+*(Conferido em 30/08/2026: a tabela F1–F11 abaixo continua valendo dezessete testes, e o
+número estava certo. O que faltava era dizer que ela deixou de ser a lista inteira. O
+arquivo tem hoje **vinte e dois**, e os cinco de fora nasceram depois dela:
+`adr_0012_o_binario_publicado_responde_como_o_codigo`,
+`adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine`,
+`adr_0017_nenhum_teste_desta_arvore_espera_ser_lembrado`,
+`adr_0017_o_portao_do_corpus_tem_tres_estados` e
+`o_status_de_toda_adr_consta_do_gabarito`. A numeração F é desta auditoria e está
+fechada: fitness function nova entra com o nome da ADR que a exige, ou com o do que ela
+guarda quando não é de uma ADR só.)*
+
 | # | Governa | Reprova quando |
 |---|---|---|
 | F1 | ADR 0001, escopo | aparece dependência fora da lista autorizada, ou a lista guarda entrada que o manifesto não usa mais |

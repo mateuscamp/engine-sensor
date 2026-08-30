@@ -7,9 +7,13 @@ o pré-projeto de uma possível engine vive em repositório próprio, com série
 própria; a única ligação entre os dois é a matriz do legado, que mora lá e cita este por
 caminho e revisão.
 
-> **O remoto ainda se chama `sara-engine`** — o nome do produto que saiu de casa. Quem
-> clona por esse nome chega aqui, no sensor. Renomear é ato do proprietário e está
-> pendente, registrado na [ADR 0016 §6](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md).
+> **O remoto se chama `mateuscamp/engine-sensor`** — conferido em 30/08/2026 contra a API
+> do GitHub, e o nome do produto que saiu de casa deixou de nomear este acervo. Em que dia
+> o renome aconteceu não está registrado em lugar nenhum. A pendência que a
+> [ADR 0016 §6](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md)
+> registrou está cumprida. `mateuscamp/sara-engine` ainda resolve, pelo redirecionamento
+> que o GitHub mantém do nome antigo — quem clonar por ele chega aqui do mesmo jeito, e
+> não é por isso que o nome volta a ser dele.
 
 **Sara é o nome provisório enquanto o projeto for esta camada de verificação**
 ([ADR 0003](docs/decisoes/0003-sara-como-nome-provisorio.md)). Publicação e monetização
@@ -144,6 +148,7 @@ caminho e revisão alcançável a partir de `origin/main`.
 | [0014](docs/decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) | não construir o spike do Marco 7 — a Sentinela já o entregava — e preservar a pergunta 7 |
 | [0015](docs/decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) | a verdade de design são três campos no carimbo, e um deles bloqueia |
 | [0016](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md) | a engine sai de casa antes do G0, e este repositório é o sensor |
+| [0017](docs/decisoes/0017-o-portao-do-corpus-roda-sempre-e-ausencia-e-inconclusivo.md) | o portão do corpus roda na suíte padrão, e ausência de corpus é inconclusivo |
 
 ## Os artigos
 

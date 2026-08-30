@@ -13,6 +13,7 @@ use std::{
 };
 
 use serde_json::Value;
+use walkdir::WalkDir;
 
 fn raiz() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR"))
@@ -627,8 +628,13 @@ fn adr_0006_codigos_de_saida_continuam_exercitados() {
 // F4 - quantum do binário `sara` (ADR 0007)
 // ---------------------------------------------------------------------------
 
-/// Binários autorizados. `sara` é o quantum offline medido no 0.1.0; `sara-observe`
-/// é o experimento do Marco 7, que pode exigir Godot instalado sem contaminar o portão.
+/// Binários **autorizados**, que é diferente de binários **construídos**. `sara` é o
+/// quantum offline medido no 0.1.0 e existe; `sara-observe` é um nome reservado pela
+/// ADR 0007 para o experimento do Marco 7, e nunca foi construído — o `Cargo.toml`
+/// declara um `[[bin]]` só. O Marco 7 foi cancelado pela ADR 0014.
+///
+/// Esta lista é um teto, não um inventário. Ler decisão registrada como artefato medido
+/// é o erro que este projeto existe para nomear.
 const BINARIOS_AUTORIZADOS: &[&str] = &["sara", "sara-observe"];
 
 /// Nomes de binário lidos do `Cargo.toml`.
@@ -827,5 +833,179 @@ fn adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine() {
          única ligação entre os dois é a matriz do legado, que cita este por caminho e \
          revisão alcançável a partir de `origin/main`. Se a intenção é desfazer a \
          separação, escreva a ADR que substitui a 0016 antes de trazer os arquivos."
+    );
+}
+
+// ---------------------------------------------------------------------------
+// ADR 0017 - o portão do corpus roda na suíte padrão, e ausência é inconclusivo
+// ---------------------------------------------------------------------------
+
+/// `tests/corpus.rs` era o único `#[ignore]` desta árvore, e a conta chegou em
+/// 28/08/2026: os cinco caminhos do corpus tinham migrado de `~/Godot` para `~/godot`
+/// e um projeto mudara de nome, sem que nada reprovasse. Teste que só roda quando
+/// alguém lembra de invocá-lo à mão não avisa quando envelhece — ele envelhece junto,
+/// e leva o confronto que a ADR 0012 §3 exige.
+///
+/// Este portão não proíbe trabalho caro. Proíbe pular em silêncio: se algum dia um
+/// teste precisar mesmo de `#[ignore]`, isso é decisão arquitetural e vem com ADR,
+/// como veio esta.
+#[test]
+fn adr_0017_nenhum_teste_desta_arvore_espera_ser_lembrado() {
+    let mut ignorados = Vec::new();
+    for diretorio in ["tests", "src"] {
+        for entrada in WalkDir::new(raiz().join(diretorio))
+            .into_iter()
+            .filter_map(Result::ok)
+        {
+            let caminho = entrada.path();
+            if caminho.extension().is_none_or(|extensao| extensao != "rs") {
+                continue;
+            }
+            let fonte = fs::read_to_string(caminho).unwrap_or_default();
+            for (numero, linha) in fonte.lines().enumerate() {
+                // Só o atributo conta. Prosa que fala de `#[ignore]` — e este arquivo
+                // fala — não é um teste desligado.
+                if linha.trim_start().starts_with("#[ignore") {
+                    ignorados.push(format!(
+                        "{}:{}",
+                        caminho.strip_prefix(raiz()).unwrap_or(caminho).display(),
+                        numero + 1
+                    ));
+                }
+            }
+        }
+    }
+    ignorados.sort();
+    assert!(
+        ignorados.is_empty(),
+        "teste desligado por `#[ignore]`: {ignorados:?}. Pela ADR 0017 a suíte padrão \
+         roda tudo, inclusive o portão do corpus. Um teste que espera ser lembrado \
+         defasa junto com o que ele mediria, e foi assim que os cinco caminhos do \
+         corpus envelheceram invisíveis. Se o teste depende de ambiente que pode faltar, \
+         o desenho é o da ADR 0017: terceiro estado, não desligamento."
+    );
+}
+
+/// O arnês do Cargo tem dois estados e o portão do corpus precisa de três. Ausência
+/// de corpus não pode reprovar — falhar por ausência treina quem roda a ignorar o
+/// vermelho — nem aprovar, porque **não poder conferir não é ter conferido**.
+///
+/// Quem sustenta o terceiro estado é `tools/check_corpus.sh`, traduzindo o veredito
+/// em código de saída. Este teste guarda as duas pontas: o script continua existindo,
+/// continua sem depender da flag `--ignored` que a ADR 0017 aposentou, e continua
+/// separando o 2 do 0.
+#[test]
+fn adr_0017_o_portao_do_corpus_tem_tres_estados() {
+    let portao = ler("tools/check_corpus.sh");
+    assert!(
+        !portao.contains("--ignored"),
+        "`tools/check_corpus.sh` ainda invoca `--ignored`, e nenhum teste desta árvore \
+         é `#[ignore]` desde a ADR 0017. A flag faz o portão rodar zero teste e sair 0: \
+         aprovação por vacuidade, que é pior que a defasagem que ela substituiu."
+    );
+    for marca in ["aprovado", "reprovado", "inconclusivo", "exit 2"] {
+        assert!(
+            portao.contains(marca),
+            "`tools/check_corpus.sh` perdeu o estado `{marca}`. Pela ADR 0017 o portão \
+             tem três saídas — 0 aprovado, 1 reprovado, 2 inconclusivo — e o 2 é o que \
+             impede registrar corpus indisponível como aprovação implícita."
+        );
+    }
+
+    let teste = ler("tests/corpus.rs");
+    assert!(
+        teste.contains("SARA_CORPUS_VEREDITO") && portao.contains("SARA_CORPUS_VEREDITO"),
+        "o canal do veredito entre `tests/corpus.rs` e `tools/check_corpus.sh` se \
+         rompeu. Sem ele o script não distingue os três estados e volta a ter dois."
+    );
+    for variavel in [
+        "SARA_CORPUS_RAIZ",
+        "SARA_CORPUS_BOMBERBOOM_DF",
+        "SARA_CORPUS_BOMBERBOOM_GD",
+        "SARA_CORPUS_BOOMLITUDE",
+        "SARA_CORPUS_MINEBOOM",
+        "SARA_CORPUS_GODS",
+    ] {
+        assert!(
+            teste.contains(variavel),
+            "`tests/corpus.rs` não declara mais `{variavel}`. Pela ADR 0017 os cinco \
+             caminhos vêm do ambiente e os valores da máquina do proprietário são \
+             apenas o padrão documentado: literal como fonte foi o que deixou a \
+             migração de `~/Godot` para `~/godot` passar despercebida."
+        );
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Gabarito de ADR - o status de cada decisão é um dos que o modelo declara
+// ---------------------------------------------------------------------------
+
+/// A ADR 0011 usava o status `Cumprida`, que não constava de `docs/modelos/ADR.md`.
+/// A divergência atravessou meses porque nada lia as duas coisas juntas, e gabarito que
+/// a própria série contradiz descreve menos o projeto do que parece descrever.
+///
+/// O reparo, em 30/08/2026, foi acrescentar `Cumprida` ao gabarito e não à ADR: a
+/// informação que o status carrega é real e não tinha sinônimo entre os três anteriores
+/// — decisão que era pré-condição e foi satisfeita não governa mais nada e também não
+/// foi substituída por outra. Este teste é o que impede o próximo status inventado de
+/// entrar sem passar pelo modelo.
+#[test]
+fn o_status_de_toda_adr_consta_do_gabarito() {
+    let gabarito = ler("docs/modelos/ADR.md");
+    let modelo = gabarito
+        .lines()
+        .find(|linha| linha.starts_with("**Status:**"))
+        .expect("a linha `**Status:**` sumiu de docs/modelos/ADR.md, e ela é a fonte");
+    let autorizados = modelo
+        .trim_start_matches("**Status:**")
+        .split('|')
+        .filter_map(|opcao| opcao.split_whitespace().next())
+        .collect::<Vec<_>>();
+    assert!(
+        !autorizados.is_empty(),
+        "o gabarito deixou de listar status algum em docs/modelos/ADR.md"
+    );
+
+    let mut decisoes = fs::read_dir(raiz().join("docs/decisoes"))
+        .expect("docs/decisoes")
+        .filter_map(|entrada| entrada.ok())
+        .map(|entrada| entrada.path())
+        .filter(|caminho| caminho.extension().is_some_and(|extensao| extensao == "md"))
+        .collect::<Vec<_>>();
+    decisoes.sort();
+    assert!(!decisoes.is_empty(), "docs/decisoes ficou vazio");
+
+    let mut fora = Vec::new();
+    for caminho in decisoes {
+        let nome = caminho
+            .file_name()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .into_owned();
+        let texto = fs::read_to_string(&caminho).unwrap_or_default();
+        let Some(linha) = texto.lines().find(|linha| linha.starts_with("**Status:**")) else {
+            fora.push(format!("{nome}: sem linha de status"));
+            continue;
+        };
+        // A série grifa o status com `**`, e algumas o seguem de uma explicação. O que
+        // o gabarito governa é a primeira palavra.
+        let declarado = linha.trim_start_matches("**Status:**").replace('*', "");
+        let primeira = declarado
+            .split_whitespace()
+            .next()
+            .unwrap_or_default()
+            .to_owned();
+        if !autorizados.contains(&primeira.as_str()) {
+            fora.push(format!("{nome}: `{primeira}`"));
+        }
+    }
+
+    assert!(
+        fora.is_empty(),
+        "status fora do gabarito: {fora:?}. Os autorizados são {autorizados:?}, e a fonte \
+         é `docs/modelos/ADR.md`. Se o status novo carrega informação que os existentes \
+         não carregam, ele entra no gabarito com a definição junto — foi o que se fez com \
+         `Cumprida` em 30/08/2026. Se não carrega, use um dos que já existem: gabarito \
+         que a série contradiz para de descrever a série."
     );
 }
