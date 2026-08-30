@@ -628,8 +628,13 @@ fn adr_0006_codigos_de_saida_continuam_exercitados() {
 // F4 - quantum do binário `sara` (ADR 0007)
 // ---------------------------------------------------------------------------
 
-/// Binários autorizados. `sara` é o quantum offline medido no 0.1.0; `sara-observe`
-/// é o experimento do Marco 7, que pode exigir Godot instalado sem contaminar o portão.
+/// Binários **autorizados**, que é diferente de binários **construídos**. `sara` é o
+/// quantum offline medido no 0.1.0 e existe; `sara-observe` é um nome reservado pela
+/// ADR 0007 para o experimento do Marco 7, e nunca foi construído — o `Cargo.toml`
+/// declara um `[[bin]]` só. O Marco 7 foi cancelado pela ADR 0014.
+///
+/// Esta lista é um teto, não um inventário. Ler decisão registrada como artefato medido
+/// é o erro que este projeto existe para nomear.
 const BINARIOS_AUTORIZADOS: &[&str] = &["sara", "sara-observe"];
 
 /// Nomes de binário lidos do `Cargo.toml`.
@@ -929,4 +934,78 @@ fn adr_0017_o_portao_do_corpus_tem_tres_estados() {
              migração de `~/Godot` para `~/godot` passar despercebida."
         );
     }
+}
+
+// ---------------------------------------------------------------------------
+// Gabarito de ADR - o status de cada decisão é um dos que o modelo declara
+// ---------------------------------------------------------------------------
+
+/// A ADR 0011 usava o status `Cumprida`, que não constava de `docs/modelos/ADR.md`.
+/// A divergência atravessou meses porque nada lia as duas coisas juntas, e gabarito que
+/// a própria série contradiz descreve menos o projeto do que parece descrever.
+///
+/// O reparo, em 30/08/2026, foi acrescentar `Cumprida` ao gabarito e não à ADR: a
+/// informação que o status carrega é real e não tinha sinônimo entre os três anteriores
+/// — decisão que era pré-condição e foi satisfeita não governa mais nada e também não
+/// foi substituída por outra. Este teste é o que impede o próximo status inventado de
+/// entrar sem passar pelo modelo.
+#[test]
+fn o_status_de_toda_adr_consta_do_gabarito() {
+    let gabarito = ler("docs/modelos/ADR.md");
+    let modelo = gabarito
+        .lines()
+        .find(|linha| linha.starts_with("**Status:**"))
+        .expect("a linha `**Status:**` sumiu de docs/modelos/ADR.md, e ela é a fonte");
+    let autorizados = modelo
+        .trim_start_matches("**Status:**")
+        .split('|')
+        .filter_map(|opcao| opcao.split_whitespace().next())
+        .collect::<Vec<_>>();
+    assert!(
+        !autorizados.is_empty(),
+        "o gabarito deixou de listar status algum em docs/modelos/ADR.md"
+    );
+
+    let mut decisoes = fs::read_dir(raiz().join("docs/decisoes"))
+        .expect("docs/decisoes")
+        .filter_map(|entrada| entrada.ok())
+        .map(|entrada| entrada.path())
+        .filter(|caminho| caminho.extension().is_some_and(|extensao| extensao == "md"))
+        .collect::<Vec<_>>();
+    decisoes.sort();
+    assert!(!decisoes.is_empty(), "docs/decisoes ficou vazio");
+
+    let mut fora = Vec::new();
+    for caminho in decisoes {
+        let nome = caminho
+            .file_name()
+            .unwrap_or_default()
+            .to_string_lossy()
+            .into_owned();
+        let texto = fs::read_to_string(&caminho).unwrap_or_default();
+        let Some(linha) = texto.lines().find(|linha| linha.starts_with("**Status:**")) else {
+            fora.push(format!("{nome}: sem linha de status"));
+            continue;
+        };
+        // A série grifa o status com `**`, e algumas o seguem de uma explicação. O que
+        // o gabarito governa é a primeira palavra.
+        let declarado = linha.trim_start_matches("**Status:**").replace('*', "");
+        let primeira = declarado
+            .split_whitespace()
+            .next()
+            .unwrap_or_default()
+            .to_owned();
+        if !autorizados.contains(&primeira.as_str()) {
+            fora.push(format!("{nome}: `{primeira}`"));
+        }
+    }
+
+    assert!(
+        fora.is_empty(),
+        "status fora do gabarito: {fora:?}. Os autorizados são {autorizados:?}, e a fonte \
+         é `docs/modelos/ADR.md`. Se o status novo carrega informação que os existentes \
+         não carregam, ele entra no gabarito com a definição junto — foi o que se fez com \
+         `Cumprida` em 30/08/2026. Se não carrega, use um dos que já existem: gabarito \
+         que a série contradiz para de descrever a série."
+    );
 }

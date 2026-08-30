@@ -3,7 +3,7 @@ name = "sara-ai-first"
 version = "0.1.0"
 edition = "2024"
 description = "Verificador AI-first interno para projetos Godot e Defold"
-repository = "https://github.com/mateuscamp/sara-engine"
+repository = "https://github.com/mateuscamp/engine-sensor"
 publish = false
 
 [[bin]]

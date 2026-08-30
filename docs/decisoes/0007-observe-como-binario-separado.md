@@ -77,6 +77,17 @@ quase nada e decidir depois custa reescrever empacotamento e refazer a medição
 `tests/governanca.rs::adr_0007_apenas_binarios_autorizados` reprova quando aparece um
 `[[bin]]` fora da lista `sara` e `sara-observe`.
 
+*(Acrescentado em 30/08/2026, porque a distinção ficou invisível por meses: **`sara-observe`
+nunca existiu como artefato.** O `Cargo.toml` declara um `[[bin]]` só, o `sara`. Esta ADR
+reserva o nome e decide a forma que ele terá **se** for construído; a lista autorizada e o
+freio da [ADR 0011](0011-marco-7-exige-comparacao-com-ferramenta-existente.md) guardam um
+nome, não um binário. E o Marco 7 que o construiria foi cancelado pela
+[ADR 0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md): a unidade de
+evidência que ele buscava já existia pronta, e a Sentinela do porte a entregou sem que
+nenhum binário novo nascesse. Ler a lista `sara` e `sara-observe` como inventário é o
+mesmo erro que este projeto existe para nomear — decisão registrada não é artefato
+medido.)*
+
 Quando `sara-observe` existir, a lista de dependências autorizadas passa a ser por
 binário e o teste offline continua sendo executado contra `sara`. Enquanto ele não
 existir, a lista única já garante que nenhuma dependência de instrumentação entrou.
