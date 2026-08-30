@@ -777,3 +777,55 @@ fn adr_0007_apenas_binarios_autorizados() {
          que exija ambiente vive em binário próprio."
     );
 }
+
+// ---------------------------------------------------------------------------
+// ADR 0016 - o sensor não hospeda o pré-projeto da engine
+// ---------------------------------------------------------------------------
+
+/// A branch `licao-da-aranha` custou quatro rodadas de auditoria sobre uma árvore que
+/// não continha o acervo inteiro, e a causa não era a branch: eram dois produtos
+/// dividindo uma árvore, uma série de decisões e um portão. A ADR 0016 consumou a
+/// fronteira movendo o pré-projeto da engine para repositório próprio.
+///
+/// Fronteira que depende de lembrança volta por descuido de merge, de cherry-pick ou
+/// de restauração de branch antiga — foi exatamente assim que a colisão de numeração
+/// da ADR 0015 apareceu. Este teste é o mecanismo no lugar da regra lembrada.
+#[test]
+fn adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine() {
+    let mut intrusos = Vec::new();
+
+    for caminho in ["docs/engine", "docs/RISCOS-ENGINE.md"] {
+        if raiz().join(caminho).exists() {
+            intrusos.push(caminho.to_string());
+        }
+    }
+
+    let decisoes = fs::read_dir(raiz().join("docs/decisoes")).expect("docs/decisoes");
+    for entrada in decisoes.filter_map(|entrada| entrada.ok()) {
+        let nome = entrada.file_name().to_string_lossy().to_lowercase();
+        if !nome.ends_with(".md") {
+            continue;
+        }
+        // A própria 0016 fala da engine porque decide a fronteira; as demais não.
+        if nome.starts_with("0016") {
+            continue;
+        }
+        let escopo = fs::read_to_string(entrada.path()).unwrap_or_default();
+        let escopo = escopo.to_lowercase();
+        if escopo.contains("sara engine") || escopo.contains("sare-") {
+            intrusos.push(format!("docs/decisoes/{nome}"));
+        }
+    }
+
+    intrusos.sort();
+    assert!(
+        intrusos.is_empty(),
+        "o pré-projeto da engine reapareceu neste repositório: {intrusos:?}. Pela ADR 0016 \
+         este repositório é o sensor: ele conserva o verificador, o corpus, o kit, os \
+         estudos, os artigos e a série 0001-0016, e não hospeda constituição, backlog, \
+         riscos nem ADR da engine. Aquele material vive no repositório da engine, e a \
+         única ligação entre os dois é a matriz do legado, que cita este por caminho e \
+         revisão alcançável a partir de `origin/main`. Se a intenção é desfazer a \
+         separação, escreva a ADR que substitui a 0016 antes de trazer os arquivos."
+    );
+}

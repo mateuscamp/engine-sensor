@@ -1,9 +1,12 @@
-# Sara
+# Sara — o sensor
 
 Verificador AI-first interno e estudo sobre desenvolvimento de jogos quando quem
-escreve o código é um agente. **Sara é o nome provisório enquanto o projeto for esta
-camada de verificação.** Se um dia ele se tornar uma engine, nome e marca serão uma
-nova decisão. Publicação e monetização permanecem adiadas.
+escreve o código é um agente. **Este repositório é o sensor**, e só ele: desde a
+[ADR 0016](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md)
+o pré-projeto de uma possível engine vive em repositório próprio, com série de decisões
+própria. **Sara é o nome provisório enquanto o projeto for esta camada de verificação**
+([ADR 0003](docs/decisoes/0003-sara-como-nome-provisorio.md)). Publicação e monetização
+permanecem adiadas.
 
 O primeiro resultado é o `sara 0.1.0`: um CLI Rust, offline, para detectar posse
 concorrente de animação e entrada em projetos Godot 4.7 e Defold 1.13. Ele bloqueia
@@ -97,6 +100,20 @@ e um defeito que só a Sara achou — o mesmo que, na versão Defold, chegou ao 
 **onze dos treze casos ainda exigiram inspeção humana**, que é o recurso escasso que o
 projeto existe para economizar. A ADR 0013 registra os dois.
 
+**Em 29 de agosto de 2026 o pré-projeto da engine saiu deste repositório**, pela
+[ADR 0016](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md).
+A causa não foi ambição de escopo: foi um defeito medido. Quatro rodadas de revisão
+externa auditaram uma branch que estava trinta commits atrás do acervo — sem uma ADR
+aceita, sem a fitness function dela e sem um eixo inteiro do verificador. Dois produtos
+dividindo uma árvore, uma série de decisões e um portão. **Verde por construção, porque a
+pergunta foi feita a um recorte que não continha a resposta** — o defeito que este projeto
+existe para nomear, acontecendo com ele mesmo.
+
+A fronteira agora é física e tem portão executável: `docs/engine/` não existe aqui, e
+`adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine` reprova se voltar. A única
+ligação entre os dois repositórios é a matriz do legado, que mora lá e cita este por
+caminho e revisão alcançável a partir de `origin/main`.
+
 | ADR | Decisão |
 |---|---|
 | [0001](docs/decisoes/0001-validar-mecanismos-antes-da-engine-completa.md) | validar mecanismos antes de uma engine completa |
@@ -113,6 +130,8 @@ projeto existe para economizar. A ADR 0013 registra os dois.
 | [0012](docs/decisoes/0012-sara-e-corpus-coevoluem.md) | Sara e corpus coevoluem; a evolução do instrumento é registrada |
 | [0013](docs/decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md) | manter a Sara privada ao fim do Marco 6 |
 | [0014](docs/decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) | não construir o spike do Marco 7 — a Sentinela já o entregava — e preservar a pergunta 7 |
+| [0015](docs/decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) | a verdade de design são três campos no carimbo, e um deles bloqueia |
+| [0016](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md) | a engine sai de casa antes do G0, e este repositório é o sensor |
 
 ## Os artigos
 
