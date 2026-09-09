@@ -447,3 +447,77 @@ editor, SARIF, daemon, SDK, protocolo público, runtime e engine própria.
 - Oito achados em um projeto com quatro ADRs, matriz de risco, corpus de cinco
   projetos e fitness functions medidas é um resultado bom. Cinco dos oito são o
   método do projeto sendo aplicado com mais rigor do que o próprio projeto aplicou.
+
+---
+
+## 7. Nota de 09/09/2026 — sete branches que pareciam adiante e estavam atrás
+
+*Acrescentada onze dias depois, sem tocar em nada acima. Os oito achados da §2 continuam
+oito: isto não é um nono achado sobre o produto, é um achado sobre como a árvore foi lida.*
+
+Em 09/09/2026, `git log main..<branch>` dizia que sete branches tinham trabalho fora do
+tronco — oito commits na maior delas. **Nenhuma tinha.** As sete eram fotografias antigas,
+e o conteúdo dos commits já estava em `main`, reaplicado por outro caminho.
+
+| branch | tip | commits fora de `main` | linhas só dela | linhas que `main` tem a mais |
+|---|---|---:|---:|---:|
+| `licao-da-aranha` (publicada) | `5830c9b` | 8 | 71 | 3.155 |
+| `claude/fmt-do-relogio-do-tween` | `58fa135` | 8 | 71 | 3.155 |
+| `backup/licao-da-aranha-pre-limpeza` | `ae96f6d` | 6 | 118 | 3.489 |
+| `claude/hopeful-bell-01ecbc` | `c32e227` | 2 | 71 | 2.722 |
+| `coevolucao-…-e-corpus` | `1c57a90` | 1 | 111 | 5.453 |
+| `freio-do-marco-7` | `e6df9d4` | 1 | 116 | 5.719 |
+| `relatorio-da-pesquisa-da-engine` | `6e78305` | 2 | 117 | 5.018 |
+
+*(O nome da quinta é elidido de propósito: ele carregava o nome anterior do produto, e a
+fitness function `adr_0018_o_nome_anterior_nao_volta` reprova escrevê-lo aqui. O portão
+funcionando é parte do registro.)*
+
+### O comando que confunde, e o que decide
+
+`git log main..<branch>` responde sobre o **grafo**: quais commits não são ancestrais de
+`main`. Rebase, cherry-pick e squash reaplicam mudanças com SHA novo, e a resposta do
+grafo passa a ser verdadeira e inútil ao mesmo tempo — os commits antigos ficam órfãos
+para sempre, e o `log` os conta para sempre.
+
+`git diff main..<branch>`, com **dois** pontos, responde sobre o **conteúdo**: o que muda
+ao ir de uma árvore para a outra. Foi ele que resolveu o caso, e a leitura é direta:
+inserções minúsculas contra milhares de deleções significa que a branch está atrás, não
+adiante.
+
+Cuidado com o terceiro: `git diff main...<branch>`, com **três** pontos, compara a branch
+com a **base comum** e esconde tudo que `main` andou desde então. Foi a primeira medição
+feita neste caso, e ela mostrou 1.438 inserções — o oposto da conclusão certa.
+
+### As duas provas que fecharam
+
+Contagem de linhas indica; ela não decide. O que decidiu foi ler o que só as branches
+tinham:
+
+- A `licao-da-aranha` diz **"A3 continua aberta"**. `main` diz **"A3 entrou"**, e explica
+  que entrou depois, sozinha, em commit próprio.
+- A `hopeful-bell` se anunciava como *"duas correções na ADR 0015, achadas ao
+  implementá-la"*. A ADR 0015 dela é de **28/08**; a de `main` é de **29/08** e traz três
+  achados a mais, entre eles o elo `tela → texto emitido`.
+
+Todo o resto que só elas tinham é estado anterior conhecido: o `#[ignore]` que a ADR 0017
+removeu, o `check_corpus.sh` com `--ignored`, o gabarito de status antes de ganhar
+`Cumprida`, o binário de 3.892.496 bytes, "treze fitness functions", "2 de 10 mudanças".
+
+### Por que isto pertence a esta auditoria
+
+É a mesma armadilha que a
+[ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) registrou em
+29/08/2026, **na direção contrária**: uma conferência independente rodou os `grep` da
+seção de conformidade contra uma cópia da `main` três merges atrasada, não achou as peças
+e concluiu que a ADR prometia a mais. As peças estavam lá. Lá foi uma `main` velha lida
+como se fosse a atual; aqui foram branches velhas lidas como se fossem novas. **A leitura
+do repositório precisa declarar contra qual revisão foi feita, do mesmo jeito que o dossiê
+do portão declara.**
+
+### O que se fez
+
+As sete foram apagadas em 09/09/2026, com as remotas correspondentes. Os SHAs acima
+deixam de resolver, e é o preço aceito: nenhuma linha delas era única, e o que era
+conteúdo está em `main`. O registro fica aqui para a pergunta não voltar em uma terceira
+leitura.
