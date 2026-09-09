@@ -12,7 +12,7 @@ fn fixture(name: &str) -> PathBuf {
 }
 
 fn json_report(name: &str, extra: &[&str]) -> (i32, Value, String) {
-    let mut command = Command::cargo_bin("sara").expect("binary");
+    let mut command = Command::cargo_bin("engine-sensor").expect("binary");
     command
         .arg("check")
         .arg(fixture(name))
@@ -40,7 +40,7 @@ fn defold_animation_red_fails_and_green_passes() {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| { item["rule"] == "SAR-OWN-001" && item["severity"] == "error" })
+            .any(|item| { item["rule"] == "ESN-OWN-001" && item["severity"] == "error" })
     );
 
     let (green_code, green, _) = json_report("defold_animation_green", &[]);
@@ -75,7 +75,7 @@ fn defold_input_is_profile_aware() {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| { item["rule"] == "SAR-OWN-002" && item["severity"] == "error" })
+            .any(|item| { item["rule"] == "ESN-OWN-002" && item["severity"] == "error" })
     );
 
     let (desktop_code, desktop, _) = json_report("defold_input_red", &["--profile", "desktop"]);
@@ -95,7 +95,7 @@ fn godot_distinguishes_sequential_and_competing_tweens() {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| { item["rule"] == "SAR-OWN-001" && item["severity"] == "error" })
+            .any(|item| { item["rule"] == "ESN-OWN-001" && item["severity"] == "error" })
     );
 
     let (green_code, green, _) = json_report("godot_animation_green", &[]);
@@ -104,7 +104,7 @@ fn godot_distinguishes_sequential_and_competing_tweens() {
 }
 
 /// ADR 0009. O padrão de dono centralizado — cada escritor encerra o Tween guardado
-/// antes de criar o seu — é a própria remediação que o `SAR-OWN-001` recomenda, e
+/// antes de criar o seu — é a própria remediação que o `ESN-OWN-001` recomenda, e
 /// virava aviso falso quando o cancelamento passava por método auxiliar.
 ///
 /// A segunda metade do teste é a que importa: uma regra boa demais silenciaria também
@@ -126,7 +126,7 @@ fn godot_detects_touch_and_mouse_reaching_the_same_effect() {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| { item["rule"] == "SAR-OWN-002" && item["severity"] == "error" }),
+            .any(|item| { item["rule"] == "ESN-OWN-002" && item["severity"] == "error" }),
         "{android:#}"
     );
 
@@ -172,7 +172,7 @@ fn godot_recognizes_centralized_owner_cancellation() {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| { item["rule"] == "SAR-OWN-001" && item["severity"] == "warning" }),
+            .any(|item| { item["rule"] == "ESN-OWN-001" && item["severity"] == "warning" }),
         "cancelar de um lado só não serializa: o aviso precisa continuar de pé: {warn:#}"
     );
 }
@@ -194,7 +194,7 @@ fn godot_inventories_tweens_with_fluent_configuration() {
 
 /// O relógio do Tween, nascido do caso da aranha (28/08/2026).
 ///
-/// A Sara declarava alvo, propriedade e dono, e nenhuma das três muda quando alguém
+/// O engine-sensor declarava alvo, propriedade e dono, e nenhuma das três muda quando alguém
 /// pausa ou desacelera a trajetória -- enquanto o que acontece na tela muda inteiro.
 /// A capacidade entra **declarando**, sem diagnóstico novo, como a ADR 0010 entrou.
 #[test]
@@ -347,7 +347,7 @@ fn godot_input_needs_one_owner_or_explicit_consumption() {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| { item["rule"] == "SAR-OWN-002" && item["severity"] == "error" })
+            .any(|item| { item["rule"] == "ESN-OWN-002" && item["severity"] == "error" })
     );
 
     let (green_code, green, _) = json_report("godot_input_green", &[]);
@@ -361,7 +361,7 @@ fn godot_undeclared_action_warns_without_inventing_a_conflict() {
     assert_eq!(code, 0);
     let diagnostics = report["diagnostics"].as_array().unwrap();
     assert!(diagnostics.iter().any(|item| {
-        item["rule"] == "SAR-PARSE-001"
+        item["rule"] == "ESN-PARSE-001"
             && item["severity"] == "warning"
             && item["explanation"]
                 .as_str()
@@ -372,18 +372,18 @@ fn godot_undeclared_action_warns_without_inventing_a_conflict() {
 
 #[test]
 fn syntax_error_exits_two_and_names_the_rule() {
-    Command::cargo_bin("sara")
+    Command::cargo_bin("engine-sensor")
         .expect("binary")
         .arg("check")
         .arg(fixture("godot_invalid"))
         .assert()
         .code(2)
-        .stderr(predicate::str::contains("SAR-PARSE-001"));
+        .stderr(predicate::str::contains("ESN-PARSE-001"));
 }
 
 #[test]
 fn incompatible_engine_version_exits_two() {
-    Command::cargo_bin("sara")
+    Command::cargo_bin("engine-sensor")
         .expect("binary")
         .arg("check")
         .arg(fixture("godot_incompatible"))
@@ -401,7 +401,7 @@ fn dynamic_target_warns_without_blocking() {
             .as_array()
             .unwrap()
             .iter()
-            .any(|item| { item["rule"] == "SAR-PARSE-001" && item["severity"] == "warning" })
+            .any(|item| { item["rule"] == "ESN-PARSE-001" && item["severity"] == "warning" })
     );
 }
 
@@ -414,13 +414,13 @@ fn mutation_that_adds_a_second_owner_is_rejected() {
         "function init(self)\n    gui.animate(\"bomb\", gui.PROP_SCALE, vmath.vector3(1, 1, 1), gui.EASING_LINEAR, 0.2)\n    gui.animate(\"bomb\", gui.PROP_SCALE, vmath.vector3(2, 2, 1), gui.EASING_LINEAR, 0.2)\nend\n",
     )
     .expect("mutate");
-    Command::cargo_bin("sara")
+    Command::cargo_bin("engine-sensor")
         .expect("binary")
         .arg("check")
         .arg(temporary.path())
         .assert()
         .code(1)
-        .stdout(predicate::str::contains("SAR-OWN-001"));
+        .stdout(predicate::str::contains("ESN-OWN-001"));
 }
 
 #[test]
@@ -437,7 +437,7 @@ fn init_creates_both_agent_fragments_without_overwriting_roots() {
     fs::write(temporary.path().join("AGENTS.md"), "meu agents\n").expect("agents");
     fs::write(temporary.path().join("CLAUDE.md"), "meu claude\n").expect("claude");
 
-    Command::cargo_bin("sara")
+    Command::cargo_bin("engine-sensor")
         .expect("binary")
         .arg("init")
         .arg(temporary.path())
@@ -452,21 +452,21 @@ fn init_creates_both_agent_fragments_without_overwriting_roots() {
         fs::read_to_string(temporary.path().join("CLAUDE.md")).unwrap(),
         "meu claude\n"
     );
-    assert!(temporary.path().join(".sara/CONTRATO.md").is_file());
-    assert!(temporary.path().join(".sara/PADROES.md").is_file());
-    assert!(temporary.path().join(".sara/USOS.md").is_file());
-    assert!(temporary.path().join(".sara/AGENTS.fragment.md").is_file());
-    assert!(temporary.path().join(".sara/CLAUDE.fragment.md").is_file());
+    assert!(temporary.path().join(".engine-sensor/CONTRATO.md").is_file());
+    assert!(temporary.path().join(".engine-sensor/PADROES.md").is_file());
+    assert!(temporary.path().join(".engine-sensor/USOS.md").is_file());
+    assert!(temporary.path().join(".engine-sensor/AGENTS.fragment.md").is_file());
+    assert!(temporary.path().join(".engine-sensor/CLAUDE.fragment.md").is_file());
     assert!(
         temporary
             .path()
-            .join(".sara/godot/portao_ai_first.gd")
+            .join(".engine-sensor/godot/portao_ai_first.gd")
             .is_file()
     );
     assert!(
         temporary
             .path()
-            .join(".sara/godot/padroes_ai_first.gd")
+            .join(".engine-sensor/godot/padroes_ai_first.gd")
             .is_file()
     );
 }
@@ -476,11 +476,11 @@ fn init_creates_defold_gate_and_patterns() {
     let temporary = TempDir::new().expect("tempdir");
     fs::write(
         temporary.path().join("game.project"),
-        "[project]\ntitle = Sara\n",
+        "[project]\ntitle = engine-sensor\n",
     )
     .expect("manifest");
 
-    Command::cargo_bin("sara")
+    Command::cargo_bin("engine-sensor")
         .expect("binary")
         .arg("init")
         .arg(temporary.path())
@@ -490,13 +490,13 @@ fn init_creates_defold_gate_and_patterns() {
     assert!(
         temporary
             .path()
-            .join(".sara/defold/portao_ai_first.lua")
+            .join(".engine-sensor/defold/portao_ai_first.lua")
             .is_file()
     );
     assert!(
         temporary
             .path()
-            .join(".sara/defold/padroes_ai_first.lua")
+            .join(".engine-sensor/defold/padroes_ai_first.lua")
             .is_file()
     );
 }
@@ -505,13 +505,13 @@ fn init_creates_defold_gate_and_patterns() {
 fn exact_exception_suppresses_only_the_named_conflict() {
     let temporary = TempDir::new().expect("tempdir");
     copy_tree(&fixture("defold_animation_red"), temporary.path());
-    let request = sara_ai_first::CheckRequest {
+    let request = engine_sensor::CheckRequest {
         project: temporary.path().to_path_buf(),
-        engine: sara_ai_first::config::EngineChoice::Auto,
-        profiles: vec![sara_ai_first::config::Profile::Desktop],
+        engine: engine_sensor::config::EngineChoice::Auto,
+        profiles: vec![engine_sensor::config::Profile::Desktop],
         allow: Vec::new(),
     };
-    let report = sara_ai_first::check_project(&request).expect("report");
+    let report = engine_sensor::check_project(&request).expect("report");
     let diagnostic = report.diagnostics.first().expect("diagnostic");
     let owners = diagnostic
         .owners
@@ -520,14 +520,14 @@ fn exact_exception_suppresses_only_the_named_conflict() {
         .collect::<Vec<_>>()
         .join(", ");
     fs::write(
-        temporary.path().join("sara.toml"),
+        temporary.path().join("engine-sensor.toml"),
         format!(
             "schema_version = 1\nengine = \"defold\"\nprofiles = [\"desktop\"]\n\n[[allow]]\nrule = \"{}\"\nresource = \"{}\"\nowners = [{}]\nreason = \"ciclos mutuamente exclusivos provados pelo projeto\"\n",
             diagnostic.rule, diagnostic.resource, owners
         ),
     )
     .expect("config");
-    Command::cargo_bin("sara")
+    Command::cargo_bin("engine-sensor")
         .expect("binary")
         .arg("check")
         .arg(temporary.path())

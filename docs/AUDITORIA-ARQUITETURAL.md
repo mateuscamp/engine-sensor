@@ -9,21 +9,21 @@
 >
 > - **O achado A5 — "o Marco 7 muda o quantum arquitetural" — não se realizou, e por um
 >   motivo que a auditoria não podia prever: o marco não foi construído.** Ele aconteceu
->   sozinho, como a Sentinela do porte, e o quantum do `sara` nunca mudou. Ver a
+>   sozinho, como a Sentinela do porte, e o quantum do `engine-sensor` nunca mudou. Ver a
 >   [ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) e o
 >   adendo dela. A decisão de empacotamento que a §5 previa "antes do Marco 7" não é mais
 >   devida.
-> - **A Fase 2 foi revista em 28/08** pela [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md),
+> - **A Fase 2 foi revista em 28/08** pela [ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md),
 >   que trocou "não altere o instrumento" por "não altere sem deixar evidência". O gatilho
 >   que obrigou a revisão estava escrito na ADR 0009, e ele funcionou.
 > - **O Marco 6 encerrou em 28/08 por conclusão**, com treze mudanças, e o portão decidiu
->   manter privado ([ADR 0013](decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md)).
+>   manter privado ([ADR 0013](decisoes/0013-manter-o-sensor-privado-ao-fim-do-marco-6.md)).
 >   A linha "data de parada: 20/09/2026" da tabela de achados descreve um critério que não
 >   chegou a mandar.
 >
 > A fitness function F8, o freio da ADR 0011, continua de pé e passou a ser satisfeita: a ADR
 > de comparação existe.
-**Escopo:** conformidade do Sara `0.1.0` com o método declarado em
+**Escopo:** conformidade do engine-sensor `0.1.0` com o método declarado em
 [`METODO-ARQUITETURAL.md`](METODO-ARQUITETURAL.md), medida contra as duas referências
 **Referências:** Richards e Ford, *Fundamentals of Software Architecture* (FSA);
 Ford, Richards, Sadalage e Dehghani, *Software Architecture: The Hard Parts* (HP)
@@ -37,7 +37,7 @@ dois pontos com disciplina maior que a dos livros.
 
 A auditoria encontra **oito achados**. Nenhum invalida o `0.1.0`. Um deles é
 estrutural e barato agora, caro depois: o Marco 7 muda o quantum arquitetural do
-Sara, e o plano trata isso como consequência em prosa, não como estrutura no código.
+engine-sensor, e o plano trata isso como consequência em prosa, não como estrutura no código.
 Três achados são o próprio método do projeto sendo violado pelo projeto.
 
 O plano final consolidado está na seção 5. Ele não acrescenta escopo: acrescenta um
@@ -56,7 +56,7 @@ terminando em código 0.
 | `tests/governanca.rs` com quinze fitness functions | A1, A2, A5, A6, A7 | 36 testes no total, contra 19 antes |
 | ADR 0005 - foco em Godot, Defold congelado | A4 | matriz ponderada retirada do `ROTEIRO.md` |
 | ADR 0006 - contrato estrito de relatório e códigos de saída | A6 | forma do JSON congelada por teste |
-| ADR 0007 - `sara observe` como binário separado | A5 | `sara` permanece um quantum offline |
+| ADR 0007 - `engine-sensor observe` como binário separado | A5 | `engine-sensor` permanece um quantum offline |
 | ADR 0008 - gramáticas tree-sitter fixadas | Fase 3 | decisão que já existia de fato, agora registrada |
 | Data de parada do Marco 6: 20/09/2026 | A3 | `ROTEIRO.md` e `USO-PESSOAL.md` |
 | Caixa de decisão do agente | seção 3 | `kit/CONTRATO.md` e os dois fragmentos |
@@ -73,7 +73,7 @@ que entra é o melhor argumento possível a favor dela.
 
 ## 1. O que a auditoria confirma
 
-| Prática do Sara | Mecanismo na referência | Veredito |
+| Prática do engine-sensor | Mecanismo na referência | Veredito |
 |---|---|---|
 | `METODO §1` separa objetivo, evidência, referência e mercado | FSA cap. 2: arquitetura é o que não se pode pesquisar; HP: não existem melhores práticas universais | Correto, e mais rigoroso que os livros: os livros não avisam para não virarem requisito |
 | "Registrar o porquê antes do como" | FSA, Segunda Lei: *why is more important than how* | Fiel |
@@ -217,7 +217,7 @@ funcional e alto acoplamento estático. Exigir uma instalação de Godot é acop
 estático novo. HP cap. 7, desintegradores de granularidade aplicados a `check` e
 `observe`:
 
-| Desintegrador | `sara check` x `sara observe` |
+| Desintegrador | `engine-sensor check` x `engine-sensor observe` |
 |---|---|
 | Escopo e função | análise estática de texto x instrumentação de cena em execução |
 | Volatilidade | estável, com corpus x experimental, muda a cada repetição |
@@ -227,13 +227,13 @@ estático novo. HP cap. 7, desintegradores de granularidade aplicados a `check` 
 Quatro desintegradores. Os integradores existentes — `model`, esquema do relatório,
 vocabulário do CLI — pedem biblioteca compartilhada, não binário compartilhado.
 
-**Consequência.** Se `observe` entrar no mesmo binário, `sara check` herda dependência
+**Consequência.** Se `observe` entrar no mesmo binário, `engine-sensor check` herda dependência
 de Godot. A característica 5, "Possibilidade de posse", e o risco "Ferramenta depende
 de rede ou runtime externo" degradam sem que nenhum teste reclame.
 
 **Decisão aplicada.** [ADR 0007](decisoes/0007-observe-como-binario-separado.md):
-`sara-observe` nasce como binário separado no mesmo workspace, compartilhando `model` e
-`report` pela biblioteca. O binário `sara` continua sem Godot, sem rede e sem runtime
+`engine-sensor-observe` nasce como binário separado no mesmo workspace, compartilhando `model` e
+`report` pela biblioteca. O binário `engine-sensor` continua sem Godot, sem rede e sem runtime
 externo. `adr_0007_apenas_binarios_autorizados` reprova quando aparece um `[[bin]]` fora
 da lista. O desenho está em [`arquitetura.svg`](arquitetura.svg).
 
@@ -241,9 +241,9 @@ da lista. O desenho está em [`arquitetura.svg`](arquitetura.svg).
 
 **Evidência.** `src/model.rs:7` define `REPORT_SCHEMA_VERSION: u32 = 1`. Os códigos
 0, 1 e 2 e o formato JSON são consumidos por Codex e Claude Code através de
-`.sara/CONTRATO.md` e dos fragmentos. Não há ADR.
+`.engine-sensor/CONTRATO.md` e dos fragmentos. Não há ADR.
 
-**Referência.** HP cap. 14, contratos estritos x frouxos. A escolha do Sara é estrita,
+**Referência.** HP cap. 14, contratos estritos x frouxos. A escolha do engine-sensor é estrita,
 e está certa: o consumidor é um agente que não pode adivinhar. Mas contrato estrito
 sem decisão escrita não tem regra de quebra nem de versionamento.
 
@@ -257,7 +257,7 @@ forma, a coerência da versão e a existência de cenário vivo para cada códig
 
 **Evidência.** `docs/COMPATIBILIDADE.md` lista extensões e construções também
 codificadas em `src/scanner.rs:106-107` e nos adapters. Existem três arquivos de
-diário — `docs/USO-PESSOAL.md`, `kit/USOS.md` e `.sara/USOS.md` — sem cabeçalho
+diário — `docs/USO-PESSOAL.md`, `kit/USOS.md` e `.engine-sensor/USOS.md` — sem cabeçalho
 dizendo qual é qual.
 
 **Referência.** `METODO §5`, de novo regra do próprio projeto: "informação operacional
@@ -269,7 +269,7 @@ reprovou com `["gd", "render_script"]`: o contrato publicado não declarava a ex
 principal do Godot nem uma das quatro do Defold. O documento foi corrigido.
 
 Os três diários receberam cabeçalho: `docs/USO-PESSOAL.md` é o registro do próprio
-Sara, `kit/USOS.md` é o modelo distribuído pelo `init`, e `.sara/USOS.md` é a instância
+engine-sensor, `kit/USOS.md` é o modelo distribuído pelo `init`, e `.engine-sensor/USOS.md` é a instância
 de cada projeto integrado.
 
 **A metade que faltava, fechada depois.** As extensões eram só metade da duplicação: as
@@ -307,7 +307,7 @@ bibliotecas de terceiros em três caixas e dizer, para cada caixa, quem decide.
 | Framework | o arquiteto decide; o time nem analisa |
 
 Num projeto cujo usuário primário é um agente, essa caixa é o mecanismo mais útil do
-capítulo e o `.sara/CONTRATO.md` não o tem. O contrato hoje lista oito regras de
+capítulo e o `.engine-sensor/CONTRATO.md` não o tem. O contrato hoje lista oito regras de
 código, mas não diz **o que o agente pode decidir sozinho**. A tradução é direta:
 
 | Decisão do agente | Regime |
@@ -330,11 +330,12 @@ Todas em `tests/governanca.rs`, todas locais, nenhuma depende de rede. Dezessete
 
 *(Conferido em 30/08/2026: a tabela F1–F11 abaixo continua valendo dezessete testes, e o
 número estava certo. O que faltava era dizer que ela deixou de ser a lista inteira. O
-arquivo tem hoje **vinte e dois**, e os cinco de fora nasceram depois dela:
+arquivo tem hoje **vinte e três**, e os seis de fora nasceram depois dela:
 `adr_0012_o_binario_publicado_responde_como_o_codigo`,
 `adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine`,
 `adr_0017_nenhum_teste_desta_arvore_espera_ser_lembrado`,
-`adr_0017_o_portao_do_corpus_tem_tres_estados` e
+`adr_0017_o_portao_do_corpus_tem_tres_estados`,
+`adr_0018_o_nome_anterior_nao_volta` e
 `o_status_de_toda_adr_consta_do_gabarito`. A numeração F é desta auditoria e está
 fechada: fitness function nova entra com o nome da ADR que a exige, ou com o do que ela
 guarda quando não é de uma ADR só.)*
@@ -344,12 +345,12 @@ guarda quando não é de uma ADR só.)*
 | F1 | ADR 0001, escopo | aparece dependência fora da lista autorizada, ou a lista guarda entrada que o manifesto não usa mais |
 | F2 | ADR 0006, contrato | a forma do JSON muda sem subir `REPORT_SCHEMA_VERSION`; a versão emitida diverge da constante; algum código de saída fica sem cenário vivo |
 | F3 | A1, fronteira | `common.rs` conhece engine, ou surge ramo por engine fora dos cinco arquivos declarados |
-| F4 | ADR 0007, quantum | aparece um `[[bin]]` fora de `sara` e `sara-observe` |
+| F4 | ADR 0007, quantum | aparece um `[[bin]]` fora de `engine-sensor` e `engine-sensor-observe` |
 | F5 | A7, fonte única | o scanner aceita extensão que o `COMPATIBILIDADE.md` não declara |
 | F6 | ADR 0005, Defold congelado | some qualquer uma das quatro fixtures ou dos dois cenários históricos |
 | F7 | A7, fonte única | adapter e `COMPATIBILIDADE.md` divergem sobre as construções reconhecidas, em qualquer um dos dois sentidos; token declarado que não existe no fonte; a lista do Defold cresce |
-| F8 | ADR 0011, freio do Marco 7 | o binário `sara-observe` aparece sem existir a ADR que compara o spike contra as ferramentas que já entregam a mesma unidade de evidência |
-| F9 | ADR 0012, série histórica | a tabela de usos perde a coluna `Sara`, ou um uso preenchido não declara qual instrumento respondeu a ele |
+| F8 | ADR 0011, freio do Marco 7 | o binário `engine-sensor-observe` aparece sem existir a ADR que compara o spike contra as ferramentas que já entregam a mesma unidade de evidência |
+| F9 | ADR 0012, série histórica | a tabela de usos perde a coluna `engine-sensor`, ou um uso preenchido não declara qual instrumento respondeu a ele |
 | F10 | ADR 0013, o pacote privado | o `Cargo.toml` perde `publish = false`, que é o passo irreversível entre privado e público |
 | F11 | ADR 0015, registro intacto | a lista de fitness functions da ADR 0004 deixa de ter sete itens — o registro cancelado editado depois, ou o oitavo critério parafusado nele em vez de morar na ADR 0015 §5 |
 
@@ -381,9 +382,9 @@ verdes, clippy sem aviso.
 7. Dez mudanças reais em projetos Godot, ou a data. O que vier primeiro. Pela ADR
    0005, mudança em BomberBoom Defold não conta mais; o projeto continua no corpus de
    falso positivo.
-8. **REVISTO em 28/08/2026 pela [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md).**
+8. **REVISTO em 28/08/2026 pela [ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md).**
    O gatilho escrito na ADR 0009 disparou: o terceiro caso não era uma regra, era um modo
-   de trabalho — desenvolver a Sara junto com os testes, porque o domínio é novo. A
+   de trabalho — desenvolver o engine-sensor junto com os testes, porque o domínio é novo. A
    obrigação deixou de ser "não altere o instrumento" e passou a ser "não altere sem
    deixar evidência de por que mudou, o que mudou e o que aconteceu no corpus". As dez
    mudanças e a medição de utilidade continuam; o diário ganhou a coluna da versão usada,
@@ -395,14 +396,14 @@ verdes, clippy sem aviso.
    como a fixture da cadeia fluente do `tween_property` apareceu; a segunda foi
    acrescentada pela [ADR 0009](decisoes/0009-baseline-em-projeto-real-expoe-regra-ausente.md),
    quando a baseline do `gods` mostrou que o padrão de dono centralizado — a própria
-   remediação que o `SAR-OWN-001` recomenda — virava aviso falso. Uma terceira exceção
+   remediação que o `ESN-OWN-001` recomenda — virava aviso falso. Uma terceira exceção
    obriga a rever a Fase 2 inteira em vez de ampliá-la de novo.
 9. O corpus Godot era quase mudo quando esta linha foi escrita: `mineboom` com zero
    declaração e `boomlitude` com quatro. A ADR 0010 mudou parte disso — o eixo de
    entrada passou a enxergar, e o `boomlitude` foi para doze, metade delas de entrada.
    O `mineboom` continua em zero. A conclusão que a linha carregava permanece de pé e
    fica mais afiada: se as dez mudanças não produzirem nenhum verdadeiro positivo em
-   Godot, isso é um resultado sobre o Sara, não sobre os projetos — e agora sem a
+   Godot, isso é um resultado sobre o engine-sensor, não sobre os projetos — e agora sem a
    desculpa de que ele estava olhando com um olho só.
 
    *(Atualizado em 25/08/2026. Os números originais eram de antes da ADR 0010 e
@@ -416,9 +417,9 @@ ferramenta e manter só o kit; encerrar. `RESULTADO-0.1.0.md` já autoriza as tr
 ### Fase 3 - só se o portão aprovar
 
 10. Medição Android. Tem poder de veto e é a evidência comparável que falta.
-11. Marco 7, com `sara-observe` como binário separado desde o primeiro commit, pela
+11. Marco 7, com `engine-sensor-observe` como binário separado desde o primeiro commit, pela
     ADR 0007. Quando o segundo binário existir, a lista de dependências autorizadas
-    passa a ser por binário e o teste offline continua sendo executado contra `sara`.
+    passa a ser por binário e o teste offline continua sendo executado contra `engine-sensor`.
 
 A ADR 0008, sobre as gramáticas tree-sitter, foi antecipada para a Fase 0: ela
 registrava uma decisão que já estava tomada de fato e custou quinze minutos.
@@ -446,3 +447,77 @@ editor, SARIF, daemon, SDK, protocolo público, runtime e engine própria.
 - Oito achados em um projeto com quatro ADRs, matriz de risco, corpus de cinco
   projetos e fitness functions medidas é um resultado bom. Cinco dos oito são o
   método do projeto sendo aplicado com mais rigor do que o próprio projeto aplicou.
+
+---
+
+## 7. Nota de 09/09/2026 — sete branches que pareciam adiante e estavam atrás
+
+*Acrescentada onze dias depois, sem tocar em nada acima. Os oito achados da §2 continuam
+oito: isto não é um nono achado sobre o produto, é um achado sobre como a árvore foi lida.*
+
+Em 09/09/2026, `git log main..<branch>` dizia que sete branches tinham trabalho fora do
+tronco — oito commits na maior delas. **Nenhuma tinha.** As sete eram fotografias antigas,
+e o conteúdo dos commits já estava em `main`, reaplicado por outro caminho.
+
+| branch | tip | commits fora de `main` | linhas só dela | linhas que `main` tem a mais |
+|---|---|---:|---:|---:|
+| `licao-da-aranha` (publicada) | `5830c9b` | 8 | 71 | 3.155 |
+| `claude/fmt-do-relogio-do-tween` | `58fa135` | 8 | 71 | 3.155 |
+| `backup/licao-da-aranha-pre-limpeza` | `ae96f6d` | 6 | 118 | 3.489 |
+| `claude/hopeful-bell-01ecbc` | `c32e227` | 2 | 71 | 2.722 |
+| `coevolucao-…-e-corpus` | `1c57a90` | 1 | 111 | 5.453 |
+| `freio-do-marco-7` | `e6df9d4` | 1 | 116 | 5.719 |
+| `relatorio-da-pesquisa-da-engine` | `6e78305` | 2 | 117 | 5.018 |
+
+*(O nome da quinta é elidido de propósito: ele carregava o nome anterior do produto, e a
+fitness function `adr_0018_o_nome_anterior_nao_volta` reprova escrevê-lo aqui. O portão
+funcionando é parte do registro.)*
+
+### O comando que confunde, e o que decide
+
+`git log main..<branch>` responde sobre o **grafo**: quais commits não são ancestrais de
+`main`. Rebase, cherry-pick e squash reaplicam mudanças com SHA novo, e a resposta do
+grafo passa a ser verdadeira e inútil ao mesmo tempo — os commits antigos ficam órfãos
+para sempre, e o `log` os conta para sempre.
+
+`git diff main..<branch>`, com **dois** pontos, responde sobre o **conteúdo**: o que muda
+ao ir de uma árvore para a outra. Foi ele que resolveu o caso, e a leitura é direta:
+inserções minúsculas contra milhares de deleções significa que a branch está atrás, não
+adiante.
+
+Cuidado com o terceiro: `git diff main...<branch>`, com **três** pontos, compara a branch
+com a **base comum** e esconde tudo que `main` andou desde então. Foi a primeira medição
+feita neste caso, e ela mostrou 1.438 inserções — o oposto da conclusão certa.
+
+### As duas provas que fecharam
+
+Contagem de linhas indica; ela não decide. O que decidiu foi ler o que só as branches
+tinham:
+
+- A `licao-da-aranha` diz **"A3 continua aberta"**. `main` diz **"A3 entrou"**, e explica
+  que entrou depois, sozinha, em commit próprio.
+- A `hopeful-bell` se anunciava como *"duas correções na ADR 0015, achadas ao
+  implementá-la"*. A ADR 0015 dela é de **28/08**; a de `main` é de **29/08** e traz três
+  achados a mais, entre eles o elo `tela → texto emitido`.
+
+Todo o resto que só elas tinham é estado anterior conhecido: o `#[ignore]` que a ADR 0017
+removeu, o `check_corpus.sh` com `--ignored`, o gabarito de status antes de ganhar
+`Cumprida`, o binário de 3.892.496 bytes, "treze fitness functions", "2 de 10 mudanças".
+
+### Por que isto pertence a esta auditoria
+
+É a mesma armadilha que a
+[ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) registrou em
+29/08/2026, **na direção contrária**: uma conferência independente rodou os `grep` da
+seção de conformidade contra uma cópia da `main` três merges atrasada, não achou as peças
+e concluiu que a ADR prometia a mais. As peças estavam lá. Lá foi uma `main` velha lida
+como se fosse a atual; aqui foram branches velhas lidas como se fossem novas. **A leitura
+do repositório precisa declarar contra qual revisão foi feita, do mesmo jeito que o dossiê
+do portão declara.**
+
+### O que se fez
+
+As sete foram apagadas em 09/09/2026, com as remotas correspondentes. Os SHAs acima
+deixam de resolver, e é o preço aceito: nenhuma linha delas era única, e o que era
+conteúdo está em `main`. O registro fica aqui para a pergunta não voltar em uma terceira
+leitura.

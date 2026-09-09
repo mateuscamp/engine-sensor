@@ -36,17 +36,17 @@ de estado. Mensagem livre pode acompanhar o log para pessoas, mas não é a prov
 Godot, ajustando a pasta pura depois de `--`:
 
 ```text
-godot --headless --path . --script res://.sara/godot/portao_ai_first.gd -- game/domain
+godot --headless --path . --script res://.engine-sensor/godot/portao_ai_first.gd -- game/domain
 ```
 
 Defold/Lua, enumerando explicitamente os módulos puros:
 
 ```text
-luajit .sara/defold/portao_ai_first.lua modules/*.lua
+luajit .engine-sensor/defold/portao_ai_first.lua modules/*.lua
 ```
 
 O portão estático comum é:
 
 ```text
-sara check . --format json
+engine-sensor check . --format json
 ```

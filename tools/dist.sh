@@ -13,10 +13,10 @@ set -euo pipefail
 # que a de antes -- e `set -e` impede que um teste vermelho siga adiante.
 cargo build --release
 
-install -m 755 target/release/sara dist/sara-linux-x86_64
-( cd dist && sha256sum sara-linux-x86_64 > SHA256SUMS )
+install -m 755 target/release/engine-sensor dist/engine-sensor-linux-x86_64
+( cd dist && sha256sum engine-sensor-linux-x86_64 > SHA256SUMS )
 
 cargo test
 
-echo "Sara: dist/sara-linux-x86_64 com $(stat -c %s dist/sara-linux-x86_64) bytes."
+echo "engine-sensor: dist/engine-sensor-linux-x86_64 com $(stat -c %s dist/engine-sensor-linux-x86_64) bytes."
 sed 's/^/  /' dist/SHA256SUMS

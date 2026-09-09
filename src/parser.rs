@@ -52,7 +52,7 @@ pub fn parse_source(engine: Engine, path: String, source: String) -> Result<Pars
     if tree.root_node().has_error() {
         let error = first_error(tree.root_node()).unwrap_or(tree.root_node());
         bail!(
-            "SAR-PARSE-001 {}:{}:{} contém sintaxe não compreendida pelo parser de {}",
+            "ESN-PARSE-001 {}:{}:{} contém sintaxe não compreendida pelo parser de {}",
             path,
             error.start_position().row + 1,
             error.start_position().column + 1,

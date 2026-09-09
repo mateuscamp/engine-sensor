@@ -20,15 +20,15 @@
 <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--edge)"/></marker></defs>
 
 <rect class="bg" x="0" y="0" width="960" height="660"/>
-<text class="h" x="32" y="40">Sara — o que é um quantum hoje, e onde o Marco 7 encosta</text>
+<text class="h" x="32" y="40">engine-sensor — o que é um quantum hoje, e onde o Marco 7 encosta</text>
 <text class="s" x="32" y="60">docs/AUDITORIA-ARQUITETURAL.md, achados A1 e A5 · ADR 0005, 0007</text>
 
 <!-- ============ PAINEL A ============ -->
 <rect class="zone" x="32" y="84" width="896" height="290"/>
-<text class="zl" x="48" y="106">BINÁRIO `sara` — UM QUANTUM: INDEPENDENTE, OFFLINE, SEM RUNTIME EXTERNO</text>
+<text class="zl" x="48" y="106">BINÁRIO `engine-sensor` — UM QUANTUM: INDEPENDENTE, OFFLINE, SEM RUNTIME EXTERNO</text>
 
 <rect class="accent" x="48" y="122" width="128" height="46"/>
-<text class="tb code" x="60" y="142">sara check</text>
+<text class="tb code" x="60" y="142">engine-sensor check</text>
 <text class="s" x="60" y="158">CLI, main.rs</text>
 
 <rect class="card" x="200" y="122" width="140" height="46"/>
@@ -95,7 +95,7 @@
 <rect class="zone" x="32" y="456" width="440" height="176"/>
 <text class="zl" x="48" y="478">SEM AMBIENTE EXTERNO</text>
 <rect class="accent" x="48" y="492" width="200" height="60"/>
-<text class="tb code" x="60" y="514">sara</text>
+<text class="tb code" x="60" y="514">engine-sensor</text>
 <text class="s" x="60" y="531">análise estática · offline</text>
 <text class="s" x="60" y="545">contrato estrito, ADR 0006</text>
 <text class="s" x="48" y="578">Teste offline e lista de dependências</text>
@@ -105,7 +105,7 @@
 <rect class="zone" x="504" y="456" width="424" height="176"/>
 <text class="zl" x="520" y="478">EXIGE GODOT INSTALADO</text>
 <rect class="warnbox" x="520" y="492" width="220" height="60"/>
-<text class="tb code" x="532" y="514">sara-observe</text>
+<text class="tb code" x="532" y="514">engine-sensor-observe</text>
 <text class="s" x="532" y="531">cena instrumentada · experimento</text>
 <text class="s" x="532" y="545">interface provisória, sem contrato</text>
 <text class="s" x="520" y="578">Pode falhar, mudar ou ser descartado</text>

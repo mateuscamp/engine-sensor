@@ -2,7 +2,7 @@
 
 **Data:** 29 de agosto de 2026
 **Estado:** contrafactual registrado, **não** fitness function cumprida
-**Autorizado por:** [ADR 0012 §4](decisoes/0012-sara-e-corpus-coevoluem.md) — contrafactual é
+**Autorizado por:** [ADR 0012 §4](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) — contrafactual é
 permitido, é datado, e **nunca reescreve o resultado original do caso**
 
 A [ADR 0004](decisoes/0004-spike-de-visao-instrumentada-em-godot.md) tinha sete fitness
@@ -108,7 +108,7 @@ O próprio porte já tinha escrito isso, no cabeçalho da família que responde 
 > tinha visto.
 
 Três defeitos, três vezes a mesma origem. É a mesma linha da
-[ADR 0013](decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md): **onze dos treze casos
+[ADR 0013](decisoes/0013-manter-o-sensor-privado-ao-fim-do-marco-6.md): **onze dos treze casos
 do Marco 6 ainda exigiram inspeção humana.**
 
 **2. O lado "estado" é deste jogo, e não é portável.** `PresencaNaCena` sabe o que é uma

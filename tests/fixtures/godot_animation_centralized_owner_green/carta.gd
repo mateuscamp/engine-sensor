@@ -1,7 +1,7 @@
 extends Node2D
 
 # Dono centralizado: todo escritor encerra o Tween guardado antes de criar o seu.
-# E o padrao que a propria remediacao do SAR-OWN-001 recomenda, e o cancelamento
+# E o padrao que a propria remediacao do ESN-OWN-001 recomenda, e o cancelamento
 # acontece por metodo auxiliar, nao por `variavel.kill()` na mesma funcao.
 
 const ELEVACAO_PX := 24.0

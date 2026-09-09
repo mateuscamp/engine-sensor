@@ -1,5 +1,5 @@
 [package]
-name = "sara-ai-first"
+name = "engine-sensor"
 version = "0.1.0"
 edition = "2024"
 description = "Verificador AI-first interno para projetos Godot e Defold"
@@ -7,7 +7,7 @@ repository = "https://github.com/mateuscamp/engine-sensor"
 publish = false
 
 [[bin]]
-name = "sara"
+name = "engine-sensor"
 path = "src/main.rs"
 
 [dependencies]
@@ -36,7 +36,7 @@ strip = true
 # O portão do corpus deixou de ser `#[ignore]` na ADR 0017 e passou a rodar em todo
 # `cargo test`: ele varre 694 arquivos reais dos cinco projetos. Com as gramáticas
 # tree-sitter sem otimização isso custava 40 s por suíte, e portão caro é portão que
-# alguém desliga. Otimizar só as dependências — o código do Sara continua sem
+# alguém desliga. Otimizar só as dependências — o código do engine-sensor continua sem
 # otimização, para o depurador e o pânico continuarem legíveis — devolve a suíte a
 # 10 s sem tocar no que ela mede.
 [profile.dev.package."*"]

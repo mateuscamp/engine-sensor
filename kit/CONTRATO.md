@@ -9,12 +9,12 @@ pessoa olhando a engine.
 2. Toda aleatoriedade de regra recebe uma semente e passa por um gerador único.
 3. Entrada física é normalizada em um ponto antes de alterar o estado.
 4. Uma propriedade animada tem um proprietário. Composição deliberada precisa de
-   exceção exata e justificada em `sara.toml`.
+   exceção exata e justificada em `engine-sensor.toml`.
 5. Logs para verificação são estruturados; texto livre é apenas para pessoas.
 6. O comando de teste e o comando de prova de cena vivem no repositório.
-7. Conclusão exige executar `sara check . --format json`.
+7. Conclusão exige executar `engine-sensor check . --format json`.
 8. Durante o Marco 6, mudança de entrada ou animação registra resultado, tempo,
-   avisos e inspeção humana em `.sara/USOS.md`.
+   avisos e inspeção humana em `.engine-sensor/USOS.md`.
 
 ## Caixa de decisão do agente
 

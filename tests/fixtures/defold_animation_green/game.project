@@ -1,5 +1,5 @@
 [project]
-title = Sara Defold Animation Green
+title = engine-sensor Defold Animation Green
 
 [input]
 game_binding = /input/game.input_bindingc

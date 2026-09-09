@@ -1,7 +1,7 @@
 config_version=5
 
 [application]
-config/name="Sara Godot Centralized Owner Green"
+config/name="engine-sensor Godot Centralized Owner Green"
 
 [rendering]
 config/features=PackedStringArray("4.7", "GL Compatibility")

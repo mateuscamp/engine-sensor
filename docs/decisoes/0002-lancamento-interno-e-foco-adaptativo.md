@@ -2,12 +2,12 @@
 
 **Status:** Aceita
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** primeira versão do verificador
 
 ## Contexto
 
-O proprietário quer o Sara para os próprios jogos antes de avaliar qualquer
+O proprietário quer o engine-sensor para os próprios jogos antes de avaliar qualquer
 produto público. Godot fecha hoje uma parte maior do ciclo de cena sem atenção
 humana; Defold, porém, contém os dois defeitos históricos que dão ao linter seu
 teste causal mais forte.
@@ -17,14 +17,14 @@ mesmo contrato no projeto sem manter duas cópias divergentes das regras.
 
 ## Decisão
 
-- Sara é o nome provisório da camada e `0.1.0` é um lançamento interno.
+- engine-sensor é o nome provisório da camada e `0.1.0` é um lançamento interno.
 - A versão inicial verifica somente posse de animação e de entrada.
 - Conflito comprovado bloqueia; ambiguidade produz aviso.
 - O núcleo é independente de engine. Defold prova as regras primeiro e Godot é a
   hipótese inicial de foco, sujeita à matriz de decisão registrada no roteiro.
-- `.sara/CONTRATO.md` é a fonte canônica para agentes. `AGENTS.md` e `CLAUDE.md`
-  recebem fragmentos curtos que apontam para ela e para `sara check`.
-- `sara init` cria material copiável, mas nunca sobrescreve arquivos de instrução
+- `.engine-sensor/CONTRATO.md` é a fonte canônica para agentes. `AGENTS.md` e `CLAUDE.md`
+  recebem fragmentos curtos que apontam para ela e para `engine-sensor check`.
+- `engine-sensor init` cria material copiável, mas nunca sobrescreve arquivos de instrução
   existentes.
 
 ## Consequências

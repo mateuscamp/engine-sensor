@@ -2,12 +2,12 @@
 
 **Status:** Aceita
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** regra de posse de entrada no adapter Godot
 
 ## Contexto
 
-O `ROTEIRO.md` define o que o Sara bloqueia: dois donos para uma propriedade animada,
+O `ROTEIRO.md` define o que o engine-sensor bloqueia: dois donos para uma propriedade animada,
 ou **dois canais físicos distintos chegando ao mesmo efeito de entrada**. A segunda
 metade existia só no adapter Defold.
 
@@ -21,7 +21,7 @@ animação e **zero de entrada**, contra 69 e 7 do original em Defold. Não por 
 de entrada, mas porque a regra não tinha em que se agarrar. Metade da ferramenta era
 cega — e desde 23/08/2026 o porte é o único projeto em desenvolvimento ativo, com os
 outros três parados como corpus de regressão. A medição do Marco 6 concluiria sobre a
-utilidade do Sara tendo exercitado metade dele.
+utilidade do engine-sensor tendo exercitado metade dele.
 
 E o que estava escondido nesse ponto cego era um defeito real, da mesma família que a
 regressão histórica do Portão 0. Em `main/tabuleiro.gd`, `_unhandled_input` despacha
@@ -45,7 +45,7 @@ ele existe para cobrir é real.
 3. Derivar o canal da classe do evento testada no ramo, sem exigir mapa de ações.
 4. Esperar o porte avançar e decidir com mais evidência.
 
-A opção 2 é o Sara ditando arquitetura do jogo. Despachar `InputEvent` cru é
+A opção 2 é o engine-sensor ditando arquitetura do jogo. Despachar `InputEvent` cru é
 legítimo em Godot, e uma ferramenta de verificação que só funciona quando o projeto
 adota a estrutura que ela prefere verifica pouco.
 
@@ -74,7 +74,7 @@ estática, e por isso aparecem na remediação e não na regra.
 
 - O eixo de entrada deixa de ser cego em jogo Godot de toque, que é a classe de jogo
   do único projeto ativo e do estudo inteiro.
-- O Sara passa a reproduzir, em Godot, a regra que pegou a regressão histórica do
+- O engine-sensor passa a reproduzir, em Godot, a regra que pegou a regressão histórica do
   Defold. A simetria entre os dois adapters deixa de ser parcial.
 - O defeito encontrado no porte foi corrigido no mesmo dia, e a correção é uma linha
   de configuração porque o código já tratava os dois canais.
@@ -84,7 +84,7 @@ estática, e por isso aparecem na remediação e não na regra.
 - A regra é sintática: ela vê a classe testada no `is`, não o fluxo real do evento.
   Despacho por variável intermediária, por `match`, ou por sinal de nó não é visto.
 - Ela não prova dano, só duplicação. No porte a segunda entrega era neutralizada por
-  uma guarda de estado, e o Sara bloqueou mesmo assim — porque a guarda é acidente de
+  uma guarda de estado, e o engine-sensor bloqueou mesmo assim — porque a guarda é acidente de
   implementação e some quando alguém mexer nela sem saber. Bloquear aqui é a escolha
   do contrato, não um descuido.
 - O vocabulário de eventos é fechado e cresce por decisão. Joypad, teclado e caneta
@@ -98,7 +98,7 @@ em `tests/cli.rs`, sobre três fixtures:
 
 | fixture | perfil | espera |
 |---|---|---|
-| `godot_input_channel_red` | android | erro `SAR-OWN-002`, saída 1 |
+| `godot_input_channel_red` | android | erro `ESN-OWN-002`, saída 1 |
 | `godot_input_channel_red` | desktop | nenhum diagnóstico, saída 0 |
 | `godot_input_channel_green` | android | nenhum: a emulação está desligada |
 | `godot_input_channel_separate_green` | android | nenhum: canais em efeitos distintos |
@@ -121,7 +121,7 @@ variável intermediária — isso é regra ausente nova, e não motivo para afro
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
 - Substitui: nenhuma
 - Última alteração: 23 de agosto de 2026

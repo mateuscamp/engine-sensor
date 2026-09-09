@@ -2,12 +2,12 @@
 
 **Status:** Aceita
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** análise sintática de GDScript e Lua
 
 ## Contexto
 
-O Sara não interpreta texto por expressão regular: ele analisa a árvore sintática.
+O engine-sensor não interpreta texto por expressão regular: ele analisa a árvore sintática.
 Nem Godot nem Defold publicam uma gramática oficial para consumo externo, então as
 gramáticas usadas são comunitárias, fixadas por versão exata no manifesto e no
 lockfile: `tree-sitter =0.26.13`, `tree-sitter-gdscript =6.1.0`, `tree-sitter-lua
@@ -20,7 +20,7 @@ A consequência já se materializou uma vez. A gramática de GDScript recusou
 identificadores Unicode válidos encontrados no projeto Gods. O adapter passou a criar
 uma forma ASCII de mesmo tamanho em bytes apenas para a análise, mantendo o texto
 original nas localizações e diagnósticos. O defeito era da gramática; a correção teve
-de ser do Sara.
+de ser do engine-sensor.
 
 ## Opções consideradas
 
@@ -36,9 +36,9 @@ Nós adotaremos a opção 3.
 - As três dependências ficam fixadas com `=` no manifesto, e não com faixa de versão.
   Atualizar qualquer uma delas é uma mudança que precisa passar pelo corpus inteiro
   antes de ser aceita.
-- **Um defeito da gramática vira um defeito do Sara.** Não há repasse de culpa: se a
+- **Um defeito da gramática vira um defeito do engine-sensor.** Não há repasse de culpa: se a
   gramática não entende uma construção válida, ou o adapter contorna com uma
-  transformação registrada e reversível, ou o arquivo recebe `SAR-PARSE-001`.
+  transformação registrada e reversível, ou o arquivo recebe `ESN-PARSE-001`.
 - **Nenhuma omissão silenciosa.** Todo arquivo relevante é aceito ou recusado
   explicitamente. Erro de sintaxe ou árvore incompleta encerra a execução com código 2.
 - Contorno de defeito de gramática precisa preservar a origem: a transformação vale
@@ -58,7 +58,7 @@ Nós adotaremos a opção 3.
 
 ### Negativas
 
-- o Sara herda os limites de gramáticas que não controla;
+- o engine-sensor herda os limites de gramáticas que não controla;
 - acompanhar a evolução do GDScript depende de terceiros;
 - a transformação ASCII é dívida técnica visível: ela existe para contornar um defeito
   externo e precisa ser removida se a gramática for corrigida.
@@ -83,6 +83,6 @@ Revisar quando ocorrer o primeiro destes eventos:
 
 ## Notas
 
-- Autor: proprietário do Sara
+- Autor: proprietário do engine-sensor
 - Origem: seção 5 do plano em `docs/AUDITORIA-ARQUITETURAL.md`
 - Substitui: nenhuma

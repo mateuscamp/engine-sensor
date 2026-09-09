@@ -4,7 +4,7 @@ Data da medição: 2026-08-23.
 
 ## Decisão
 
-Os Marcos 0 a 5 foram implementados e o Sara pode entrar no Marco 6, de uso
+Os Marcos 0 a 5 foram implementados e o engine-sensor pode entrar no Marco 6, de uso
 pessoal. O Portão 0 foi aprovado: as duas regressões históricas vermelhas falham, as
 versões corrigidas passam e o BomberBoom atual não recebe erro bloqueante.
 
@@ -52,7 +52,7 @@ fixtures e exige relatórios idênticos —, e foi ele que reprovou aqui, exatam
 `godot_animation_clock_control_green` e `godot_draw_order_green`, as fixtures das duas
 capacidades ausentes.)*
 
-O porte Godot recebeu `.sara/`, `sara.toml` e o portão curto tanto em `AGENTS.md`
+O porte Godot recebeu `.engine-sensor/`, `engine-sensor.toml` e o portão curto tanto em `AGENTS.md`
 quanto em `CLAUDE.md`. A inicialização preservou as instruções e mudanças que já
 existiam no projeto. O kit também instala padrões copiáveis para RNG injetado,
 normalização de entrada e log estruturado, sem criar uma dependência de runtime.
@@ -91,7 +91,7 @@ declarações; o critério precisa continuar sendo medido nas próximas mudança
 - A análise privilegia precisão: concorrência no mesmo fluxo pode ser comprovada;
   relações entre fluxos ou alvos dinâmicos permanecem avisos.
 - Consultas de entrada Godot só entram em conflito comprovado quando a ação existe em
-  `project.godot`; ação ausente produz `SAR-PARSE-001` visível e não um bloqueio inventado.
+  `project.godot`; ação ausente produz `ESN-PARSE-001` visível e não um bloqueio inventado.
 - Godot continua como hipótese de foco, pois concentra quatro projetos e fechou o
   corpus sem aviso. A pontuação final continua bloqueada pela prova em aparelho Android,
   que tem poder de veto no plano.
@@ -113,7 +113,7 @@ contradição não riscada, não critério vivo.
 
 A medição corrente saiu de uma para **treze mudanças reais**, todas do porte. O que a
 exigência de dois projetos protegia continua valendo, e passou de critério a **limitação
-declarada do julgamento**: mediu-se a Sara acompanhando um jogo, não um corpus.
+declarada do julgamento**: mediu-se o engine-sensor acompanhando um jogo, não um corpus.
 
 Se houver falso bloqueio, necessidade recorrente de inspeção humana ou ausência de
 uso voluntário, o encerramento legítimo é manter apenas o kit AI-first ou congelar a

@@ -1,4 +1,4 @@
-# Método arquitetural do Sara
+# Método arquitetural do engine-sensor
 
 **Versão:** 0.1
 **Data:** 23 de agosto de 2026
@@ -17,7 +17,7 @@ Este projeto mantém quatro tipos de informação separados:
    repositório. Eles descrevem problemas observados e hipóteses de mecanismo.
 3. **Referências arquiteturais** - *Fundamentals of Software Architecture* e
    *Software Architecture: The Hard Parts*. Os livros fornecem método de decisão;
-   não fornecem requisitos para o Sara e não determinam que uma engine deva ser
+   não fornecem requisitos para o engine-sensor e não determinam que uma engine deva ser
    construída.
 4. **Evidência de mercado** - regras atuais dos canais, concorrentes, entrevistas,
    uso real, conversão e pagamentos. Ela deve ser datada porque muda.
@@ -58,7 +58,7 @@ Cada decisão arquitetural relevante percorre este ciclo:
 5. **Cenários** - exercitar as alternativas em casos representativos, sobretudo nos
    casos que mais tensionam o desenho.
 6. **Trade-offs** - resumir vantagens, desvantagens e consequências no contexto do
-   Sara.
+   engine-sensor.
 7. **Experimento refutável** - menor protótipo capaz de derrubar a hipótese.
 8. **Fitness functions** - transformar a característica em uma verificação objetiva,
    automática quando possível.
@@ -80,7 +80,7 @@ Cada decisão arquitetural relevante percorre este ciclo:
 
 ## 5. Regra de leveza
 
-O próprio corpus do Sara mostra que especificação pesada não protege contra uma
+O próprio corpus do engine-sensor mostra que especificação pesada não protege contra uma
 decisão de produto errada. Por isso:
 
 - uma ADR deve tratar uma decisão e caber, em geral, em uma ou duas páginas;
@@ -104,7 +104,7 @@ que um agente de código consegue:
    deliberadamente humanos, como qualidade artística e diversão.
 
 Se uma solução não melhora esse ciclo completo, ela pode usar IA, mas não resolve o
-problema investigado pelo Sara.
+problema investigado pelo engine-sensor.
 
 ## 7. Fontes metodológicas
 

@@ -2,7 +2,7 @@ extends Node2D
 
 ## O caso da aranha, reduzido: quem decide a profundidade de desenho.
 ##
-## A Sara declarava alvo, propriedade e dono de cada trajetoria, e nenhuma das tres
+## O engine-sensor declarava alvo, propriedade e dono de cada trajetoria, e nenhuma das tres
 ## diz quem desenha na FRENTE de quem. Foi o fio de seda com `z_index` errado que
 ## nao apareceu em quadro nenhum -- e um sprite invisivel passa por todos os portoes.
 
@@ -13,7 +13,7 @@ var _cartas: Array[Node2D] = []
 ## Os DOIS mecanismos decidindo o mesmo no, e nenhum deles sabe do outro.
 ##
 ## `z_index` vence ordem de arvore, entao a reordenacao abaixo e uma verdade que
-## nao vale. Duas fontes de verdade sobre a mesma coordenada e a familia que a Sara
+## nao vale. Duas fontes de verdade sobre a mesma coordenada e a familia que o engine-sensor
 ## ja modela -- ela so nao a enxergava neste eixo.
 func _pendurar() -> void:
 	_fio = Line2D.new()

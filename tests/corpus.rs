@@ -1,6 +1,6 @@
 //! Portão do corpus pessoal.
 //!
-//! A [ADR 0012](../docs/decisoes/0012-sara-e-corpus-coevoluem.md) §3 obriga a
+//! A [ADR 0012](../docs/decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) §3 obriga a
 //! confrontar toda capacidade generalizável com os cinco projetos reais antes de
 //! incorporá-la. Este é o portão executável desse confronto.
 //!
@@ -19,19 +19,19 @@
 //! o vermelho. E não pode aprovar, porque **não poder conferir não é ter conferido**.
 //! O arnês do Cargo só tem dois estados, então o inconclusivo sai por três canais que
 //! ele não apaga: um bloco no descritor real do processo, o veredito em
-//! `$SARA_CORPUS_VEREDITO` e o código de saída 2 de `tools/check_corpus.sh`.
+//! `$ENGINE_SENSOR_CORPUS_VEREDITO` e o código de saída 2 de `tools/check_corpus.sh`.
 //!
 //! Os caminhos vêm do ambiente. Os valores de hoje são o **padrão documentado**, e
 //! não a fonte:
 //!
 //! | Variável | Padrão |
 //! |---|---|
-//! | `SARA_CORPUS_RAIZ` | `/home/mateus` |
-//! | `SARA_CORPUS_BOMBERBOOM_DF` | `$SARA_CORPUS_RAIZ/defold/bomberboom-df` |
-//! | `SARA_CORPUS_BOMBERBOOM_GD` | `$SARA_CORPUS_RAIZ/godot/bomberboom-gd` |
-//! | `SARA_CORPUS_BOOMLITUDE` | `$SARA_CORPUS_RAIZ/godot/boomlitude` |
-//! | `SARA_CORPUS_MINEBOOM` | `$SARA_CORPUS_RAIZ/godot/mineboom` |
-//! | `SARA_CORPUS_GODS` | `$SARA_CORPUS_RAIZ/godot/gods` |
+//! | `ENGINE_SENSOR_CORPUS_RAIZ` | `/home/mateus` |
+//! | `ENGINE_SENSOR_CORPUS_BOMBERBOOM_DF` | `$ENGINE_SENSOR_CORPUS_RAIZ/defold/bomberboom-df` |
+//! | `ENGINE_SENSOR_CORPUS_BOMBERBOOM_GD` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/bomberboom-gd` |
+//! | `ENGINE_SENSOR_CORPUS_BOOMLITUDE` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/boomlitude` |
+//! | `ENGINE_SENSOR_CORPUS_MINEBOOM` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/mineboom` |
+//! | `ENGINE_SENSOR_CORPUS_GODS` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/gods` |
 
 use std::{
     env, fs,
@@ -39,13 +39,13 @@ use std::{
     path::PathBuf,
 };
 
-use sara_ai_first::{
+use engine_sensor::{
     CheckRequest, check_project,
     config::{EngineChoice, Profile},
 };
 
 /// Raiz dos cinco, quando nenhuma variável individual manda outra coisa.
-const VARIAVEL_RAIZ: &str = "SARA_CORPUS_RAIZ";
+const VARIAVEL_RAIZ: &str = "ENGINE_SENSOR_CORPUS_RAIZ";
 
 /// O valor de hoje na máquina do proprietário. É padrão, e o comentário existe para
 /// que ninguém volte a lê-lo como fonte: quando o corpus se mexer de novo, quem se
@@ -54,7 +54,7 @@ const RAIZ_PADRAO: &str = "/home/mateus";
 
 /// Arquivo onde o veredito é escrito para quem chama o portão de fora do Cargo.
 /// Ausente, o teste só imprime.
-const VARIAVEL_VEREDITO: &str = "SARA_CORPUS_VEREDITO";
+const VARIAVEL_VEREDITO: &str = "ENGINE_SENSOR_CORPUS_VEREDITO";
 
 struct Projeto {
     nome: &'static str,
@@ -66,27 +66,27 @@ struct Projeto {
 const CORPUS: &[Projeto] = &[
     Projeto {
         nome: "bomberboom-df",
-        variavel: "SARA_CORPUS_BOMBERBOOM_DF",
+        variavel: "ENGINE_SENSOR_CORPUS_BOMBERBOOM_DF",
         relativo: "defold/bomberboom-df",
     },
     Projeto {
         nome: "bomberboom-gd",
-        variavel: "SARA_CORPUS_BOMBERBOOM_GD",
+        variavel: "ENGINE_SENSOR_CORPUS_BOMBERBOOM_GD",
         relativo: "godot/bomberboom-gd",
     },
     Projeto {
         nome: "boomlitude",
-        variavel: "SARA_CORPUS_BOOMLITUDE",
+        variavel: "ENGINE_SENSOR_CORPUS_BOOMLITUDE",
         relativo: "godot/boomlitude",
     },
     Projeto {
         nome: "mineboom",
-        variavel: "SARA_CORPUS_MINEBOOM",
+        variavel: "ENGINE_SENSOR_CORPUS_MINEBOOM",
         relativo: "godot/mineboom",
     },
     Projeto {
         nome: "gods",
-        variavel: "SARA_CORPUS_GODS",
+        variavel: "ENGINE_SENSOR_CORPUS_GODS",
         relativo: "godot/gods",
     },
 ];
@@ -141,7 +141,7 @@ fn registrar(estado: &str, detalhe: &str) {
     };
     if let Err(erro) = fs::write(&caminho, format!("{estado}\n{detalhe}\n")) {
         gritar(&format!(
-            "SARA-CORPUS: não consegui escrever o veredito em {caminho}: {erro}"
+            "ENGINE-SENSOR-CORPUS: não consegui escrever o veredito em {caminho}: {erro}"
         ));
     }
 }
@@ -196,7 +196,7 @@ fn five_personal_projects_have_no_blocking_false_positive() {
         }
         registrar("reprovado", &detalhe);
         panic!(
-            "SARA-CORPUS: reprovado — o confronto da ADR 0012 §3 encontrou conflito \
+            "ENGINE-SENSOR-CORPUS: reprovado — o confronto da ADR 0012 §3 encontrou conflito \
              bloqueante no corpus:\n{detalhe}\n\nIsto é resultado, não ausência: os \
              projetos acima estavam no lugar declarado e foram lidos."
         );
@@ -207,12 +207,12 @@ fn five_personal_projects_have_no_blocking_false_positive() {
         registrar("inconclusivo", &detalhe);
         gritar(&format!(
             "\n\
-             ┌─ SARA-CORPUS: INCONCLUSIVO ─────────────────────────────────────────────\n\
+             ┌─ ENGINE-SENSOR-CORPUS: INCONCLUSIVO ─────────────────────────────────────────────\n\
              │ {} de {} projetos do corpus fora do lugar declarado:\n\
              │   {}\n\
              │\n\
              │ Não poder conferir não é ter conferido. A suíte segue verde porque corpus\n\
-             │ ausente não é defeito da Sara, e este bloco é o registro de que o confronto\n\
+             │ ausente não é defeito do engine-sensor, e este bloco é o registro de que o confronto\n\
              │ da ADR 0012 §3 NÃO aconteceu — verde aqui não conta como aprovação.\n\
              │\n\
              │ Aponte {VARIAVEL_RAIZ} ou a variável do projeto para o lugar certo, ou\n\
@@ -228,7 +228,7 @@ fn five_personal_projects_have_no_blocking_false_positive() {
 
     registrar("aprovado", &conferidos.join("\n"));
     println!(
-        "SARA-CORPUS: aprovado — {} de {} projetos lidos, nenhum conflito bloqueante:\n  {}",
+        "ENGINE-SENSOR-CORPUS: aprovado — {} de {} projetos lidos, nenhum conflito bloqueante:\n  {}",
         conferidos.len(),
         CORPUS.len(),
         conferidos.join("\n  ")

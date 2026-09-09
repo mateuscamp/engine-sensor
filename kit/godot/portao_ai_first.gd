@@ -1,6 +1,6 @@
 extends SceneTree
 
-## Modelo deliberadamente pequeno. Copie para `.sara/godot/` e passe as pastas
+## Modelo deliberadamente pequeno. Copie para `.engine-sensor/godot/` e passe as pastas
 ## puras depois de `--`.
 const PROIBIDOS: PackedStringArray = [
 	"Node", "Node2D", "Control", "Tween", "Timer", "Input", "InputEvent",

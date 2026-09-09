@@ -2,7 +2,7 @@
 
 **Status:** Aceita
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** governança do Marco 6 e regra de posse de animação em Godot
 
 ## Contexto
@@ -13,19 +13,19 @@ assim que a fixture da cadeia fluente do `tween_property` apareceu — a realida
 manda, não o roteiro.
 
 Na integração do `gods` e do `boomlitude`, a baseline do `gods` produziu um aviso
-`SAR-OWN-001` em `src/entities/card.gd`. A classificação foi feita e o aviso é
+`ESN-OWN-001` em `src/entities/card.gd`. A classificação foi feita e o aviso é
 **falso**: as seis trajetórias de `position` no arquivo seguem disciplina de dono
 centralizado — cada escritor chama `_kill_active_tween()` antes de criar a sua e
 guarda a nova em `_active_tween`. Existe um único Tween de posição por construção.
 
-O Sara não via isso por duas lacunas em `src/adapters/godot.rs`:
+O engine-sensor não via isso por duas lacunas em `src/adapters/godot.rs`:
 
 1. `has_ordering_barrier` reconhecia apenas `variavel.kill()` literal entre as duas
    linhas. O `gods` cancela por método auxiliar, e a indireção não era seguida.
 2. O aviso entre donos nunca consultava barreira nenhuma. Mesmo um `.kill()` literal
    não o calaria.
 
-O detalhe que decide: a remediação que o próprio `SAR-OWN-001` imprime é *"centralize
+O detalhe que decide: a remediação que o próprio `ESN-OWN-001` imprime é *"centralize
 o proprietário"*. O `card.gd` já faz exatamente isso. A ferramenta estava pedindo o
 padrão que não sabia reconhecer, no maior projeto do corpus.
 
@@ -36,14 +36,14 @@ letra, a Fase 2 não autoriza o conserto.
 ## Opções consideradas
 
 1. Esperar uma mudança real tocar o `card.gd`, cumprindo a Fase 2 literalmente.
-2. Registrar exceção `[[allow]]` no `sara.toml` do `gods`, calando o aviso sem tocar
+2. Registrar exceção `[[allow]]` no `engine-sensor.toml` do `gods`, calando o aviso sem tocar
    em regra.
 3. Consertar sem registrar nada, tratando a baseline como coberta pela exceção.
 4. Ampliar a exceção por escrito e consertar.
 
 A opção 1 mantém um falso positivo conhecido de pé no maior projeto do corpus por até
 quatro semanas, dentro da janela de medição. Cada mudança futura em `card.gd` tropeça
-no mesmo ruído, e o desfecho previsível é o proprietário aprender a ignorar o Sara —
+no mesmo ruído, e o desfecho previsível é o proprietário aprender a ignorar o engine-sensor —
 que é precisamente o fracasso que o Marco 6 existe para detectar. Produzi-lo de
 propósito, com o defeito já diagnosticado, invalidaria a medição.
 
@@ -82,7 +82,7 @@ continua sendo de mudanças reais, e continua em 1 de 10.
 
 ### Negativas
 
-- A superfície de silêncio do `SAR-OWN-001` aumenta. Um projeto que chame um método
+- A superfície de silêncio do `ESN-OWN-001` aumenta. Um projeto que chame um método
   auxiliar de cancelamento sem que ele cancele o Tween certo não recebe mais o aviso.
   A fixture `godot_animation_uncancelled_owners_warn` limita o dano fixando que
   cancelamento de um lado só continua avisando.
@@ -114,7 +114,7 @@ ampliá-la de novo.
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
 - Substitui: nenhuma
 - Última alteração: 23 de agosto de 2026

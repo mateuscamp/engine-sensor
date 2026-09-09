@@ -2,7 +2,7 @@
 
 **Status:** Aceita
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** alocação de esforço entre os dois adapters
 
 ## Contexto
@@ -16,7 +16,7 @@ Duas evidências puxam para lados opostos:
 
 - Godot concentra quatro dos cinco projetos do corpus, fecha mais do ciclo de cena sem
   atenção humana e é a única engine do spike autorizado pela ADR 0004.
-- **Todos os verdadeiros positivos medidos do Sara são Defold.** Os 667 arquivos Godot
+- **Todos os verdadeiros positivos medidos do engine-sensor são Defold.** Os 667 arquivos Godot
   do corpus produziram zero erro e zero aviso. As duas regressões históricas que
   definem o Portão 0 — `defold_animation_red` e `defold_input_red` — são Defold, e são
   a única prova causal de que o verificador detecta alguma coisa em código real.
@@ -83,12 +83,12 @@ substituída.
 Revisar quando ocorrer o primeiro destes eventos:
 
 - o Marco 6 fechar e o portão autorizar continuidade;
-- uma mudança real em projeto Defold produzir defeito de posse que o Sara deixou passar;
+- uma mudança real em projeto Defold produzir defeito de posse que o engine-sensor deixou passar;
 - o adapter Godot acumular verdadeiros positivos suficientes para substituir o Portão 0;
 - o Defold publicar versão que quebre o adapter congelado.
 
 ## Notas
 
-- Autor: proprietário do Sara
+- Autor: proprietário do engine-sensor
 - Origem: achado A1 de `docs/AUDITORIA-ARQUITETURAL.md`
 - Substitui: nenhuma. Complementa a ADR 0002, que permanece aceita

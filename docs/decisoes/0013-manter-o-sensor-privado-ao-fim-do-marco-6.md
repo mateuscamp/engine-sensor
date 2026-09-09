@@ -1,8 +1,8 @@
-# ADR 0013 - Manter a Sara privada ao fim do Marco 6
+# ADR 0013 - Manter o engine-sensor privado ao fim do Marco 6
 
 **Status:** Aceita
 **Data:** 28 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** desfecho do portão do Marco 6
 
 ## Contexto
@@ -23,7 +23,7 @@ para o registro do marco no mesmo dia, depois de a leitura do
 | instrumento | 12 das 13 com o mesmo binário, `f1f4d5f` |
 | avisos | **1 útil, 0 falsos** em treze usos |
 | bloqueios falsos | 0 |
-| defeitos que só a Sara achou | 1 — toque e mouse no mesmo `_dedo`, cuja versão em Defold **chegou ao jogador** |
+| defeitos que só o engine-sensor achou | 1 — toque e mouse no mesmo `_dedo`, cuja versão em Defold **chegou ao jogador** |
 | casos que ainda exigiram inspeção humana | **11 de 13** |
 | capacidades ausentes nomeadas | 7, todas estáticas e todas de Godot |
 
@@ -59,7 +59,7 @@ ainda exigiram inspeção humana.** A atenção da pessoa é o recurso escasso q
 inteiro existe para economizar, e em 85% dos casos ela continuou sendo gasta. Um aviso útil
 em treze usos é colheita magra.
 
-O que a derruba é o custo do outro lado. A Sara é um binário offline de 3,9 MB, sem serviço,
+O que a derruba é o custo do outro lado. O engine-sensor é um binário offline de 3,9 MB, sem serviço,
 sem rede e sem manutenção fora do corpus; congelar economiza quase nada e joga fora sete
 capacidades nomeadas com o contexto fresco. E o defeito que ela achou não era qualquer um:
 **é o mesmo que, na versão Defold, chegou ao jogador com duas bombas por toque**, invisível
@@ -71,7 +71,7 @@ exigiria evidência que treze usos não produziram.
 
 ## Decisão
 
-Nós **mantemos a Sara privada**. O Marco 6 encerra por conclusão, com o desfecho que a
+Nós **mantemos o engine-sensor privado**. O Marco 6 encerra por conclusão, com o desfecho que a
 previsão datada de 25/08 antecipou.
 
 ### 1. O que isto autoriza
@@ -89,7 +89,7 @@ encurta. A [ADR 0001](0001-validar-mecanismos-antes-da-engine-completa.md) perma
 
 ### 3. A ADR 0012 continua valendo, e isso é decisão e não omissão
 
-A [ADR 0012](0012-sara-e-corpus-coevoluem.md) declarou governar "um marco em curso, não o
+A [ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md) declarou governar "um marco em curso, não o
 projeto inteiro", e previu encerrar junto se o portão concluísse **congelar ou encerrar**.
 O portão concluiu nenhum dos dois.
 
@@ -124,7 +124,7 @@ e ganhou uma segunda pergunta pelo caso da aranha, registrada no
   isso.** A decisão aceita conviver com a lacuna principal em vez de fechá-la. Quem ler esta
   ADR procurando o argumento contra ela deve ler esta linha primeiro.
 - **A generalização continua sem medida.** As treze mudanças são de um jogo só; a segunda
-  linha de evidência da ADR 0012 §5 tem um ponto e não uma série. O que se mediu foi a Sara
+  linha de evidência da ADR 0012 §5 tem um ponto e não uma série. O que se mediu foi o engine-sensor
   acompanhando um projeto.
 - A medição Android continua faltando e mantém poder de veto sobre qualquer conclusão de
   foco. Nada aqui a substitui.
@@ -146,7 +146,7 @@ um binário fora do Cargo. O freio real é esta ADR estar escrita.
 
 ## Critério de revisão
 
-- **Data:** 20 de setembro de 2026, o antigo critério de parada. Se até lá a Sara não tiver
+- **Data:** 20 de setembro de 2026, o antigo critério de parada. Se até lá o engine-sensor não tiver
   recebido nenhuma capacidade nova nem sido executada num projeto novo, "manter privado"
   virou "congelado sem admitir", e a revisão passa a ser entre congelar de verdade e
   encerrar.
@@ -159,7 +159,7 @@ um binário fora do Cargo. O freio real é esta ADR estar escrita.
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
 - Substitui: nenhuma. Encerra o Marco 6 e mantém a ADR 0012 em vigor por decisão explícita.
 - Última alteração: 28 de agosto de 2026

@@ -2,14 +2,14 @@
 
 **Status:** Aceita
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** interface consumida por agentes
 
 ## Contexto
 
-`sara check --format json` produz um relatório com `schema_version` e os códigos de
+`engine-sensor check --format json` produz um relatório com `schema_version` e os códigos de
 saída 0, 1 e 2 têm significado definido. Codex e Claude Code consomem os dois através
-de `.sara/CONTRATO.md` e dos fragmentos instalados em cada projeto. Na prática isso já
+de `.engine-sensor/CONTRATO.md` e dos fragmentos instalados em cada projeto. Na prática isso já
 é um contrato público, com consumidores ativos em dois projetos.
 
 Não havia decisão escrita. Sem ela não existe regra de quebra: qualquer campo podia
@@ -19,7 +19,7 @@ campo sem política.
 Contratos frouxos toleram evolução e adiam a descoberta do erro para o consumidor.
 Contratos estritos quebram alto e cedo e custam evolução. Quando o consumidor é um
 agente, a alternativa à quebra alta é o agente adivinhar, e adivinhação silenciosa é
-exatamente a classe de defeito que o Sara existe para encontrar.
+exatamente a classe de defeito que o engine-sensor existe para encontrar.
 
 ## Opções consideradas
 
@@ -81,6 +81,6 @@ Revisar quando ocorrer o primeiro destes eventos:
 
 ## Notas
 
-- Autor: proprietário do Sara
+- Autor: proprietário do engine-sensor
 - Origem: achado A6 de `docs/AUDITORIA-ARQUITETURAL.md`
 - Substitui: nenhuma

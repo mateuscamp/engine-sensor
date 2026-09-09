@@ -14,7 +14,7 @@ pub fn text(report: &AnalysisReport) -> String {
         .count();
     let warnings = report.diagnostics.len() - errors;
     let mut lines = vec![format!(
-        "Sara {} - {} arquivo(s), {} declaração(ões), {} erro(s), {} aviso(s)",
+        "engine-sensor {} - {} arquivo(s), {} declaração(ões), {} erro(s), {} aviso(s)",
         report.tool_version,
         report.files_scanned,
         report.claims.len(),

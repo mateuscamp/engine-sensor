@@ -4,7 +4,7 @@
 [0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md), de 28/08/2026, e ela
 concluiu por cancelar o spike. Este freio custou uma ADR e nenhuma hora de implementação.
 **Data:** 26 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** pré-condição do Marco 7; restringe a [ADR 0004](0004-spike-de-visao-instrumentada-em-godot.md)
 
 ## Contexto
@@ -68,7 +68,7 @@ das sete que produz conhecimento em vez de infraestrutura.
 
 A opção 3 é o mesmo erro invertido: adotar antes de medir. E há uma consequência
 arquitetural que precisa ser examinada antes, não depois — a ADR 0007 separou
-`sara-observe` em binário próprio justamente para que o quantum offline do `sara` não
+`engine-sensor-observe` em binário próprio justamente para que o quantum offline do `engine-sensor` não
 herdasse dependência de ambiente. Adotar um servidor MCP acrescenta runtime e, em
 alguns casos, processo em segundo plano. Isso é decisão, não detalhe.
 
@@ -114,7 +114,7 @@ pré-condição: enquanto a ADR de comparação não existir, o segundo binário
 ## Conformidade
 
 Fitness function automática, `adr_0011_observe_exige_adr_de_comparacao` em
-`tests/governanca.rs`: se um binário `sara-observe` aparecer no `Cargo.toml` sem que
+`tests/governanca.rs`: se um binário `engine-sensor-observe` aparecer no `Cargo.toml` sem que
 exista uma ADR de comparação em `docs/decisoes/`, o teste reprova citando esta decisão.
 
 O mecanismo é um **freio**, não escopo novo. A Fase 2 proíbe regra de posse nova durante
@@ -133,8 +133,8 @@ acontece.
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
 - Substitui: nenhuma. Restringe a ADR 0004.
 - Fontes consultadas em 26/08/2026: `github.com/defold/extension-automation-bridge`,
   `defold.com/2026/06/30/Defold-H1-2026/`, `github.com/aigengame/godot-agent`,
