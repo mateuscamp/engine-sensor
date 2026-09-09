@@ -201,3 +201,94 @@ tools/check_corpus.sh; echo "saída: $?"
 
 Sem o corpus na máquina, a saída esperada é **2**, e ela é o resultado correto — não uma
 falha da reprodução.
+
+---
+
+## Execução de 9 de setembro de 2026 — depois do renome e da migração do contrato
+
+A [ADR 0018](decisoes/0018-o-nome-sai-para-a-engine-e-este-produto-se-chama-engine-sensor.md)
+renomeou o produto e, com ele, o contrato que vive em disco nos projetos do corpus. Um
+renome que muda o nome do arquivo de configuração é a mudança mais fácil de aprovar por
+engano: sem migração, o verificador não acha o contrato, cai no padrão, ignora os blocos
+`[[allow]]` e **continua saindo 0**. Esta execução é o que separa migrado de parecido com
+migrado.
+
+| | |
+|---|---|
+| Comando | `tools/check_corpus.sh` |
+| Revisão | `da2440c` — *O nome anterior sai para a engine, e este produto passa a se chamar engine-sensor*, árvore limpa antes e depois |
+| Máquina | Arch Linux, `Linux 7.2.2-1-cachyos x86_64`, Intel Core i7-14700K, `rustc 1.96.0` / `cargo 1.96.0` |
+| Resultado | **aprovado**, saída **0**, cinco projetos lidos, zero erro |
+
+A migração aconteceu antes, nos quatro projetos que tinham contrato: `bomberboom-df`,
+`bomberboom-gd`, `boomlitude` e `gods` passaram a ter `.engine-sensor/` e
+`engine-sensor.toml`, com os ids `ESN-*` dentro. O antes de cada um está na tabela da
+[ADR 0018 §1](decisoes/0018-o-nome-sai-para-a-engine-e-este-produto-se-chama-engine-sensor.md),
+que é o único lugar desta árvore onde o nome antigo ainda aparece — a fitness function
+`adr_0018_o_nome_anterior_nao_volta` reprovou a primeira versão deste parágrafo por
+escrevê-lo aqui, e ela está certa: mapa de renome em dois lugares vira dois mapas.
+`mineboom` nunca foi inicializado e não migrou.
+
+### O diff de diagnóstico, que a ADR 0012 §3 manda ler
+
+A parte manual não foi pulada, e desta vez ela tinha o que ler: **os avisos do
+`bomberboom-df` caíram de 60, medidos em 29/08/2026, para 0.** Queda dessa ordem no dia de
+um renome tem duas explicações possíveis, e elas se parecem no relatório: o projeto mudou,
+ou a ferramenta parou de ver. A pergunta se responde rodando **o binário anterior ao
+renome** contra a árvore de hoje:
+
+| | claims desktop | claims android | avisos | arquivos |
+|---|---:|---:|---:|---:|
+| binário anterior ao renome | 357 | 392 | 0 | 141 |
+| binário de `da2440c` | 357 | 392 | 0 | **139** |
+
+Os dois concordam em tudo que é diagnóstico. A única divergência são **dois arquivos**, e
+ela é explicada até o fim: são `.engine-sensor/defold/padroes_ai_first.lua` e
+`portao_ai_first.lua`, que o binário novo ignora por serem o contrato e o antigo varre por
+só conhecer o nome antigo da pasta. **O renome é inerte no diagnóstico, e a queda de 60
+avisos é trabalho feito no projeto** — o `bomberboom-df` está sendo desenvolvido, e a
+medição de 29/08 é de uma árvore que não existe mais.
+
+### A fotografia do corpus no dia
+
+Somando os perfis `desktop` e `android`, com `engine-sensor 0.1.0` (esquema de relatório 1):
+
+| Projeto | Engine | Arquivos | Declarações | Erros | Avisos |
+|---|---|---:|---:|---:|---:|
+| bomberboom-df | Defold | 139 | 357 | 0 | 0 |
+| bomberboom-gd | Godot | 1552 | 420 | 0 | 0 |
+| boomlitude | Godot | 97 | 12 | 0 | 0 |
+| mineboom | Godot | 51 | 0 | 0 | 0 |
+| gods | Godot | 2108 | 381 | 0 | 0 |
+
+*As três primeiras colunas não são comparáveis com a tabela de 29/08/2026, e não é ruído de
+medição: os projetos mudaram entre uma data e outra — o `gods` cresceu de 450 para 2.108
+arquivos relevantes, o `bomberboom-gd` encolheu de 2.806 para 1.552. O que este portão
+julga, e o que as duas tabelas afirmam em comum, é a coluna de erros: zero antes, zero
+agora.*
+
+### O que esta execução fecha, e o que ela não fecha
+
+**Fecha:** a migração do contrato foi conferida por reexecução, e não por intenção. E o
+renome foi mostrado inerte por comparação com o binário anterior, que é diferente de ser
+declarado inerte pela ADR que o fez.
+
+**Não fecha:**
+
+- Os quatro projetos migraram **na árvore de trabalho**; nenhum commit foi feito nos
+  repositórios deles. Enquanto essa mudança não for commitada, um `git checkout` naqueles
+  projetos desfaz a migração e o contrato volta a não ser encontrado — em silêncio, com
+  saída 0.
+- Os documentos históricos daqueles projetos (carimbos, auditorias, diários) continuam
+  citando o comando pelo nome antigo. São registros deles, não deste acervo, e reescrevê-los
+  não estava no escopo desta decisão.
+- Corpus continua existindo numa máquina só. Nada aqui muda isso.
+
+### Como reproduzir
+
+```bash
+git checkout da2440c
+tools/check_corpus.sh; echo "saída: $?"
+```
+
+Sem o corpus na máquina, a saída esperada é **2**, e ela é o resultado correto.
