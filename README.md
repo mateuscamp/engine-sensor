@@ -153,6 +153,7 @@ caminho e revisão alcançável a partir de `origin/main`.
 | [0016](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md) | a engine sai de casa antes do G0, e este repositório é o sensor |
 | [0017](docs/decisoes/0017-o-portao-do-corpus-roda-sempre-e-ausencia-e-inconclusivo.md) | o portão do corpus roda na suíte padrão, e ausência de corpus é inconclusivo |
 | [0018](docs/decisoes/0018-o-nome-sai-para-a-engine-e-este-produto-se-chama-engine-sensor.md) | o nome anterior sai para a engine, e este produto se chama `engine-sensor` |
+| [0019](docs/decisoes/0019-o-projeto-termina-onde-comeca-outro-checkout-do-git.md) | o projeto termina onde começa outro checkout do Git |
 
 ## Os artigos
 
