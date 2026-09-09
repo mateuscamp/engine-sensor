@@ -1,4 +1,8 @@
-use std::{fs, path::Path};
+use std::{
+    collections::BTreeSet,
+    fs,
+    path::{Path, PathBuf},
+};
 
 use anyhow::{Context, Result, bail};
 use regex::Regex;
@@ -32,11 +36,12 @@ pub fn detect_engine(project: &Path, choice: EngineChoice) -> Result<Engine> {
 }
 
 pub fn scan_sources(project: &Path, engine: Engine) -> Result<Vec<ParsedSource>> {
+    let submodules = declared_submodules(project);
     let mut paths = Vec::new();
     for entry in WalkDir::new(project)
         .follow_links(false)
         .into_iter()
-        .filter_entry(included_entry)
+        .filter_entry(|entry| included_entry(project, &submodules, entry))
     {
         let entry = entry.with_context(|| format!("falha ao percorrer {}", project.display()))?;
         if entry.file_type().is_file() && supported(entry.path(), engine) {
@@ -79,16 +84,21 @@ pub fn validate_compatibility(project: &Path, engine: Engine) -> Result<()> {
     Ok(())
 }
 
-fn included_entry(entry: &DirEntry) -> bool {
+/// Nome com que o Git assinala a raiz de um checkout. Como **diretório** num
+/// repositório comum; como **arquivo** (`gitdir: ...`) numa worktree vinculada e num
+/// submódulo. Os dois formatos vivem na raiz e em nenhum outro lugar da árvore.
+const GIT_MARKER: &str = ".git";
+
+fn included_entry(project: &Path, submodules: &BTreeSet<PathBuf>, entry: &DirEntry) -> bool {
     if entry.depth() == 0 {
         return true;
     }
     if !entry.file_type().is_dir() {
         return true;
     }
-    !matches!(
+    if matches!(
         entry.file_name().to_string_lossy().as_ref(),
-        ".git"
+        GIT_MARKER
             | ".godot"
             | ".engine-sensor"
             | ".aurora"
@@ -97,7 +107,54 @@ fn included_entry(entry: &DirEntry) -> bool {
             | "target"
             | "node_modules"
             | "vendor"
-    )
+    ) {
+        return false;
+    }
+    !foreign_checkout(project, submodules, entry.path())
+}
+
+/// Raiz de outro checkout, que este projeto não declara como conteúdo seu.
+///
+/// A raiz pedida nunca chega aqui: `included_entry` devolve cedo na profundidade 0, e
+/// é isso que mantém `check .` funcionando **dentro** de uma worktree, onde o agente
+/// trabalha. Abaixo dela a marca do Git diz onde outro checkout começa, e o que começa
+/// ali não é fonte do projeto pedido — é outra árvore, com outra história, que ninguém
+/// está editando por este caminho.
+///
+/// O critério é a **presença** da marca, não o que ela aponta. Cópia velha cujo
+/// `gitdir` não existe mais continua sendo outro checkout, e era essa a metade maior do
+/// caso medido no BomberBoom em 09/09/2026: três das quatro cópias apontavam para um
+/// repositório que tinha sido renomeado. Resolver o alvo, ou perguntar ao binário do
+/// `git`, deixaria justamente essas três de fora — e traria dependência de processo
+/// externo a uma ferramenta que é offline por decisão.
+fn foreign_checkout(project: &Path, submodules: &BTreeSet<PathBuf>, path: &Path) -> bool {
+    if fs::symlink_metadata(path.join(GIT_MARKER)).is_err() {
+        return false;
+    }
+    path.strip_prefix(project)
+        .is_ok_and(|relative| !submodules.contains(relative))
+}
+
+/// Caminhos que o `.gitmodules` da raiz declara como submódulos.
+///
+/// Submódulo também é checkout aninhado, e a diferença não está na marca: está em o
+/// projeto **declarar** aquele caminho como conteúdo seu. Worktree vinculada e clone
+/// solto não têm declaração nenhuma, e é ela — e não o gitdir, que numa cópia velha já
+/// não existe — que separa os dois casos.
+///
+/// Sem isso a correção trocaria um defeito por outro: pararia de contar cinco vezes o
+/// mesmo achado e passaria a não contar nenhuma vez o código que a engine carrega
+/// junto com o projeto. Ausência do arquivo é o caso comum e não é erro.
+fn declared_submodules(project: &Path) -> BTreeSet<PathBuf> {
+    let Ok(source) = fs::read_to_string(project.join(".gitmodules")) else {
+        return BTreeSet::new();
+    };
+    source
+        .lines()
+        .filter_map(|line| line.split_once('='))
+        .filter(|(key, _)| key.trim() == "path")
+        .map(|(_, value)| PathBuf::from(value.trim()))
+        .collect()
 }
 
 fn supported(path: &Path, engine: Engine) -> bool {
