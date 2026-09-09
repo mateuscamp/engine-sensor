@@ -102,14 +102,14 @@ fn literal_inside(source: &str, prefix: &str) -> Option<String> {
 
 pub fn unresolved_diagnostic(claim: &OwnershipClaim, what: &str) -> Diagnostic {
     Diagnostic {
-        rule: "SAR-PARSE-001".to_owned(),
+        rule: "ESN-PARSE-001".to_owned(),
         severity: Severity::Warning,
         resource: claim.resource.id(),
         primary: claim.span.clone(),
         related: Vec::new(),
         owners: vec![claim.owner.clone()],
         explanation: format!(
-            "{what} é dinâmico; o Sara registrou a declaração, mas não consegue provar identidade ou sobreposição"
+            "{what} é dinâmico; o engine-sensor registrou a declaração, mas não consegue provar identidade ou sobreposição"
         ),
         remediation: "use um alvo/propriedade textual estável ou mantenha o aviso visível"
             .to_owned(),

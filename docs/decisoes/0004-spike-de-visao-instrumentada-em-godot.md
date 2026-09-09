@@ -2,7 +2,7 @@
 
 **Status:** **Substituída por [0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md)**
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** experimento posterior ao Marco 6
 **Restringida por:** [ADR 0011](0011-marco-7-exige-comparacao-com-ferramenta-existente.md) — o
 Marco 7 não começa sem uma ADR que compare este spike contra as ferramentas existentes.
@@ -34,13 +34,13 @@ captura isolada mostra sintomas, porém não distingue com segurança posição,
 visibilidade, ordem de desenho, propriedade animada, estado do nó ou entrada que levou
 ao quadro.
 
-Os critérios arquiteturais do Sara já priorizam verificabilidade autônoma e
+Os critérios arquiteturais do engine-sensor já priorizam verificabilidade autônoma e
 observabilidade consultável. É preciso testar se uma engine hospedeira consegue expor
 essas duas características sem construir um runtime próprio.
 
 ## Decisão
 
-Após o Marco 6, o Sara fará um spike somente em Godot para produzir uma prova de cena
+Após o Marco 6, o engine-sensor fará um spike somente em Godot para produzir uma prova de cena
 instrumentada. A unidade de evidência será:
 
 ```text
@@ -50,12 +50,12 @@ imagem + estado semântico + sequência de entradas + instante + logs
 O experimento terá uma interface provisória equivalente a:
 
 ```text
-sara observe CAMINHO --scenario NOME
+engine-sensor observe CAMINHO --scenario NOME
 ```
 
 Cada execução deverá criar um diretório autocontido com manifesto, imagens PNG em
 checkpoints, estado consultável da cena, rastro de entradas e log da engine. Codex ou
-Claude Code serão os consumidores das evidências; o Sara não incorporará modelo de
+Claude Code serão os consumidores das evidências; o engine-sensor não incorporará modelo de
 visão, serviço remoto nem credencial de provedor.
 
 O spike poderá executar uma instalação existente do Godot e instalar material local
@@ -112,6 +112,6 @@ causa encerra o spike sem autorizar SDK ou runtime.
 
 ## Limites
 
-Esta ADR autoriza somente o spike. Incorporar `sara observe` a um lançamento interno,
+Esta ADR autoriza somente o spike. Incorporar `engine-sensor observe` a um lançamento interno,
 suportar outra engine ou aparelho e oferecer protocolo estável exige os resultados do
 experimento e uma nova decisão.

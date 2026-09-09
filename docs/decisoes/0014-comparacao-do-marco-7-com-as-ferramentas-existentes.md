@@ -2,7 +2,7 @@
 
 **Status:** Aceita
 **Data:** 28 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** pré-condição exigida pela [ADR 0011](0011-marco-7-exige-comparacao-com-ferramenta-existente.md);
 conclui sobre o spike autorizado pela [ADR 0004](0004-spike-de-visao-instrumentada-em-godot.md)
 
@@ -13,7 +13,7 @@ de começar sem uma ADR que confrontasse o spike da ADR 0004 contra as ferrament
 existentes, item a item contra as sete fitness functions daquela ADR. Esta é essa ADR.
 
 Ela é escrita agora porque a pré-condição de tempo caiu: o
-[Marco 6 encerrou em 28/08/2026](0013-manter-a-sara-privada-ao-fim-do-marco-6.md), por
+[Marco 6 encerrou em 28/08/2026](0013-manter-o-sensor-privado-ao-fim-do-marco-6.md), por
 conclusão.
 
 ### O que existe, com data, versão e maturidade observadas em 28/08/2026
@@ -131,8 +131,8 @@ O acoplamento é o problema, e ele é escrito, não estimado:
   a medição em aparelho é o veto que o `RESULTADO-0.1.0.md` mantém sobre toda conclusão de
   foco. A ferramenta não alcança o lugar onde a evidência que falta seria colhida.
 
-Contra a [ADR 0007](0007-observe-como-binario-separado.md): ela separou `sara-observe` em
-binário próprio justamente para que o quantum offline do `sara` não herdasse dependência de
+Contra a [ADR 0007](0007-observe-como-binario-separado.md): ela separou `engine-sensor-observe` em
+binário próprio justamente para que o quantum offline do `engine-sensor` não herdasse dependência de
 ambiente. Adotar não fere a ADR 0007 — o acoplamento ficaria do lado certo da fronteira —,
 mas **esvazia o motivo dela**: não haveria segundo binário nenhum, e sim um daemon de
 terceiros.
@@ -155,7 +155,7 @@ Nós **cancelamos o spike da ADR 0004 e o Marco 7 como estavam especificados**, 
 
 ### 1. O Marco 7 não acontece
 
-O segundo binário `sara-observe` não nasce. As fitness functions 1, 2, 4, 5 e 6 da ADR 0004
+O segundo binário `engine-sensor-observe` não nasce. As fitness functions 1, 2, 4, 5 e 6 da ADR 0004
 deixam de ser trabalho deste projeto: elas estão entregues por terceiros, e refazê-las seria
 construir o que já existe — que é literalmente o erro que a ADR 0011 existe para impedir.
 
@@ -184,7 +184,7 @@ O caso da aranha mostrou que uma prova de forma regressiva passa numa peça que 
 certa. Antes de a pergunta 7 valer alguma coisa, é preciso saber contra o que a evidência
 combinada é conferida — e a resposta hoje é *"contra uma referência que só existe se a peça
 já esteve certa"*. Isso é a **verdade de design declarada**, que a
-[ADR 0012](0012-sara-e-corpus-coevoluem.md) nomeou e deixou sem formato, lugar e dono.
+[ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md) nomeou e deixou sem formato, lugar e dono.
 
 Esta ADR não a decide. Registra que ela é pré-condição da pergunta 7, e não o contrário.
 
@@ -209,7 +209,7 @@ Esta ADR concluiu por cancelar com o argumento *"outros já construíram"*. O ar
 certo e é o mais fraco dos dois disponíveis. **O forte é que este projeto já construiu — e
 o registro dizia isso, no dia em que esta ADR foi escrita.**
 
-A [ADR 0012](0012-sara-e-corpus-coevoluem.md), de 28/08/2026, tem a frase inteira:
+A [ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md), de 28/08/2026, tem a frase inteira:
 
 > O **sentinela**, construído no `bomberboom-gd`, é um aparelho de observação **mais completo
 > que o spike que a ADR 0004 especifica**: relógio fixo, 25 telas com tabela de delta por
@@ -257,7 +257,7 @@ portão desde 26/08/2026 e sem custo de dependência.
 **O status do Marco 7 muda de nome.** Ele não foi *cancelado antes de acontecer*: **foi
 executado sem ter sido planejado**, pela pressão de um jogo real, e o resultado está medido.
 O portão que a ADR 0004 previa ao terminar — *"encerrar, manter como ferramenta privada ou
-propor incorporação ao Sara"* — já se realizou de fato na segunda saída: a Sentinela é
+propor incorporação ao engine-sensor"* — já se realizou de fato na segunda saída: a Sentinela é
 ferramenta privada, do porte, e é lá que ela vale.
 
 **E o resultado do Marco 7 inclui o limite dele, que também está medido.** O
@@ -282,7 +282,7 @@ para falhar de um jeito interessante.
 - O freio da ADR 0011 se prova barato e eficaz: uma ADR impediu um experimento redundante
   cuja redundância só apareceria no fim.
 - A pergunta que interessa fica isolada do trabalho que outros já fizeram, e fica menor.
-- É coerente com a [ADR 0013](0013-manter-a-sara-privada-ao-fim-do-marco-6.md): manter
+- É coerente com a [ADR 0013](0013-manter-o-sensor-privado-ao-fim-do-marco-6.md): manter
   privado e construir um segundo binário ao mesmo tempo seria decisão contra decisão.
 
 ### Negativas
@@ -308,7 +308,7 @@ ADR de comparação em `docs/decisoes/`, e agora existe uma.
 
 O freio efetivo contra o spike renascer é a lista de binários autorizados da
 [ADR 0007](0007-observe-como-binario-separado.md), conferida por
-`adr_0007_apenas_binarios_autorizados`: `sara-observe` não está nela, e acrescentá-lo exige
+`adr_0007_apenas_binarios_autorizados`: `engine-sensor-observe` não está nela, e acrescentá-lo exige
 uma ADR que substitua esta.
 
 Não há fitness function automática para "a pergunta 7 não virou projeto de infraestrutura".
@@ -329,8 +329,8 @@ Isso é conformidade manual, e fica declarada como manual.
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
 - Substitui: nenhuma. **Cancela a [ADR 0004](0004-spike-de-visao-instrumentada-em-godot.md)
   e encerra a [ADR 0011](0011-marco-7-exige-comparacao-com-ferramenta-existente.md)**, que
   a exigiu.

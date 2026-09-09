@@ -2,17 +2,17 @@
 
 **Status:** Aceita
 **Data:** 28 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** método. Decide o formato, o lugar e o dono da **verdade de design declarada**,
-que a [ADR 0012](0012-sara-e-corpus-coevoluem.md) nomeou e deixou sem os três, e que a
+que a [ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md) nomeou e deixou sem os três, e que a
 [ADR 0014 §3](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) registrou como
-pré-condição da pergunta 7. **Não altera a Sara**, nem a ADR 0004, nem a 0011.
+pré-condição da pergunta 7. **Não altera o engine-sensor**, nem a ADR 0004, nem a 0011.
 
 ## Contexto
 
 Duas ADRs nomearam a verdade de design e nenhuma ficou com ela.
 
-A [ADR 0012](0012-sara-e-corpus-coevoluem.md), na seção *"A verdade de design"*, escreveu
+A [ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md), na seção *"A verdade de design"*, escreveu
 que **o agente precisa de uma verdade de design declarada para ter com o que comparar** —
 sem ela, um agente que executa conclui *"rodou, logo funcionou"* — e fechou dizendo que
 decidir formato, lugar e dono *"exige decisão própria"*. A
@@ -27,7 +27,7 @@ num carimbo, no registro de decisões deste projeto.
 ### A evidência, e ela é de 28/08/2026
 
 O caso da aranha: uma peça de jogo construída, **303 casos verdes**, portão de cena verde,
-Sentinela verde, `sara check` com saída 0, carimbada e mergeada — e o roubo **não se
+Sentinela verde, `engine-sensor check` com saída 0, carimbada e mergeada — e o roubo **não se
 completava em condição nenhuma**, 0 de 36 encontros. Dos nove defeitos, **portão pegou um**,
 e os dois que decidiam se a peça existia foram achados pelo autor jogando.
 
@@ -100,7 +100,7 @@ exatamente o tamanho da evidência, e nada além dele.
 
 1. **Não fazer.** A verdade de design continua sem formato, lugar e dono, como as ADRs 0012
    e 0014 a deixaram.
-2. **A Sara passa a ler a verdade de design** — um arquivo declarado no projeto que o scanner
+2. **O engine-sensor passa a ler a verdade de design** — um arquivo declarado no projeto que o scanner
    lê e confronta com o código.
 3. **Documento próprio neste repositório** — um `docs/VERDADE-DE-DESIGN.md`, com o critério
    por peça.
@@ -110,7 +110,7 @@ exatamente o tamanho da evidência, e nada além dele.
 ### Por que não a 1
 
 Ela tem o melhor argumento de todos, e ele é de escopo: depois das
-[ADRs 0013](0013-manter-a-sara-privada-ao-fim-do-marco-6.md) e
+[ADRs 0013](0013-manter-o-sensor-privado-ao-fim-do-marco-6.md) e
 [0014](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) **este projeto não tem
 experimento aberto**; a pergunta 7 pode nunca ser retomada; e decidir formato para um
 documento que mora em outro repositório é legislar onde o `cargo test` daqui não enxerga.
@@ -125,18 +125,18 @@ que nenhum portão lê. Não decidir aqui é o caso da aranha aplicado às decis
 Ela contraria a [ADR 0001](0001-validar-mecanismos-antes-da-engine-completa.md) e a
 [ADR 0014 §2](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md), que escreveu que
 nada ali autoriza binário, daemon, addon, autoload, rede ou dependência. Seria eixo novo — ler
-declaração e correlacioná-la com execução —, e pela [ADR 0012 §3](0012-sara-e-corpus-coevoluem.md)
+declaração e correlacioná-la com execução —, e pela [ADR 0012 §3](0012-o-sensor-e-o-corpus-coevoluem.md)
 capacidade só entra depois de confrontada com o corpus, que para esta não existe.
 
 E ela não resolveria o caso que a motivou. O defeito decisivo da aranha é **aritmética sobre
-durações** — 2,20 s de pavio contra 0,50 + 0,35 + 1,40 de roubo — num domínio que a Sara não
+durações** — 2,20 s de pavio contra 0,50 + 0,35 + 1,40 de roubo — num domínio que o engine-sensor não
 modela, e o [caso §6](../CASO-DA-ARANHA.md) já registrou que nenhuma versão melhor de um
-verificador de posse vai saber disso. Uma Sara que lesse a verdade de design continuaria sem
+verificador de posse vai saber disso. Uma engine-sensor que lesse a verdade de design continuaria sem
 conferi-la.
 
 ### Por que não a 3
 
-A verdade de design é sobre a **peça que está sendo construída**, não sobre a Sara. Escrita
+A verdade de design é sobre a **peça que está sendo construída**, não sobre o engine-sensor. Escrita
 aqui, ela seria escrita depois, por quem escreve ADR, num momento em que a peça já existe —
 que é o defeito da [§3.5](../CASO-DA-ARANHA.md): o carimbo da aranha foi retrospectivo e diz
 de si mesmo que *"reconstrução sai sempre coerente com o que aconteceu, que é justamente o
@@ -202,7 +202,7 @@ contrário produziria documento escrito depois, que é a opção 3 recusada acim
 palavra — `bloqueia` ou `adia` — por item deixado de fora. Não escrever: está medido no caso
 da aranha, e é o preço que esta decisão compra. Uma hora de construção sobre um palpite
 ([§3.3](../CASO-DA-ARANHA.md)); e uma peça que nunca funcionou, aprovada por 303 casos, pelo
-portão de cena, pela Sentinela e pelo `sara check`, e mergeada com a lacuna decisiva declarada
+portão de cena, pela Sentinela e pelo `engine-sensor check`, e mergeada com a lacuna decisiva declarada
 em prosa no próprio carimbo ([§3.2](../CASO-DA-ARANHA.md)).
 
 ### 4. Só uma coisa bloqueia, e ela é estreita
@@ -260,10 +260,10 @@ ela só pôde ser construída **depois** do conserto — que é precisamente o a
 
 ### 6. O que isto não autoriza
 
-Nada aqui muda a Sara, acrescenta eixo, arquivo lido pelo scanner, campo de relatório,
+Nada aqui muda o engine-sensor, acrescenta eixo, arquivo lido pelo scanner, campo de relatório,
 dependência, binário, daemon, addon, autoload ou rede. A
 [ADR 0001](0001-validar-mecanismos-antes-da-engine-completa.md) e a
-[ADR 0013 §2](0013-manter-a-sara-privada-ao-fim-do-marco-6.md) continuam inteiras, e a lista
+[ADR 0013 §2](0013-manter-o-sensor-privado-ao-fim-do-marco-6.md) continuam inteiras, e a lista
 adiada do [`ROTEIRO.md`](../ROTEIRO.md#o-que-fica-adiado) não encurta em uma linha.
 
 ## Consequências
@@ -324,11 +324,11 @@ de 23/08 **intacto**. Registro que se edita depois deixa de ser registro.
   carimbo depois vê quem escreveu qual palavra.
 
 Nenhuma fitness function foi escrita para esses dois. Pelo precedente da
-[ADR 0012](0012-sara-e-corpus-coevoluem.md), manual declarado vale mais que cobertura fingida.
+[ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md), manual declarado vale mais que cobertura fingida.
 
 ## Critério de revisão
 
-- **Data: 20 de setembro de 2026** — a mesma da [ADR 0013](0013-manter-a-sara-privada-ao-fim-do-marco-6.md).
+- **Data: 20 de setembro de 2026** — a mesma da [ADR 0013](0013-manter-o-sensor-privado-ao-fim-do-marco-6.md).
   O portão foi escrito em 28/08, então o que a data pergunta deixou de ser *"foi
   implementado?"* e passou a ser **quantos carimbos passaram pela coluna `verdade`, e quantos
   vieram `com`**. Se em 20/09 a série ainda for curta, ou majoritariamente `sem`, o formato
@@ -362,9 +362,9 @@ Nenhuma fitness function foi escrita para esses dois. Pelo precedente da
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
-- Substitui: nenhuma. **Decide o que a [ADR 0012](0012-sara-e-corpus-coevoluem.md) nomeou e
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
+- Substitui: nenhuma. **Decide o que a [ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md) nomeou e
   deixou sem formato, lugar e dono, e o que a
   [ADR 0014 §3](0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) registrou como
   pré-condição da pergunta 7.** A decisão de nenhuma das duas é alterada: cada uma recebeu

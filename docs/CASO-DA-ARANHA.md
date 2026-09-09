@@ -8,7 +8,7 @@ a um; as falas do autor e da agente estão no registro da sessão.
 
 Isto **não é uma ADR** e não decide nada. É a matéria-prima de uma: o caso escrito antes
 de a conclusão ser tirada, como o `RESULTADOS.md §4` exige e como a
-[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) passou a obrigar para toda dor local
+[ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) passou a obrigar para toda dor local
 que se candidata a virar capacidade.
 
 A pergunta que o organiza é a do autor, e é a pergunta central deste projeto: **o que
@@ -24,7 +24,7 @@ o último, porque a leitura dele levou o proprietário a reconhecer as dez mudan
 
 Uma peça nova de jogo - a aranha que rouba a bomba - foi construída, testada com 303
 casos verdes, aprovada pelo portão de cena, aprovada pela Sentinela, aprovada pelo
-`sara check` com saída 0, carimbada pelo Carimbador, mergeada na `main` - e **não
+`engine-sensor check` com saída 0, carimbada pelo Carimbador, mergeada na `main` - e **não
 funcionava**: nenhum roubo se completava, em nenhuma condição de jogo.
 
 Quem descobriu foi o autor, jogando.
@@ -141,7 +141,7 @@ nenhum instante de aranha-com-bomba, e mesmo que houvesse, a referência teria s
 gravada já contendo o defeito.
 
 Isto não é falha da Sentinela - é a definição dela. Referência pega tela que **estava
-certa e ficou errada**. Esta nasceu errada. A [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md)
+certa e ficou errada**. Esta nasceu errada. A [ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md)
 já registrava a distinção entre prova por referência e prova por afirmação; a aranha é a
 confirmação empírica dela, e acrescenta o corolário: **nenhuma das duas pega o que
 ninguém pensou em afirmar** - e o que ninguém pensou em afirmar, aqui, era a peça
@@ -327,19 +327,19 @@ escrita - só não estava marcada como pendente.
 
 ---
 
-## 5. O que a Sara poderia ter visto sozinha
+## 5. O que o engine-sensor poderia ter visto sozinha
 
 Seis candidatos, em dois grupos muito diferentes. Nenhum está decidido: pela
-[ADR 0012 §3](decisoes/0012-sara-e-corpus-coevoluem.md), capacidade generalizável só entra
+[ADR 0012 §3](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md), capacidade generalizável só entra
 depois de confrontada com o corpus, e nenhum deles foi.
 
-### 5.1 As três que o próprio porte nomeou - e são da família que a Sara já modela
+### 5.1 As três que o próprio porte nomeou - e são da família que o engine-sensor já modela
 
 Estas valem mais que as outras três, e a diferença é de natureza: **não pedem eixo novo.**
-São todas de posse de animação em Godot, que é exatamente o que a Sara faz hoje. Foram
-escritas pela sessão, na hora, nas linhas 11 a 13 do `.sara/USOS.md` do porte.
+São todas de posse de animação em Godot, que é exatamente o que o engine-sensor faz hoje. Foram
+escritas pela sessão, na hora, nas linhas 11 a 13 do `.engine-sensor/USOS.md` do porte.
 
-| # | o que a Sara não via | por que dói | estado |
+| # | o que o engine-sensor não via | por que dói | estado |
 |---:|---|---|---|
 | A1 | **`pause()` / `play()` num Tween** | ela vê a propriedade e o dono, não o fato de o relógio ter parado. Uma bomba presa para sempre, com o tween pausado, é indistinguível de uma que está queimando | **entrou** |
 | A2 | **`set_speed_scale` num Tween** | ela modela quem *anima* a propriedade, não o relógio com que anima. Aqui não é detalhe: *"um pavio que passou a queimar na metade da velocidade é indistinguível de um que não passou - e essa é a regra inteira da peça"* | **entrou** |
@@ -371,17 +371,17 @@ ferramenta. **Ela não teria pego o defeito 2**: o fio tinha um dono, não dois,
 declaração de posse com um dono só não acusa nada - o que ela faz é pôr a coordenada no
 inventário. E **o pai continua fora**: `z_index` é relativo ao pai, que é informação de
 `.tscn`, então a declaração é sempre sobre um nó e nunca sobre quem aparece na frente de
-quem. Foi essa relatividade que produziu o defeito, e é ela que a Sara continua não
+quem. Foi essa relatividade que produziu o defeito, e é ela que o engine-sensor continua não
 resolvendo.
 
 A A2 era a mais forte das seis. O `set_speed_scale` **é** a regra da peça depois do conserto:
-a teia não para o pavio, ela o lentifica. Quer dizer que a Sara varreu 1142 arquivos, contou
+a teia não para o pavio, ela o lentifica. Quer dizer que o engine-sensor varreu 1142 arquivos, contou
 302 declarações e deu saída 0 sobre um mecanismo cuja regra central mora numa chamada de
 Tween que ela não modela. Isso é um limite nomeado do inventário, não um limite do método.
 
 O que as três têm em comum, e que sugere a forma da regra: as três são **modificações do
 relógio de um Tween** ou **da ordem de desenho**, e nenhuma modifica a propriedade animada.
-A Sara declara alvo, propriedade e dono; nenhuma das três aparece nessas três coordenadas.
+O engine-sensor declara alvo, propriedade e dono; nenhuma das três aparece nessas três coordenadas.
 
 ### 5.2 As três que pedem eixo novo
 
@@ -418,13 +418,13 @@ um resultado.
 carrega aquele script. Isso não é defeito da aranha: vale para qualquer script de `main/`,
 e é ponto cego de cobertura declarável sem executar nada.
 
-**O que a Sara já tem para isso.** O inventário. A fitness function do Marco 2 é "nenhum
+**O que o engine-sensor já tem para isso.** O inventário. A fitness function do Marco 2 é "nenhum
 arquivo relevante é omitido", e ela já percorre o projeto inteiro. Dizer quais scripts
 nenhum teste alcança é aritmética sobre um inventário que já existe.
 
-**O limite honesto, e ele importa.** A Sara **não teria pego o erro em si**. `_tranco` não
+**O limite honesto, e ele importa.** O engine-sensor **não teria pego o erro em si**. `_tranco` não
 declarado é erro semântico, não sintático: o tree-sitter analisa o arquivo sem reclamar, e
-a Sara não resolve identificadores nem mantém tabela de símbolos. O que ela poderia
+o engine-sensor não resolve identificadores nem mantém tabela de símbolos. O que ela poderia
 relatar é o **fato de cobertura** - "este script não é carregado por caminho de teste
 nenhum" -, que é o que teria feito alguém olhar. Confundir as duas coisas seria prometer
 o que a ferramenta não faz.
@@ -441,7 +441,7 @@ ficavam para sempre. O conserto foi fazer a cena **seguir o estado**, como o res
 tabuleiro.
 
 Isso tem a forma de um problema de posse - a presença na cena passa a ter duas fontes de
-verdade, o fluxo de eventos e o estado, e elas divergem -, que é a família que a Sara já
+verdade, o fluxo de eventos e o estado, e elas divergem -, que é a família que o engine-sensor já
 conhece.
 
 **É a mais fraca das três, e fica registrada como fraca.** Não sei dizer se é expressável
@@ -452,17 +452,17 @@ incorporação ou recusa.
 
 ---
 
-## 6. O que a Sara não veria, e a quem pertence
+## 6. O que o engine-sensor não veria, e a quem pertence
 
-O defeito decisivo - 0 de 36 - é **aritmética sobre durações num domínio que a Sara não
+O defeito decisivo - 0 de 36 - é **aritmética sobre durações num domínio que o engine-sensor não
 modela**: 2,20 s de pavio contra 0,50 + 0,35 + 1,40 de roubo. Nenhum analisador estático
 sabe que esses números correm um contra o outro, e nenhuma versão melhor de um verificador
 de posse vai saber.
 
 Isto é honesto e é o mesmo veredito que o `USO-PESSOAL.md` já registrou para as onze
-pegadinhas do porte: **a Sara vigia uma porta específica num corredor com várias portas
+pegadinhas do porte: **o engine-sensor vigia uma porta específica num corredor com várias portas
 caladas.** O caso da aranha não muda o tamanho da porta. Ele acrescenta uma medição ao
-denominador: mais dois defeitos da classe "só olho humano acha", e a Sara não cobre
+denominador: mais dois defeitos da classe "só olho humano acha", e o engine-sensor não cobre
 nenhum dos dois.
 
 O que o caso sugere é que a peça que falta **para este defeito** não é uma regra estática
@@ -513,7 +513,7 @@ racionalização.
   contradição sobre o critério continua aberta: o `RESULTADO-0.1.0.md` exige as dez
   mudanças **em pelo menos dois projetos**, e as treze são todas do porte. Está registrada
   em [`USO-PESSOAL.md`](USO-PESSOAL.md), onde o número mora.
-- **Não conclui sobre o recorte da Sara.** A previsão datada de 25/08 continua de pé e
+- **Não conclui sobre o recorte do engine-sensor.** A previsão datada de 25/08 continua de pé e
   este caso a alimenta em vez de a substituir: dois defeitos novos na classe "só olho
   humano acha", nenhum coberto.
 - **Não julga a sessão.** Ela entregou a peça funcionando, com 305 casos, portão verde e a
@@ -533,5 +533,5 @@ racionalização.
 | o caso que faltava, depois do conserto | `tests/aranhas_spec.gd:105` - `O PAVIO QUEIMA DURANTE O ROUBO INTEIRO` |
 | o teto que fez o roubo existir | `tests/aranhas_spec.gd:213`, e o commit `28330eb` |
 | a medição 0/36 e 12/36 | saída do `conta_temporaria.gd`, citada no fecho da sessão |
-| as três capacidades ausentes, nomeadas na hora | `.sara/USOS.md` do porte, linhas 11, 12 e 13 |
-| a Sara usada | `f1f4d5f`; `sara check` no porte com saída 0, 302 claims em 1142 arquivos |
+| as três capacidades ausentes, nomeadas na hora | `.engine-sensor/USOS.md` do porte, linhas 11, 12 e 13 |
+| o engine-sensor usado | `f1f4d5f`; `engine-sensor check` no porte com saída 0, 302 claims em 1142 arquivos |

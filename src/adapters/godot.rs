@@ -279,7 +279,7 @@ fn animation_claims(source: &ParsedSource, output: &mut AdapterOutput) {
 
 /// Métodos que mexem no relógio de um Tween sem tocar na propriedade animada.
 ///
-/// A Sara declarava alvo, propriedade e dono, e nenhuma destas três coordenadas muda
+/// O engine-sensor declarava alvo, propriedade e dono, e nenhuma destas três coordenadas muda
 /// quando alguém pausa ou desacelera a trajetória. O resultado na tela muda inteiro:
 /// uma bomba parada para sempre com o Tween pausado é indistinguível de uma queimando,
 /// e um pavio que passou a queimar na metade da velocidade é indistinguível de um que
@@ -451,7 +451,7 @@ fn tween_assignments(source: &ParsedSource) -> BTreeMap<(String, String), String
 /// A propriedade nomeia o **efeito**, não a API: `z_index` e a ordem entre irmãos são
 /// coisas diferentes no motor e decidem a mesma coisa na tela. Nomeá-las igual é o que
 /// faz as duas caírem no mesmo recurso, com um controlador cada -- que é a forma que a
-/// Sara já usa para duas fontes de verdade sobre uma coordenada.
+/// engine-sensor já usa para duas fontes de verdade sobre uma coordenada.
 const DEPTH_PROPERTY: &str = "profundidade";
 const DEPTH_BY_Z_INDEX: &str = "z_index";
 const DEPTH_BY_CHILD_ORDER: &str = "ordem_de_filho";
@@ -461,7 +461,7 @@ const DEPTH_BY_CHILD_ORDER: &str = "ordem_de_filho";
 /// A terceira capacidade que o caso da aranha nomeou (`docs/CASO-DA-ARANHA.md` §5.1), e
 /// a única das três que pegou um defeito por conta própria: o fio de seda com
 /// `z_index = -1` não apareceu em quadro nenhum, e nenhum teste, portão ou captura viu.
-/// A Sara modelava quem **anima** uma propriedade; não modelava quem **desenha na
+/// O engine-sensor modelava quem **anima** uma propriedade; não modelava quem **desenha na
 /// frente de quem**, e um sprite invisível passava por todos os portões.
 ///
 /// **Só declara, sem diagnóstico novo**, como a ADR 0010 e o relógio do Tween entraram.
@@ -640,7 +640,7 @@ fn diagnose_animations(
                 && !has_ordering_barrier(first, second, sources)
             {
                 diagnostics.push(common::conflict_diagnostic(
-                    "SAR-OWN-001",
+                    "ESN-OWN-001",
                     Severity::Error,
                     first,
                     second,
@@ -652,7 +652,7 @@ fn diagnose_animations(
                 && !serialized_by_cancel(first, second, sources, &helpers, &kill)
             {
                 diagnostics.push(common::conflict_diagnostic(
-                    "SAR-OWN-001",
+                    "ESN-OWN-001",
                     Severity::Warning,
                     first,
                     second,
@@ -717,7 +717,7 @@ fn cancelled_before(
 ///
 /// Exigir os dois lados é deliberado. Cancelar de um lado só não serializa nada, e é
 /// o que separa esta regra de uma que cala aviso legítimo. Ver ADR 0009: sem ela, o
-/// padrão de dono centralizado — a própria remediação que o `SAR-OWN-001` sugere —
+/// padrão de dono centralizado — a própria remediação que o `ESN-OWN-001` sugere —
 /// era invisível sempre que o cancelamento passava por um método auxiliar.
 fn serialized_by_cancel(
     first: &OwnershipClaim,
@@ -814,7 +814,7 @@ fn input_claims(
                     };
                     if !declared {
                         output.diagnostics.push(Diagnostic {
-                            rule: "SAR-PARSE-001".to_owned(),
+                            rule: "ESN-PARSE-001".to_owned(),
                             severity: Severity::Warning,
                             resource: claim.resource.id(),
                             primary: span.clone(),
@@ -875,7 +875,7 @@ fn physical_channel_claims(source: &ParsedSource, output: &mut AdapterOutput) {
 }
 
 /// Dois canais físicos distintos chegando ao mesmo efeito. É a definição que o
-/// `ROTEIRO.md` dá do que o Sara bloqueia, e o adapter Godot não a aplicava quando o
+/// `ROTEIRO.md` dá do que o engine-sensor bloqueia, e o adapter Godot não a aplicava quando o
 /// projeto não declarava ações. ADR 0010.
 fn diagnose_physical_channels(
     all_claims: &[OwnershipClaim],
@@ -903,7 +903,7 @@ fn diagnose_physical_channels(
                 continue;
             }
             diagnostics.push(common::conflict_diagnostic(
-                "SAR-OWN-002",
+                "ESN-OWN-002",
                 Severity::Error,
                 first,
                 second,
@@ -950,7 +950,7 @@ fn diagnose_inputs(
                     continue;
                 }
                 diagnostics.push(common::conflict_diagnostic(
-                    "SAR-OWN-002",
+                    "ESN-OWN-002",
                     Severity::Error,
                     input,
                     unhandled,
@@ -959,7 +959,7 @@ fn diagnose_inputs(
                 ));
             } else {
                 diagnostics.push(common::conflict_diagnostic(
-                    "SAR-OWN-002",
+                    "ESN-OWN-002",
                     Severity::Warning,
                     first,
                     second,

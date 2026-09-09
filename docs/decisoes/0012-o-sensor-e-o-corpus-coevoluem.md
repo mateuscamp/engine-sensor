@@ -1,8 +1,8 @@
-# ADR 0012 - Sara e corpus coevoluem, e a evolução do instrumento é registrada
+# ADR 0012 - engine-sensor e corpus coevoluem, e a evolução do instrumento é registrada
 
 **Status:** Aceita
 **Data:** 28 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** método da Fase 2 e do Marco 6. Revisão obrigada pelo gatilho da
 [ADR 0009](0009-baseline-em-projeto-real-expoe-regra-ausente.md)
 
@@ -14,7 +14,7 @@ baselines e escreveu o gatilho: **uma terceira exceção obriga a rever a Fase 2
 em vez de ampliá-la de novo.**
 
 O terceiro caso chegou, e ele não é uma regra. É um **modo de trabalho**: desenvolver a
-Sara ao mesmo tempo em que se desenvolvem os testes, porque o domínio é novo e não se
+engine-sensor ao mesmo tempo em que se desenvolvem os testes, porque o domínio é novo e não se
 sabe de antemão o que precisa ser medido.
 
 Três evidências deste mês sustentam que o congelamento descreve mal o processo real:
@@ -41,7 +41,7 @@ refutação é registrada porque ela é o conteúdo da decisão:
 > experimento. Estamos num domínio novo e desenvolvendo o instrumento ao mesmo tempo em
 > que descobrimos o que precisa ser medido. Congelar produziria uma comparação
 > metodologicamente limpa, mas artificial: descobriríamos quanto uma versão arbitrária e
-> incompleta da Sara ajuda durante dez mudanças, enquanto deliberadamente impediríamos
+> incompleta do engine-sensor ajuda durante dez mudanças, enquanto deliberadamente impediríamos
 > que problemas reais dessas mudanças melhorassem a ferramenta.
 
 O argumento vence porque as ADRs 0009 e 0010 são a prova empírica dele. A evolução do
@@ -55,7 +55,7 @@ instrumento não é contaminação do experimento; **começa a parecer o própri
    argumento acima.
 3. **Substituir a medição de utilidade pela de generalização.** Recusada: são duas
    perguntas diferentes e as duas importam. "Uma regra que nasceu num jogo continua
-   válida nos outros?" mede generalização. "Usar a Sara durante mudanças reais reduz meu
+   válida nos outros?" mede generalização. "Usar o engine-sensor durante mudanças reais reduz meu
    trabalho ou melhora minha capacidade de achar problema?" mede utilidade.
 4. **Rever o método:** manter as dez mudanças e a medição de utilidade, acrescentar a
    série histórica do instrumento, e exigir confronto com o corpus antes de incorporar.
@@ -73,13 +73,13 @@ permanece, e permanece sendo o que o portão julga.
 
 ### 2. Cada uso registra qual instrumento foi usado
 
-O diário ganha a coluna **Sara**, com a versão ou o commit usado naquele caso. Quando o
-caso alterar a Sara, uma nota numerada abaixo da tabela registra três coisas: o que
+O diário ganha a coluna **engine-sensor**, com a versão ou o commit usado naquele caso. Quando o
+caso alterar o engine-sensor, uma nota numerada abaixo da tabela registra três coisas: o que
 faltava, o que mudou, e o efeito da mudança no corpus inteiro.
 
 Assim não se finge que os dez casos usaram o mesmo instrumento. **Preserva-se a série
 histórica**, e a evolução fica explícita: se o caso três gerar capacidade nova, o caso
-quatro usa uma Sara melhor, e isso está escrito.
+quatro usa um engine-sensor melhor, e isso está escrito.
 
 ### 3. Toda capacidade generalizável é confrontada com o corpus antes de entrar
 
@@ -102,11 +102,11 @@ registrada como contrafactual, com data, e **não altera o resultado original do
 
 ### 5. Duas linhas de evidência
 
-- **Longitudinal:** como a Sara se comporta acompanhando trabalho real ao longo dos dez
+- **Longitudinal:** como o engine-sensor se comporta acompanhando trabalho real ao longo dos dez
   casos.
 - **Transversal:** se o que nasce num projeto generaliza para o corpus.
 
-O portão do Marco 6 julga as duas, e elas podem discordar. Uma Sara que generaliza bem e
+O portão do Marco 6 julga as duas, e elas podem discordar. Uma engine-sensor que generaliza bem e
 não reduz trabalho é um resultado; o inverso também.
 
 ## A verdade de design
@@ -138,7 +138,7 @@ como está: ele continua descrevendo o que esta ADR decidiu e o que não decidiu
 - O método passa a descrever o processo que já estava acontecendo, em vez de proibi-lo.
 - As duas perguntas — utilidade e generalização — ficam medidas em vez de confundidas.
 - A evolução do instrumento vira auditável: qualquer pessoa consegue reconstruir qual
-  Sara respondeu a qual caso.
+  engine-sensor respondeu a qual caso.
 - O que nasce no jogo tem caminho declarado para subir: dor local, hipótese de
   generalização, confronto com o corpus, incorporação ou recusa.
 
@@ -158,7 +158,7 @@ como está: ele continua descrevendo o que esta ADR decidiu e o que não decidiu
 
 Fitness function automática, `adr_0012_diario_declara_a_versao_usada` em
 `tests/governanca.rs`: a tabela de usos do `docs/USO-PESSOAL.md` precisa ter a coluna
-`Sara`, e toda linha preenchida precisa declarar qual instrumento respondeu àquele caso.
+`engine-sensor`, e toda linha preenchida precisa declarar qual instrumento respondeu àquele caso.
 Linha de uso sem versão reprova.
 
 O confronto com o corpus continua sendo `tools/check_corpus.sh` mais o diff de
@@ -185,8 +185,8 @@ quem lê.)*
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
 - Substitui: nenhuma. Revisa a Fase 2 do plano em `AUDITORIA-ARQUITETURAL.md §5` por
   obrigação do gatilho escrito na ADR 0009.
 - Última alteração: 28 de agosto de 2026

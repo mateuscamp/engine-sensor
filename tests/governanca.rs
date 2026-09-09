@@ -1,6 +1,6 @@
 //! Fitness functions de governança.
 //!
-//! Estes testes não verificam o comportamento do Sara: verificam que decisões
+//! Estes testes não verificam o comportamento do engine-sensor: verificam que decisões
 //! arquiteturais registradas continuam válidas. São o mecanismo executável que a
 //! seção de conformidade de cada ADR exige, no lugar de uma regra lembrada.
 //! Referência: `docs/AUDITORIA-ARQUITETURAL.md`, seção 4.
@@ -243,7 +243,7 @@ fn construcoes_do_contrato() -> BTreeSet<String> {
 }
 
 fn construcoes_declaradas() -> BTreeSet<String> {
-    sara_ai_first::adapters::recognized_constructs()
+    engine_sensor::adapters::recognized_constructs()
         .into_iter()
         .map(|item| format!("{}|{}|{}", item.engine, item.axis.label(), item.token))
         .collect()
@@ -292,7 +292,7 @@ fn fonte_do_adapter_sem_a_declaracao(engine: &str) -> String {
 #[test]
 fn a7_toda_construcao_declarada_existe_no_fonte_do_adapter() {
     let mut ausentes = Vec::new();
-    for item in sara_ai_first::adapters::recognized_constructs() {
+    for item in engine_sensor::adapters::recognized_constructs() {
         let fonte = fonte_do_adapter_sem_a_declaracao(&item.engine.to_string());
         if !fonte.contains(item.token) {
             ausentes.push(format!("{}: {}", item.engine, item.token));
@@ -323,7 +323,7 @@ fn adr_0005_lista_de_construcoes_do_defold_esta_congelada() {
 // ADR 0012 - a evolução do instrumento é registrada
 // ---------------------------------------------------------------------------
 
-/// Pela ADR 0012 a Sara muda durante o Marco 6, e a obrigação passou a ser deixar
+/// Pela ADR 0012 o engine-sensor muda durante o Marco 6, e a obrigação passou a ser deixar
 /// evidência de qual instrumento respondeu a cada caso. Uso sem versão declarada
 /// devolve a série ao problema que a coluna existe para resolver: dez casos que
 /// fingem ter usado a mesma ferramenta.
@@ -335,16 +335,16 @@ fn adr_0012_diario_declara_a_versao_usada() {
         .find(|linha| linha.starts_with("| # | Data |"))
         .expect("a tabela de usos sumiu de docs/USO-PESSOAL.md");
     assert!(
-        cabecalho.contains("Sara"),
-        "a tabela de usos perdeu a coluna `Sara`. Pela ADR 0012 cada caso declara qual \
+        cabecalho.contains("engine-sensor"),
+        "a tabela de usos perdeu a coluna `engine-sensor`. Pela ADR 0012 cada caso declara qual \
          instrumento respondeu a ele; sem a coluna, os dez casos voltam a fingir que \
          usaram a mesma ferramenta."
     );
     let coluna = cabecalho
         .trim_matches('|')
         .split('|')
-        .position(|celula| celula.contains("Sara"))
-        .expect("coluna Sara");
+        .position(|celula| celula.contains("engine-sensor"))
+        .expect("coluna engine-sensor");
 
     let mut sem_versao = Vec::new();
     for linha in diario.lines() {
@@ -369,7 +369,7 @@ fn adr_0012_diario_declara_a_versao_usada() {
     }
     assert!(
         sem_versao.is_empty(),
-        "usos sem versão da Sara declarada: {sem_versao:?}. Pela ADR 0012, alterar o \
+        "usos sem versão do engine-sensor declarada: {sem_versao:?}. Pela ADR 0012, alterar o \
          instrumento é permitido e não declarar qual instrumento respondeu ao caso não é."
     );
 }
@@ -394,7 +394,7 @@ fn resposta(binario: &Path, projeto: &Path) -> (Option<i32>, String) {
 ///
 /// A ADR 0012 obriga a declarar qual instrumento respondeu a cada caso, e o
 /// diário nomeia a versão em cada linha. Isso protege quem **lê** a coluna, e não
-/// quem **roda**: o README distribui `dist/sara-linux-x86_64`, e um artefato
+/// quem **roda**: o README distribui `dist/engine-sensor-linux-x86_64`, e um artefato
 /// atrasado escreve no diário números de um instrumento que o `src` não tem mais.
 ///
 /// Aconteceu, e é o caso que este portão nasceu para não deixar repetir: entre
@@ -409,13 +409,13 @@ fn resposta(binario: &Path, projeto: &Path) -> (Option<i32>, String) {
 /// comando que conserta.
 #[test]
 fn adr_0012_o_binario_publicado_responde_como_o_codigo() {
-    let publicado = raiz().join("dist/sara-linux-x86_64");
+    let publicado = raiz().join("dist/engine-sensor-linux-x86_64");
     assert!(
         publicado.exists(),
         "{} não existe, e é o caminho que o README manda usar.",
         publicado.display()
     );
-    let do_codigo = Path::new(env!("CARGO_BIN_EXE_sara"));
+    let do_codigo = Path::new(env!("CARGO_BIN_EXE_engine-sensor"));
 
     let mut fixtures: Vec<PathBuf> = fs::read_dir(raiz().join("tests/fixtures"))
         .expect("tests/fixtures")
@@ -442,7 +442,7 @@ fn adr_0012_o_binario_publicado_responde_como_o_codigo() {
         divergentes.is_empty(),
         "o binário de dist/ responde diferente do código em {} de {} fixtures: {divergentes:?}. \
          O artefato publicado ficou para trás do `src`, e quem seguir o README vai medir com \
-         uma Sara que não existe mais. Reconstrua com `tools/dist.sh`.",
+         um engine-sensor que não existe mais. Reconstrua com `tools/dist.sh`.",
         divergentes.len(),
         fixtures.len()
     );
@@ -552,7 +552,7 @@ fn caminhos_de_chave(valor: &Value, prefixo: &str, saida: &mut BTreeSet<String>)
 }
 
 fn forma_atual() -> BTreeSet<String> {
-    use sara_ai_first::{CheckRequest, check_project, config::EngineChoice, config::Profile};
+    use engine_sensor::{CheckRequest, check_project, config::EngineChoice, config::Profile};
 
     let mut caminhos = BTreeSet::new();
     for fixture in ["defold_animation_red", "defold_input_red"] {
@@ -563,7 +563,7 @@ fn forma_atual() -> BTreeSet<String> {
             allow: Vec::new(),
         })
         .unwrap_or_else(|erro| panic!("{fixture}: {erro:#}"));
-        let valor: Value = serde_json::from_str(&sara_ai_first::report::json(&relatorio).unwrap())
+        let valor: Value = serde_json::from_str(&engine_sensor::report::json(&relatorio).unwrap())
             .expect("json inválido");
         caminhos_de_chave(&valor, "", &mut caminhos);
     }
@@ -589,7 +589,7 @@ fn adr_0006_forma_do_relatorio_json_esta_congelada() {
 
 #[test]
 fn adr_0006_versao_do_esquema_e_a_do_modelo() {
-    use sara_ai_first::{CheckRequest, check_project, config::EngineChoice, config::Profile};
+    use engine_sensor::{CheckRequest, check_project, config::EngineChoice, config::Profile};
 
     let relatorio = check_project(&CheckRequest {
         project: raiz().join("tests/fixtures/defold_animation_green"),
@@ -600,7 +600,7 @@ fn adr_0006_versao_do_esquema_e_a_do_modelo() {
     .expect("relatório");
     assert_eq!(
         relatorio.schema_version,
-        sara_ai_first::model::REPORT_SCHEMA_VERSION,
+        engine_sensor::model::REPORT_SCHEMA_VERSION,
         "o relatório emitiu versão diferente da constante do modelo. ADR 0006."
     );
 }
@@ -625,17 +625,17 @@ fn adr_0006_codigos_de_saida_continuam_exercitados() {
 }
 
 // ---------------------------------------------------------------------------
-// F4 - quantum do binário `sara` (ADR 0007)
+// F4 - quantum do binário `engine-sensor` (ADR 0007)
 // ---------------------------------------------------------------------------
 
-/// Binários **autorizados**, que é diferente de binários **construídos**. `sara` é o
-/// quantum offline medido no 0.1.0 e existe; `sara-observe` é um nome reservado pela
+/// Binários **autorizados**, que é diferente de binários **construídos**. `engine-sensor` é o
+/// quantum offline medido no 0.1.0 e existe; `engine-sensor-observe` é um nome reservado pela
 /// ADR 0007 para o experimento do Marco 7, e nunca foi construído — o `Cargo.toml`
 /// declara um `[[bin]]` só. O Marco 7 foi cancelado pela ADR 0014.
 ///
 /// Esta lista é um teto, não um inventário. Ler decisão registrada como artefato medido
 /// é o erro que este projeto existe para nomear.
-const BINARIOS_AUTORIZADOS: &[&str] = &["sara", "sara-observe"];
+const BINARIOS_AUTORIZADOS: &[&str] = &["engine-sensor", "engine-sensor-observe"];
 
 /// Nomes de binário lidos do `Cargo.toml`.
 fn binarios_declarados() -> Vec<String> {
@@ -677,7 +677,7 @@ fn binarios_declarados() -> Vec<String> {
 fn adr_0011_observe_exige_adr_de_comparacao() {
     if !binarios_declarados()
         .iter()
-        .any(|nome| nome == "sara-observe")
+        .any(|nome| nome == "engine-sensor-observe")
     {
         return;
     }
@@ -690,7 +690,7 @@ fn adr_0011_observe_exige_adr_de_comparacao() {
         });
     assert!(
         comparacao,
-        "o binário `sara-observe` existe, mas não há ADR de comparação em docs/decisoes/. \
+        "o binário `engine-sensor-observe` existe, mas não há ADR de comparação em docs/decisoes/. \
          Pela ADR 0011 o Marco 7 não começa sem confrontar o spike da ADR 0004, item a item \
          contra as sete fitness functions dela, com as ferramentas que já entregam a mesma \
          unidade de evidência — a extension-automation-bridge oficial da Defold e as \
@@ -699,7 +699,7 @@ fn adr_0011_observe_exige_adr_de_comparacao() {
 }
 
 // ---------------------------------------------------------------------------
-// ADR 0013 - a Sara permanece privada ao fim do Marco 6
+// ADR 0013 - o engine-sensor permanece privada ao fim do Marco 6
 // ---------------------------------------------------------------------------
 
 /// O portão do Marco 6 concluiu manter privado. Publicar em registro é o passo
@@ -718,7 +718,7 @@ fn adr_0013_o_pacote_continua_privado() {
     assert!(
         privado,
         "o Cargo.toml perdeu `publish = false`. Pela ADR 0013 o portão do Marco 6 \
-         concluiu manter a Sara privada: publicação, código aberto, preço e marca \
+         concluiu manter o engine-sensor privado: publicação, código aberto, preço e marca \
          continuam adiados e exigem decisão própria. Se a intenção é publicar, escreva \
          a ADR que substitui a 0013 antes de mexer no manifesto."
     );
@@ -778,7 +778,7 @@ fn adr_0007_apenas_binarios_autorizados() {
         .collect::<Vec<_>>();
     assert!(
         intrusos.is_empty(),
-        "binário não autorizado: {intrusos:?}. Pela ADR 0007, `sara` é um quantum \
+        "binário não autorizado: {intrusos:?}. Pela ADR 0007, `engine-sensor` é um quantum \
          independente — sem Godot, sem rede, sem runtime externo — e todo experimento \
          que exija ambiente vive em binário próprio."
     );
@@ -800,7 +800,17 @@ fn adr_0007_apenas_binarios_autorizados() {
 fn adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine() {
     let mut intrusos = Vec::new();
 
-    for caminho in ["docs/engine", "docs/RISCOS-ENGINE.md"] {
+    for caminho in [
+        "docs/engine",
+        "docs/RISCOS-ENGINE.md",
+        // Entrou pela raiz, que não era vigiada, e ficou: `deep-research-report.md` era o
+        // pré-projeto da engine, idêntico byte a byte à cópia do outro repositório e sem
+        // nenhuma referência apontando para ele daqui. Saiu pela ADR 0018 §5, e a lista
+        // passou a cobrir a raiz para o próximo não entrar pelo mesmo lugar.
+        "deep-research-report.md",
+        "CONSTITUICAO.md",
+        "docs/BACKLOG.md",
+    ] {
         if raiz().join(caminho).exists() {
             intrusos.push(caminho.to_string());
         }
@@ -812,13 +822,18 @@ fn adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine() {
         if !nome.ends_with(".md") {
             continue;
         }
-        // A própria 0016 fala da engine porque decide a fronteira; as demais não.
-        if nome.starts_with("0016") {
+        // A 0016 fala da engine porque decide a fronteira, e a 0018 porque o nome que
+        // saiu foi para lá; as demais não.
+        if nome.starts_with("0016") || nome.starts_with("0018") {
             continue;
         }
         let escopo = fs::read_to_string(entrada.path()).unwrap_or_default();
         let escopo = escopo.to_lowercase();
-        if escopo.contains("sara engine") || escopo.contains("sare-") {
+        // Marcas do acervo da engine, e não do nome dela: `sare-` é o prefixo da série de
+        // decisões de lá, e `bevy` é a fundação que só o pré-projeto discute. Vigiar pelo
+        // nome deixou de funcionar quando o nome mudou de dono na ADR 0018 — a marca que
+        // sobrevive a um renome é o que o documento faz, não como ele se chama.
+        if escopo.contains("sare-") || escopo.contains("bevy") {
             intrusos.push(format!("docs/decisoes/{nome}"));
         }
     }
@@ -828,7 +843,7 @@ fn adr_0016_o_sensor_nao_hospeda_o_pre_projeto_da_engine() {
         intrusos.is_empty(),
         "o pré-projeto da engine reapareceu neste repositório: {intrusos:?}. Pela ADR 0016 \
          este repositório é o sensor: ele conserva o verificador, o corpus, o kit, os \
-         estudos, os artigos e a série 0001-0016, e não hospeda constituição, backlog, \
+         estudos, os artigos e a série 0001-0018, e não hospeda constituição, backlog, \
          riscos nem ADR da engine. Aquele material vive no repositório da engine, e a \
          única ligação entre os dois é a matriz do legado, que cita este por caminho e \
          revisão alcançável a partir de `origin/main`. Se a intenção é desfazer a \
@@ -914,17 +929,17 @@ fn adr_0017_o_portao_do_corpus_tem_tres_estados() {
 
     let teste = ler("tests/corpus.rs");
     assert!(
-        teste.contains("SARA_CORPUS_VEREDITO") && portao.contains("SARA_CORPUS_VEREDITO"),
+        teste.contains("ENGINE_SENSOR_CORPUS_VEREDITO") && portao.contains("ENGINE_SENSOR_CORPUS_VEREDITO"),
         "o canal do veredito entre `tests/corpus.rs` e `tools/check_corpus.sh` se \
          rompeu. Sem ele o script não distingue os três estados e volta a ter dois."
     );
     for variavel in [
-        "SARA_CORPUS_RAIZ",
-        "SARA_CORPUS_BOMBERBOOM_DF",
-        "SARA_CORPUS_BOMBERBOOM_GD",
-        "SARA_CORPUS_BOOMLITUDE",
-        "SARA_CORPUS_MINEBOOM",
-        "SARA_CORPUS_GODS",
+        "ENGINE_SENSOR_CORPUS_RAIZ",
+        "ENGINE_SENSOR_CORPUS_BOMBERBOOM_DF",
+        "ENGINE_SENSOR_CORPUS_BOMBERBOOM_GD",
+        "ENGINE_SENSOR_CORPUS_BOOMLITUDE",
+        "ENGINE_SENSOR_CORPUS_MINEBOOM",
+        "ENGINE_SENSOR_CORPUS_GODS",
     ] {
         assert!(
             teste.contains(variavel),
@@ -1007,5 +1022,123 @@ fn o_status_de_toda_adr_consta_do_gabarito() {
          não carregam, ele entra no gabarito com a definição junto — foi o que se fez com \
          `Cumprida` em 30/08/2026. Se não carrega, use um dos que já existem: gabarito \
          que a série contradiz para de descrever a série."
+    );
+}
+
+// ---------------------------------------------------------------------------
+// ADR 0018 - o nome anterior saiu para a engine, e não volta
+// ---------------------------------------------------------------------------
+
+/// A ADR 0003 já tinha escrito esta regra, em prosa, para o codinome que saiu antes dela:
+/// *"código, testes, documentação, binário, instalação pessoal e integração ativa não
+/// podem usar o codinome anterior, exceto ao explicar esta migração"*. Prosa não reprova
+/// nada, e a prova é o que se mediu em 09/09/2026: o nome anterior seguia em 85 dos 133
+/// arquivos rastreados, no binário, no contrato em disco e nos ids de regra, seis dias
+/// depois de o acervo já ter sido renomeado.
+///
+/// O que este teste evita é específico: o nome não volta por descuido de merge, de
+/// cherry-pick, de branch antiga restaurada ou de um `init` que escreva o contrato pelo
+/// nome velho. Ele agora pertence a **outro produto**, em outro repositório — e um nome
+/// que aponta para dois produtos não aponta para nenhum.
+///
+/// A fronteira é de palavra, não de subcadeia: *usaram* e *passaram* carregam as quatro
+/// letras e não são o nome de nada.
+#[test]
+fn adr_0018_o_nome_anterior_nao_volta() {
+    fn e_palavra(byte: u8) -> bool {
+        byte.is_ascii_alphanumeric() || byte == b'_'
+    }
+
+    // O nome proibido é montado, não escrito. Um teste que proíbe uma palavra e a digita
+    // na própria linha reprova a si mesmo — e a alternativa, abrir exceção para o arquivo
+    // que contém o portão, seria abrir exceção justamente onde a regra é fácil de furar.
+    // Montado, o teste fica sujeito à mesma regra que aplica.
+    let anterior = format!("{}{}", "sa", "ra");
+    let raiz_do_id = anterior[..3].to_owned();
+    let agulhas = [
+        format!("{raiz_do_id}-own"),
+        format!("{raiz_do_id}-parse"),
+        format!("{anterior}_"),
+    ];
+
+    // Ocorrências do nome anterior como palavra isolada, mais as duas formas em que ele
+    // virava identificador: o prefixo dos ids de regra e o das variáveis do portão.
+    let ocorrencias = |texto: &str| -> bool {
+        let baixo = texto.to_lowercase();
+        if agulhas.iter().any(|agulha| baixo.contains(agulha.as_str())) {
+            return true;
+        }
+        let bytes = baixo.as_bytes();
+        baixo.match_indices(anterior.as_str()).any(|(inicio, _)| {
+            let antes = inicio.checked_sub(1).map(|i| bytes[i]);
+            let depois = bytes.get(inicio + anterior.len()).copied();
+            !antes.is_some_and(e_palavra) && !depois.is_some_and(e_palavra)
+        })
+    };
+
+    fn varre(diretorio: &Path, achados: &mut Vec<String>, ocorrencias: &dyn Fn(&str) -> bool) {
+        let Ok(entradas) = fs::read_dir(diretorio) else {
+            return;
+        };
+        for entrada in entradas.filter_map(|entrada| entrada.ok()) {
+            let caminho = entrada.path();
+            let nome = entrada.file_name().to_string_lossy().into_owned();
+            // `target/` é produto de build, e o `dist/` guarda um binário: nenhum dos dois
+            // é fonte, e ler bytes de executável só produziria ruído.
+            if nome == "target" || nome == ".git" || nome == "dist" {
+                continue;
+            }
+            if caminho.is_dir() {
+                varre(&caminho, achados, ocorrencias);
+                continue;
+            }
+            let relativo = caminho
+                .strip_prefix(raiz())
+                .unwrap_or(&caminho)
+                .to_string_lossy()
+                .into_owned();
+            // A exceção que a ADR 0018 §4 escreve, e que a ADR 0003 já tinha escrito para o
+            // renome anterior: quem explica a migração precisa poder nomear o que mudou.
+            if relativo.contains("0018-o-nome-sai-para-a-engine") {
+                continue;
+            }
+            if ocorrencias(&nome) {
+                achados.push(format!("{relativo} (no nome do arquivo)"));
+                continue;
+            }
+            let Ok(texto) = fs::read_to_string(&caminho) else {
+                continue;
+            };
+            for (numero, linha) in texto.lines().enumerate() {
+                if ocorrencias(linha) {
+                    achados.push(format!("{relativo}:{}", numero + 1));
+                }
+            }
+        }
+    }
+
+    let mut achados = Vec::new();
+    for alvo in ["src", "tests", "tools", "docs", "estudo", "artigos", "kit"] {
+        varre(&raiz().join(alvo), &mut achados, &ocorrencias);
+    }
+    for arquivo in ["Cargo.toml", "README.md", "RESULTADOS.md"] {
+        let caminho = raiz().join(arquivo);
+        let texto = fs::read_to_string(&caminho).unwrap_or_default();
+        for (numero, linha) in texto.lines().enumerate() {
+            if ocorrencias(linha) {
+                achados.push(format!("{arquivo}:{}", numero + 1));
+            }
+        }
+    }
+
+    achados.sort();
+    assert!(
+        achados.is_empty(),
+        "o nome anterior voltou: {achados:?}. Pela ADR 0018 ele pertence à engine, que é \
+         outro produto em outro repositório, e aqui ele não aparece fora da própria ADR \
+         0018 — a exceção existe porque explicar uma migração exige nomear o que mudou. Se \
+         a intenção é desfazer o renome, escreva a ADR que substitui a 0018 antes de trazer \
+         o nome de volta; se é um alias de compatibilidade, ele foi recusado na opção 3 e \
+         volta com o caso concreto que o justifique."
     );
 }

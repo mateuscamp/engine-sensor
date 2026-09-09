@@ -63,7 +63,7 @@ Dois sinais reforçam a existência do problema, sem provar mercado:
 - O projeto aberto [Arcane](https://github.com/jsvd/arcane) se apresenta como engine
   2D code-first, test-native e agent-native, com estado consultável e lógica headless.
   Isso mostra que a categoria começou a existir e também elimina qualquer hipótese de
-  que o Sara esteja sozinho. Em 23 de agosto de 2026, o repositório ainda exibia
+  que o engine-sensor esteja sozinho. Em 23 de agosto de 2026, o repositório ainda exibia
   adoção pública inicial, com quatro estrelas e nenhuma release listada.
 
 O primeiro sinal evidencia capacidade ainda insuficiente. O segundo evidencia
@@ -89,7 +89,7 @@ Em ordem de prioridade para este projeto:
 
 ## 4. Contexto inicial do produto
 
-**Sara** é o nome provisório da camada de verificação e do projeto de decisão enquanto
+**engine-sensor** é o nome provisório da camada de verificação e do projeto de decisão enquanto
 ele não for uma engine. **Passo** é o nome usado nos artigos para um desenho
 arquitetural específico. Se a evolução chegar a uma engine, ou se houver publicação,
 nome comercial, marca e relação entre os dois serão decididos separadamente.
@@ -338,7 +338,7 @@ risco alto até o experimento reduzir a incerteza.
 | Concorrente aberto ocupar a categoria | 2 | 3 | 6 | Diferenciar por evidência medida e interoperabilidade, não pelo rótulo AI-first |
 | Código aberto não capturar receita | 2 | 2 | 4 | Separar adoção de oferta paga; medir conversão para conveniência e suporte |
 | Produto fechado bloquear adoção | 2 | 2 | 4 | Demo funcional, licença de avaliação e experimento de open core |
-| Nome comercial conflitar ou confundir Sara/Passo | 2 | 2 | 4 | Pesquisa de marca e decisão separada antes de publicar |
+| Nome comercial conflitar ou confundir engine-sensor/Passo | 2 | 2 | 4 | Pesquisa de marca e decisão separada antes de publicar |
 | Retenção e tributação tornarem o preço inviável no Brasil | 3 | 2 | 6 | Onboarding fiscal antes da pré-venda; modelar preço líquido com contador |
 
 ## 12. Decisão provisória

@@ -2,7 +2,7 @@
 
 **Status:** Aceita
 **Data:** 23 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** estratégia de produto e sequência arquitetural
 
 ## Contexto
@@ -30,7 +30,7 @@ Também não existe ainda evidência de disposição a pagar.
 
 ## Decisão
 
-O Sara será conduzido, até nova decisão, como um programa de experimentos. A
+O engine-sensor será conduzido, até nova decisão, como um programa de experimentos. A
 sequência será:
 
 1. linter de conflitos de posse em projetos existentes;

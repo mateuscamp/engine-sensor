@@ -2,7 +2,7 @@
 
 **Status:** Aceita
 **Data:** 29 de agosto de 2026
-**Decisor:** proprietário do Sara
+**Decisor:** proprietário do engine-sensor
 **Escopo:** empacotamento, fronteira de produto e sede das decisões. **Não altera o
 verificador**: nenhuma regra, nenhum adapter, nenhum código de diagnóstico muda por
 causa desta ADR.
@@ -66,7 +66,7 @@ produtos compartilhando uma árvore, uma série de decisões e um portão**.
 
 O desenho já reconhecia a fronteira sem consumá-la: o verificador fora do workspace da
 engine, com lockfile, target e comandos próprios; governança por manifesto de produto;
-prefixo `SARE-*` porque `SAR-*` já é daqui; portão do corpus com dono separado. São
+prefixo `SARE-*` porque `ESN-*` já é daqui; portão do corpus com dono separado. São
 quatro contornos para a mesma fronteira, e cada um custa vigilância permanente.
 
 ## Opções consideradas
@@ -144,17 +144,17 @@ ambíguo, e ambiguidade em referência de decisão é o defeito que esta ADR cor
 ### 5. O sensor tem dono, cadência e data
 
 A separação não decide congelar nem manter vivo o sensor, mas **obriga a dizer qual dos
-dois**. O critério de revisão datado da [ADR 0013](0013-manter-a-sara-privada-ao-fim-do-marco-6.md)
+dois**. O critério de revisão datado da [ADR 0013](0013-manter-o-sensor-privado-ao-fim-do-marco-6.md)
 — 20 de setembro de 2026 — continua valendo e passa a valer mais, porque um produto em
 outra pasta é mais fácil de abandonar sem admitir.
 
 ### 6. O nome
 
 O diretório de trabalho passou a ser `engine-sensor`, e o documento de herança já cita o
-sensor por esse nome. **O repositório remoto ainda se chama `sara-engine`** — o nome do
-produto que saiu de casa. A [ADR 0003](0003-sara-como-nome-provisorio.md) registrou que o
-sufixo do repositório não muda a natureza do produto; com dois produtos, ele passa a
-nomear o errado. Renomear o remoto é ato do proprietário e fica pendente.
+sensor por esse nome. **O repositório remoto ainda carrega o nome do produto que saiu de
+casa.** A [ADR 0003](0003-nome-provisorio-da-camada.md) registrou que o sufixo do
+repositório não muda a natureza do produto; com dois produtos, ele passa a nomear o
+errado. Renomear o remoto é ato do proprietário e fica pendente.
 
 *(Conferido em 30/08/2026: o remoto **é** `mateuscamp/engine-sensor`, pela API do GitHub.
 A pendência está cumprida; em que dia ela foi cumprida, ninguém registrou — só se sabe que
@@ -162,6 +162,12 @@ em 29/08 esta seção ainda a descrevia como pendente. O nome antigo continua re
 redirecionamento do GitHub, o que é conveniência de quem já tinha o clone e não o nome do
 acervo — e é por isso que a divergência sobreviveu: pelos dois nomes tudo funciona. O
 `repository` do `Cargo.toml`, que ainda apontava para o antigo, foi junto.)*
+
+*(Segunda conferência, em 09/09/2026: a pendência estava cumprida no GitHub e **não** neste
+clone — o `remote.origin.url` continuava apontando para o nome antigo, e o redirecionamento
+fazia os dez dias seguintes funcionarem sem que nada reclamasse. Corrigido no mesmo dia. É a
+medição que motivou a [ADR 0018](0018-o-nome-sai-para-a-engine-e-este-produto-se-chama-engine-sensor.md),
+que leva o renome do acervo para dentro do produto.)*
 
 ### 7. O que isto não decide
 
@@ -218,7 +224,7 @@ fazer sozinho — que a árvore de trabalho contém o `origin/main` — não sub
 
 ## Critério de revisão
 
-- **20 de setembro de 2026**, a data da [ADR 0013](0013-manter-a-sara-privada-ao-fim-do-marco-6.md).
+- **20 de setembro de 2026**, a data da [ADR 0013](0013-manter-o-sensor-privado-ao-fim-do-marco-6.md).
   Se até lá o sensor não tiver recebido capacidade nova nem execução registrada, a
   separação terá acelerado um abandono em vez de organizar dois produtos, e a revisão
   passa a ser entre congelar de verdade e encerrar.
@@ -232,10 +238,10 @@ fazer sozinho — que a árvore de trabalho contém o `origin/main` — não sub
 ## Notas
 
 - Autor: reconciliação de `licao-da-aranha` com `origin/main`, a pedido do proprietário
-- Aprovada por: proprietário do Sara, em 29 de agosto de 2026
+- Aprovada por: proprietário do engine-sensor, em 29 de agosto de 2026
 - Substitui: nenhuma. Substitui um **rascunho** homônimo que escolhia a opção 3 e supunha
   a separação no portão do G0; o rascunho nunca foi aceito e não está no histórico.
   Complementa a [ADR 0007](0007-observe-como-binario-separado.md), que separou binários
   dentro de um repositório, levando a mesma lógica ao nível de produto; e força a decisão
-  de nome pendente na [ADR 0003](0003-sara-como-nome-provisorio.md).
+  de nome pendente na [ADR 0003](0003-nome-provisorio-da-camada.md).
 - Última alteração: 29 de agosto de 2026

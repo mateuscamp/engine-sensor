@@ -2,14 +2,14 @@ use std::{path::PathBuf, process::ExitCode};
 
 use anyhow::Result;
 use clap::{Parser, Subcommand};
-use sara_ai_first::{
+use engine_sensor::{
     CheckRequest, check_project,
-    config::{EngineChoice, OutputFormat, Profile, SaraConfig},
+    config::{EngineChoice, OutputFormat, Profile, SensorConfig},
     initialize_project, report,
 };
 
 #[derive(Debug, Parser)]
-#[command(name = "sara", version, about = "Verificador AI-first interno")]
+#[command(name = "engine-sensor", version, about = "Verificador AI-first interno")]
 struct Cli {
     #[command(subcommand)]
     command: Command,
@@ -41,7 +41,7 @@ fn main() -> ExitCode {
     match run(Cli::parse()) {
         Ok(code) => code,
         Err(error) => {
-            eprintln!("ERRO SARA: {error:#}");
+            eprintln!("ERRO ENGINE-SENSOR: {error:#}");
             ExitCode::from(2)
         }
     }
@@ -52,15 +52,15 @@ fn run(cli: Cli) -> Result<ExitCode> {
         Command::Init { path, engine } => {
             let created = initialize_project(&path, engine)?;
             if created.is_empty() {
-                println!("Sara já inicializado; nenhum arquivo foi sobrescrito.");
+                println!("engine-sensor já inicializado; nenhum arquivo foi sobrescrito.");
             } else {
-                println!("Sara inicializado. Arquivos criados:");
+                println!("engine-sensor inicializado. Arquivos criados:");
                 for path in created {
                     println!("- {path}");
                 }
             }
             println!(
-                "Copie o fragmento de .sara/AGENTS.fragment.md para AGENTS.md e o de .sara/CLAUDE.fragment.md para CLAUDE.md."
+                "Copie o fragmento de .engine-sensor/AGENTS.fragment.md para AGENTS.md e o de .engine-sensor/CLAUDE.fragment.md para CLAUDE.md."
             );
             Ok(ExitCode::SUCCESS)
         }
@@ -70,7 +70,7 @@ fn run(cli: Cli) -> Result<ExitCode> {
             profile,
             format,
         } => {
-            let config = SaraConfig::load(&path)?;
+            let config = SensorConfig::load(&path)?;
             let engine = if engine == EngineChoice::Auto {
                 config.engine
             } else {

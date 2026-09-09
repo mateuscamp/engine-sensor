@@ -185,7 +185,7 @@ fn diagnose_animations(
                 if first.controller.starts_with("loop:") {
                     if !warned_between_owners {
                         diagnostics.push(common::conflict_diagnostic(
-                            "SAR-OWN-001",
+                            "ESN-OWN-001",
                             Severity::Warning,
                             first,
                             second,
@@ -197,7 +197,7 @@ fn diagnose_animations(
                     continue;
                 }
                 diagnostics.push(common::conflict_diagnostic(
-                    "SAR-OWN-001",
+                    "ESN-OWN-001",
                     Severity::Error,
                     first,
                     second,
@@ -206,7 +206,7 @@ fn diagnose_animations(
                 ));
             } else if !warned_between_owners {
                 diagnostics.push(common::conflict_diagnostic(
-                    "SAR-OWN-001",
+                    "ESN-OWN-001",
                     Severity::Warning,
                     first,
                     second,
@@ -419,7 +419,7 @@ fn input_claims(
                 let second_channels = bindings.get(&second.operation).cloned().unwrap_or_default();
                 if physical_duplicate(&first_channels, &second_channels) {
                     output.diagnostics.push(common::conflict_diagnostic(
-                        "SAR-OWN-002",
+                        "ESN-OWN-002",
                         Severity::Error,
                         first,
                         second,

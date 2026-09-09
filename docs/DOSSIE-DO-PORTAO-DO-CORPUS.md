@@ -1,6 +1,6 @@
 # Dossiê do portão do corpus
 
-Registro de execução do portão que a [ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) §3
+Registro de execução do portão que a [ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) §3
 exige e que a [ADR 0017](decisoes/0017-o-portao-do-corpus-roda-sempre-e-ausencia-e-inconclusivo.md)
 consertou. Quatro campos por execução — **comando, revisão, máquina e resultado** —, porque
 número copiado de documento não é evidência: sem os quatro, uma execução relatada vale como
@@ -57,7 +57,7 @@ estado **inconclusivo** existir para toda máquina que não seja esta.
 
 ```text
 $ tools/check_corpus.sh
-Sara: corpus APROVADO — os cinco projetos do corpus foram lidos e nenhum tem conflito bloqueante.
+engine-sensor: corpus APROVADO — os cinco projetos do corpus foram lidos e nenhum tem conflito bloqueante.
   bomberboom-df — /home/mateus/defold/bomberboom-df
   bomberboom-gd — /home/mateus/godot/bomberboom-gd
   boomlitude — /home/mateus/godot/boomlitude
@@ -65,7 +65,7 @@ Sara: corpus APROVADO — os cinco projetos do corpus foram lidos e nenhum tem c
   gods — /home/mateus/godot/gods
 ```
 
-A fotografia do corpus no dia, tirada com `sara 0.1.0` (esquema de relatório 1), somando os
+A fotografia do corpus no dia, tirada com `engine-sensor 0.1.0` (esquema de relatório 1), somando os
 perfis `desktop` e `android`:
 
 | Projeto | Engine | Arquivos | Declarações | Erros | Avisos |
@@ -111,36 +111,36 @@ antes de fechar, no mesmo commit e na mesma máquina descritos acima.
 | Modo | Comando | Saída | Estado |
 |---|---|---:|---|
 | Corpus presente e íntegro | `tools/check_corpus.sh` | **0** | aprovado |
-| Corpus inteiro ausente | `SARA_CORPUS_RAIZ=<diretório vazio> tools/check_corpus.sh` | **2** | inconclusivo |
-| Um projeto movido ou renomeado | `SARA_CORPUS_GODS=/home/mateus/godot/gods-renomeado tools/check_corpus.sh` | **2** | inconclusivo |
+| Corpus inteiro ausente | `ENGINE_SENSOR_CORPUS_RAIZ=<diretório vazio> tools/check_corpus.sh` | **2** | inconclusivo |
+| Um projeto movido ou renomeado | `ENGINE_SENSOR_CORPUS_GODS=/home/mateus/godot/gods-renomeado tools/check_corpus.sh` | **2** | inconclusivo |
 | Conflito bloqueante no corpus | as cinco variáveis apontadas para fixtures, com `godot_animation_red` no lugar do `gods` | **1** | reprovado |
 
 ### Corpus inteiro ausente — saída 2
 
-`SARA_CORPUS_RAIZ` apontado para um diretório vazio. Os cinco caminhos são nomeados, cada um
+`ENGINE_SENSOR_CORPUS_RAIZ` apontado para um diretório vazio. Os cinco caminhos são nomeados, cada um
 com a origem que o produziu:
 
 ```text
-┌─ SARA-CORPUS: INCONCLUSIVO ─────────────────────────────────────────────
+┌─ ENGINE-SENSOR-CORPUS: INCONCLUSIVO ─────────────────────────────────────────────
 │ 5 de 5 projetos do corpus fora do lugar declarado:
-│   bomberboom-df — /tmp/tmp.bV7Q3VncgB/defold/bomberboom-df (via $SARA_CORPUS_RAIZ)
-│   bomberboom-gd — /tmp/tmp.bV7Q3VncgB/godot/bomberboom-gd (via $SARA_CORPUS_RAIZ)
-│   boomlitude — /tmp/tmp.bV7Q3VncgB/godot/boomlitude (via $SARA_CORPUS_RAIZ)
-│   mineboom — /tmp/tmp.bV7Q3VncgB/godot/mineboom (via $SARA_CORPUS_RAIZ)
-│   gods — /tmp/tmp.bV7Q3VncgB/godot/gods (via $SARA_CORPUS_RAIZ)
+│   bomberboom-df — /tmp/tmp.bV7Q3VncgB/defold/bomberboom-df (via $ENGINE_SENSOR_CORPUS_RAIZ)
+│   bomberboom-gd — /tmp/tmp.bV7Q3VncgB/godot/bomberboom-gd (via $ENGINE_SENSOR_CORPUS_RAIZ)
+│   boomlitude — /tmp/tmp.bV7Q3VncgB/godot/boomlitude (via $ENGINE_SENSOR_CORPUS_RAIZ)
+│   mineboom — /tmp/tmp.bV7Q3VncgB/godot/mineboom (via $ENGINE_SENSOR_CORPUS_RAIZ)
+│   gods — /tmp/tmp.bV7Q3VncgB/godot/gods (via $ENGINE_SENSOR_CORPUS_RAIZ)
 │
 │ Não poder conferir não é ter conferido. [...]
 └─────────────────────────────────────────────────────────────────────────
 test five_personal_projects_have_no_blocking_false_positive ... ok
 
-Sara: corpus INCONCLUSIVO — não foi possível conferir. Faltou:
+engine-sensor: corpus INCONCLUSIVO — não foi possível conferir. Faltou:
   [os cinco caminhos, de novo]
 Registre isto como bloqueio externo, não como aprovação: não poder conferir não é ter conferido.
 ```
 
 O bloco aparece **num `cargo test` comum**, sem `--nocapture`, porque ele é escrito no
 descritor real do processo. O teste em si passa no arnês — ausência de corpus não é defeito
-da Sara —, e é o código 2 do script que carrega o veredito.
+do engine-sensor —, e é o código 2 do script que carrega o veredito.
 
 ### Um projeto movido ou renomeado — saída 2
 
@@ -149,7 +149,7 @@ quatro projetos são lidos normalmente; o que faltou é nomeado, com o caminho e
 
 ```text
 │ 1 de 5 projetos do corpus fora do lugar declarado:
-│   gods — /home/mateus/godot/gods-renomeado (via $SARA_CORPUS_GODS)
+│   gods — /home/mateus/godot/gods-renomeado (via $ENGINE_SENSOR_CORPUS_GODS)
 ```
 
 **Este é o critério que compra o conserto.** Nesta forma, a migração de `~/Godot` para
@@ -160,9 +160,9 @@ quatro projetos são lidos normalmente; o que faltou é nomeado, com o caminho e
 As cinco variáveis apontadas para fixtures, quatro verdes e uma vermelha no lugar do `gods`:
 
 ```text
-Sara: corpus REPROVADO — o confronto encontrou conflito bloqueante:
+engine-sensor: corpus REPROVADO — o confronto encontrou conflito bloqueante:
   gods — .../tests/fixtures/godot_animation_red produziu erro(s): [Diagnostic {
-    rule: "SAR-OWN-001", severity: Error,
+    rule: "ESN-OWN-001", severity: Error,
     resource: "animation:godot:main.gd:$Bomb:scale", ...
     explanation: "dois Tweens distintos começam na mesma função sobre a mesma propriedade" }]
 ```

@@ -2,8 +2,8 @@
 
 **Status:** Aceita
 **Data:** 29 de agosto de 2026
-**Decisor:** proprietário do Sara
-**Escopo:** o portão executável do confronto que a [ADR 0012](0012-sara-e-corpus-coevoluem.md) §3
+**Decisor:** proprietário do engine-sensor
+**Escopo:** o portão executável do confronto que a [ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md) §3
 exige. **Não altera o verificador**: nenhuma regra, nenhum adapter e nenhum código de
 diagnóstico muda por causa desta ADR.
 
@@ -80,12 +80,12 @@ Os valores da máquina do proprietário passam a ser **padrão documentado**, e 
 
 | Variável | Padrão |
 |---|---|
-| `SARA_CORPUS_RAIZ` | `/home/mateus` |
-| `SARA_CORPUS_BOMBERBOOM_DF` | `$SARA_CORPUS_RAIZ/defold/bomberboom-df` |
-| `SARA_CORPUS_BOMBERBOOM_GD` | `$SARA_CORPUS_RAIZ/godot/bomberboom-gd` |
-| `SARA_CORPUS_BOOMLITUDE` | `$SARA_CORPUS_RAIZ/godot/boomlitude` |
-| `SARA_CORPUS_MINEBOOM` | `$SARA_CORPUS_RAIZ/godot/mineboom` |
-| `SARA_CORPUS_GODS` | `$SARA_CORPUS_RAIZ/godot/gods` |
+| `ENGINE_SENSOR_CORPUS_RAIZ` | `/home/mateus` |
+| `ENGINE_SENSOR_CORPUS_BOMBERBOOM_DF` | `$ENGINE_SENSOR_CORPUS_RAIZ/defold/bomberboom-df` |
+| `ENGINE_SENSOR_CORPUS_BOMBERBOOM_GD` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/bomberboom-gd` |
+| `ENGINE_SENSOR_CORPUS_BOOMLITUDE` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/boomlitude` |
+| `ENGINE_SENSOR_CORPUS_MINEBOOM` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/mineboom` |
+| `ENGINE_SENSOR_CORPUS_GODS` | `$ENGINE_SENSOR_CORPUS_RAIZ/godot/gods` |
 
 A saída nomeia **o caminho e a origem dele** — variável individual, raiz ou padrão.
 Dizer "faltou" sem dizer de onde veio o caminho manda procurar no lugar errado, e foi
@@ -94,7 +94,7 @@ assim que a defasagem de 28/08 sobreviveu.
 ### 3. Três estados, três códigos de saída
 
 `tools/check_corpus.sh` continua sendo o portão, agora com os mesmos três códigos do
-contrato do `sara` ([ADR 0006](0006-contrato-estrito-de-relatorio-e-codigos-de-saida.md)),
+contrato do `engine-sensor` ([ADR 0006](0006-contrato-estrito-de-relatorio-e-codigos-de-saida.md)),
 pelo mesmo motivo:
 
 | Código | Estado | Significa |
@@ -105,7 +105,7 @@ pelo mesmo motivo:
 
 Como o arnês do Cargo não tem o terceiro estado, o inconclusivo sai por três canais que
 ele não apaga: um bloco escrito no descritor real do processo — visível num `cargo test`
-comum, apesar da captura do libtest —, o veredito em `$SARA_CORPUS_VEREDITO`, e o
+comum, apesar da captura do libtest —, o veredito em `$ENGINE_SENSOR_CORPUS_VEREDITO`, e o
 código 2 do script.
 
 ### 4. Reprovado ganha de inconclusivo
@@ -126,7 +126,7 @@ cinco projetos foram lidos.
 Rodar o corpus inteiro em toda suíte custava **40 s**, porque as gramáticas tree-sitter
 iam sem otimização. Portão caro é portão que alguém desliga, e desligar é o defeito que
 esta ADR conserta. `[profile.dev.package."*"] opt-level = 2` otimiza **só as
-dependências** — o código do Sara continua sem otimização, para o pânico e o depurador
+dependências** — o código do engine-sensor continua sem otimização, para o pânico e o depurador
 continuarem legíveis — e devolve a suíte a **10 s**, sem tocar no que ela mede.
 
 ## Consequências
@@ -152,7 +152,7 @@ continuarem legíveis — e devolve a suíte a **10 s**, sem tocar no que ela me
   escrito, isso seria uma armadilha nova no lugar da antiga.
 - O terceiro estado mora fora do arnês, em script e em canal de saída próprio. É mais
   peça do que um teste comum tem, e a razão é do arnês, não do problema.
-- A parametrização é uma porta: um `SARA_CORPUS_RAIZ` apontado para um corpus falso
+- A parametrização é uma porta: um `ENGINE_SENSOR_CORPUS_RAIZ` apontado para um corpus falso
   produz aprovado com facilidade. A ADR 0012 §3 continua exigindo que o **diff de
   diagnóstico** seja lido por uma pessoa, e nenhum teste prova leitura.
 
@@ -188,8 +188,8 @@ teste prova que uma comparação foi lida.
 
 ## Notas
 
-- Autor: proprietário do Sara
-- Aprovada por: proprietário do Sara
+- Autor: proprietário do engine-sensor
+- Aprovada por: proprietário do engine-sensor
 - Substitui: nenhuma. Refina o mecanismo de conformidade da
-  [ADR 0012](0012-sara-e-corpus-coevoluem.md) §3, que continua valendo integralmente.
+  [ADR 0012](0012-o-sensor-e-o-corpus-coevoluem.md) §3, que continua valendo integralmente.
 - Última alteração: 29 de agosto de 2026

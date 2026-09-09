@@ -1,4 +1,4 @@
-# Sara — o sensor
+# engine-sensor — o sensor
 
 Verificador AI-first interno e estudo sobre desenvolvimento de jogos quando quem
 escreve o código é um agente. **Este repositório é o sensor, e só ele.** Desde a
@@ -7,19 +7,22 @@ o pré-projeto de uma possível engine vive em repositório próprio, com série
 própria; a única ligação entre os dois é a matriz do legado, que mora lá e cita este por
 caminho e revisão.
 
-> **O remoto se chama `mateuscamp/engine-sensor`** — conferido em 30/08/2026 contra a API
-> do GitHub, e o nome do produto que saiu de casa deixou de nomear este acervo. Em que dia
-> o renome aconteceu não está registrado em lugar nenhum. A pendência que a
-> [ADR 0016 §6](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md)
-> registrou está cumprida. `mateuscamp/sara-engine` ainda resolve, pelo redirecionamento
-> que o GitHub mantém do nome antigo — quem clonar por ele chega aqui do mesmo jeito, e
-> não é por isso que o nome volta a ser dele.
+> **O remoto se chama `mateuscamp/engine-sensor`**, e desde 09/09/2026 o produto dentro
+> dele também. O renome tinha parado no acervo: o nome antigo continuava no binário, no
+> contrato que o `init` escreve, nos ids de regra e — por dez dias — no `remote.origin.url`
+> deste clone, onde o redirecionamento do GitHub fazia tudo funcionar e nada reclamar. A
+> [ADR 0018](docs/decisoes/0018-o-nome-sai-para-a-engine-e-este-produto-se-chama-engine-sensor.md)
+> leva o renome para dentro do produto e traz a tabela do antes→depois; o nome antigo hoje
+> pertence à engine, que é outro produto, em outro repositório.
+>
+> Quem clonar pelo nome antigo ainda chega aqui, pelo redirecionamento — e não é por isso
+> que o nome volta a ser deste acervo.
 
-**Sara é o nome provisório enquanto o projeto for esta camada de verificação**
-([ADR 0003](docs/decisoes/0003-sara-como-nome-provisorio.md)). Publicação e monetização
+**engine-sensor é o nome provisório enquanto o projeto for esta camada de verificação**
+([ADR 0003](docs/decisoes/0003-nome-provisorio-da-camada.md)). Publicação e monetização
 permanecem adiadas.
 
-O primeiro resultado é o `sara 0.1.0`: um CLI Rust, offline, para detectar posse
+O primeiro resultado é o `engine-sensor 0.1.0`: um CLI Rust, offline, para detectar posse
 concorrente de animação e entrada em projetos Godot 4.7 e Defold 1.13. Ele bloqueia
 somente conflitos comprovados e transforma ambiguidades em avisos explicados.
 
@@ -33,18 +36,18 @@ registros brutos, o protocolo e os critérios de aceitação estão em `estudo/`
 
 ## Usar o verificador
 
-O binário Linux x86_64 está em [`dist/sara-linux-x86_64`](dist/sara-linux-x86_64).
+O binário Linux x86_64 está em [`dist/engine-sensor-linux-x86_64`](dist/engine-sensor-linux-x86_64).
 Para experimentar sem instalação global:
 
 ```text
-./dist/sara-linux-x86_64 init /caminho/do/jogo
-./dist/sara-linux-x86_64 check /caminho/do/jogo
-./dist/sara-linux-x86_64 check /caminho/do/jogo --profile android --format json
+./dist/engine-sensor-linux-x86_64 init /caminho/do/jogo
+./dist/engine-sensor-linux-x86_64 check /caminho/do/jogo
+./dist/engine-sensor-linux-x86_64 check /caminho/do/jogo --profile android --format json
 ```
 
-`sara init` cria o contrato em `.sara/`, fragmentos separados para `AGENTS.md` e
+`engine-sensor init` cria o contrato em `.engine-sensor/`, fragmentos separados para `AGENTS.md` e
 `CLAUDE.md`, um portão executável que roda dentro da engine do jogo
-(`portao_ai_first.gd` ou `.lua`) e `sara.toml`. Arquivos de instruções já
+(`portao_ai_first.gd` ou `.lua`) e `engine-sensor.toml`. Arquivos de instruções já
 existentes nunca são sobrescritos: o agente ou a pessoa incorpora o fragmento
 correspondente de forma deliberada.
 
@@ -82,12 +85,12 @@ limite que a resposta trouxe é maior que ela.
 
 **[docs/CASO-DA-ARANHA.md](docs/CASO-DA-ARANHA.md)** - uma sessão de trabalho real lida
 inteira: nove defeitos, quem achou cada um, e por que os dois que importavam passaram por
-303 casos verdes, pela Sentinela e pelo `sara check`. É matéria-prima de decisão, não
+303 casos verdes, pela Sentinela e pelo `engine-sensor check`. É matéria-prima de decisão, não
 decisão.
 
 **[docs/CASO-DO-DESENHISTA.md](docs/CASO-DO-DESENHISTA.md)** - a primeira ferramenta do
 corpus cujo produto inteiro é uma **fala para a agente**, e não conteúdo: um prompt virado
-desenho. E a medição que ela permitiu — dos 33 pontos de entrada do porte, a Sara declara 2;
+desenho. E a medição que ela permitiu — dos 33 pontos de entrada do porte, o engine-sensor declara 2;
 os outros 31 são tecla e sinal de botão, e quatro deles vão ao aparelho.
 
 ## A decisão atual
@@ -103,8 +106,8 @@ aqui.
 
 **O Marco 6 encerrou em 28 de agosto de 2026, por conclusão**, com treze mudanças reais —
 todas do porte do BomberBoom — vinte e três dias antes do critério de parada. O portão
-decidiu **manter a Sara privada**, pela
-[ADR 0013](docs/decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md).
+decidiu **manter o engine-sensor privado**, pela
+[ADR 0013](docs/decisoes/0013-manter-o-sensor-privado-ao-fim-do-marco-6.md).
 
 É o desfecho que uma previsão datada de 25/08 antecipou, antes da evidência que o
 confirmaria: *"o recorte é pequeno demais para ser produto e grande o bastante para ser
@@ -112,7 +115,7 @@ portão privado"*. Nenhuma das duas condições que ela listou como capazes de d
 aconteceu.
 
 O que a série mostrou, e vale pelos dois lados: **1 aviso útil e 0 falsos em treze usos**,
-e um defeito que só a Sara achou — o mesmo que, na versão Defold, chegou ao jogador. Contra:
+e um defeito que só o engine-sensor achou — o mesmo que, na versão Defold, chegou ao jogador. Contra:
 **onze dos treze casos ainda exigiram inspeção humana**, que é o recurso escasso que o
 projeto existe para economizar. A ADR 0013 registra os dois.
 
@@ -134,21 +137,22 @@ caminho e revisão alcançável a partir de `origin/main`.
 |---|---|
 | [0001](docs/decisoes/0001-validar-mecanismos-antes-da-engine-completa.md) | validar mecanismos antes de uma engine completa |
 | [0002](docs/decisoes/0002-lancamento-interno-e-foco-adaptativo.md) | lançamento interno e foco adaptativo de engine |
-| [0003](docs/decisoes/0003-sara-como-nome-provisorio.md) | Sara como nome provisório da camada |
+| [0003](docs/decisoes/0003-nome-provisorio-da-camada.md) | nome provisório da camada |
 | [0004](docs/decisoes/0004-spike-de-visao-instrumentada-em-godot.md) | ~~spike de visão instrumentada em Godot~~ — a Sentinela já o entregava (0014) |
 | [0005](docs/decisoes/0005-foco-em-godot-com-defold-congelado.md) | foco em Godot, com Defold congelado como corpus de regressão |
 | [0006](docs/decisoes/0006-contrato-estrito-de-relatorio-e-codigos-de-saida.md) | contrato estrito de relatório e códigos de saída |
-| [0007](docs/decisoes/0007-observe-como-binario-separado.md) | `sara observe` nasce como binário separado |
+| [0007](docs/decisoes/0007-observe-como-binario-separado.md) | `engine-sensor observe` nasce como binário separado |
 | [0008](docs/decisoes/0008-gramaticas-tree-sitter-comunitarias-fixadas.md) | gramáticas tree-sitter comunitárias, fixadas por versão exata |
 | [0009](docs/decisoes/0009-baseline-em-projeto-real-expoe-regra-ausente.md) | baseline em projeto real também autoriza regra ausente |
 | [0010](docs/decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md) | canal físico de entrada em Godot, sem exigir mapa de ações |
 | [0011](docs/decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) | o Marco 7 não começa sem comparação com ferramenta existente — cumprida |
-| [0012](docs/decisoes/0012-sara-e-corpus-coevoluem.md) | Sara e corpus coevoluem; a evolução do instrumento é registrada |
-| [0013](docs/decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md) | manter a Sara privada ao fim do Marco 6 |
+| [0012](docs/decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) | engine-sensor e corpus coevoluem; a evolução do instrumento é registrada |
+| [0013](docs/decisoes/0013-manter-o-sensor-privado-ao-fim-do-marco-6.md) | manter o engine-sensor privado ao fim do Marco 6 |
 | [0014](docs/decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md) | não construir o spike do Marco 7 — a Sentinela já o entregava — e preservar a pergunta 7 |
 | [0015](docs/decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md) | a verdade de design são três campos no carimbo, e um deles bloqueia |
 | [0016](docs/decisoes/0016-a-engine-sai-de-casa-antes-do-g0-e-este-repositorio-e-o-sensor.md) | a engine sai de casa antes do G0, e este repositório é o sensor |
 | [0017](docs/decisoes/0017-o-portao-do-corpus-roda-sempre-e-ausencia-e-inconclusivo.md) | o portão do corpus roda na suíte padrão, e ausência de corpus é inconclusivo |
+| [0018](docs/decisoes/0018-o-nome-sai-para-a-engine-e-este-produto-se-chama-engine-sensor.md) | o nome anterior sai para a engine, e este produto se chama `engine-sensor` |
 
 ## Os artigos
 

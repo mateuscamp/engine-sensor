@@ -2,7 +2,7 @@
 
 ## Resultado pretendido
 
-Um binário Linux chamado `sara` que Codex e Claude Code executam antes de concluir
+Um binário Linux chamado `engine-sensor` que Codex e Claude Code executam antes de concluir
 mudanças em jogos Godot 4.7 ou Defold 1.13. Ele falha apenas quando consegue provar
 dois donos para uma propriedade animada ou dois canais físicos distintos chegando ao
 mesmo efeito de entrada.
@@ -29,8 +29,8 @@ Pela [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md), mudança e
 Defold não conta para o marco. O BomberBoom Defold permanece no corpus de falso positivo
 bloqueante e suas duas regressões históricas continuam sendo o Portão 0.
 
-**Desde 28 de agosto de 2026 a Sara muda durante o marco.** A
-[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) reviu a Fase 2: os dez casos deixam
+**Desde 28 de agosto de 2026 o engine-sensor muda durante o marco.** A
+[ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) reviu a Fase 2: os dez casos deixam
 de ser uma série controlada e passam a ser uma série histórica, com a versão usada
 declarada em cada um. A medição de utilidade continua, e ganha uma segunda ao lado — se o
 que nasce num projeto generaliza para o corpus.
@@ -39,7 +39,7 @@ que nasce num projeto generaliza para o corpus.
 porte do BomberBoom. Gods, Boomlitude e MineBoom ficam parados como corpus de regressão.
 As dez mudanças vieram todas do porte, e isso é ao mesmo tempo a força e o risco do marco.
 **Em 28/08/2026 elas somaram 13, a contagem fechou vinte e três dias antes da data, e o
-portão decidiu: manter privado**, pela [ADR 0013](decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md).
+portão decidiu: manter privado**, pela [ADR 0013](decisoes/0013-manter-o-sensor-privado-ao-fim-do-marco-6.md).
 É o desfecho que a previsão datada de 25/08 antecipou, e as duas condições que ela listou
 como capazes de derrubá-la não aconteceram. A evidência julgada está em
 [`USO-PESSOAL.md`](USO-PESSOAL.md).
@@ -49,10 +49,10 @@ foi corrigida no mesmo dia: ela era contradição não riscada contra este rotei
 vivo. O que ela protegia virou **limitação declarada do julgamento** — treze mudanças de um
 jogo só não são treze projetos.
 
-A força: o mesmo jogo existe em Defold e em Godot, então toda regra do Sara pode ser
+A força: o mesmo jogo existe em Defold e em Godot, então toda regra do engine-sensor pode ser
 conferida contra o original. Foi assim que a [ADR 0010](decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md)
 nasceu — o porte reproduziu, em Godot, a regressão de entrada que o original tinha em
-Defold, e o Sara não a via porque o eixo de entrada exigia mapa de ações.
+Defold, e o engine-sensor não a via porque o eixo de entrada exigia mapa de ações.
 
 O risco: um alvo só. Se o porte parar, o marco para junto e a data decide sozinha. Isso
 não muda o critério, muda o que a data significa quando chegar.
@@ -61,7 +61,7 @@ não muda o critério, muda o que a data significa quando chegar.
 
 O [ADR 0004](decisoes/0004-spike-de-visao-instrumentada-em-godot.md) autorizava, após o
 Marco 6, um único experimento adicional — o spike de visão instrumentada em Godot. Ele
-**não vai ser construído**, e o segundo binário `sara-observe` não nasce.
+**não vai ser construído**, e o segundo binário `engine-sensor-observe` não nasce.
 
 **Não porque foi recusado: porque foi feito.** A Sentinela e o portão de cena do
 `bomberboom-gd` são a unidade de evidência da ADR 0004 — `imagem + estado + entradas +
@@ -71,12 +71,12 @@ uma é parcial e uma continua aberta; o balanço item a item está no adendo de 
 [ADR 0014](decisoes/0014-comparacao-do-marco-7-com-as-ferramentas-existentes.md).
 
 Ele nasceu da pressão de um jogo real, sem ADR que o planejasse — e a
-[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) já dizia isso em 28/08, na frase que
+[ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) já dizia isso em 28/08, na frase que
 levou um dia para ser lida pelo que ela afirmava: *"o sentinela é um aparelho de observação
 **mais completo** que o spike que a ADR 0004 especifica"*.
 
 O portão que a ADR 0004 previa ao terminar — *encerrar, manter como ferramenta privada ou
-propor incorporação ao Sara* — **já se realizou na segunda saída**: a Sentinela é ferramenta
+propor incorporação ao engine-sensor* — **já se realizou na segunda saída**: a Sentinela é ferramenta
 privada do porte, e é lá que ela vale.
 
 A [ADR 0011](decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) exigiu uma
@@ -105,7 +105,7 @@ nela. É o mesmo ponto cego que a Sentinela tem por construção, reproduzido de
 decisão que ainda não fora executada.
 
 Responder essa objeção exige a **verdade de design declarada**, que a
-[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) nomeou e deixou sem formato, lugar e
+[ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) nomeou e deixou sem formato, lugar e
 dono. A ADR 0014 registra que ela é pré-condição da pergunta que sobrou, e não o contrário;
 a [ADR 0015](decisoes/0015-a-verdade-de-design-sao-tres-campos-no-carimbo.md), do mesmo dia,
 decide os três — **três campos no passo 2 do carimbo**, no repositório de quem constrói, e um
@@ -114,7 +114,7 @@ entra na ADR 0004: as sete daquela ADR medem um instrumento, e a oitava pergunta
 o instrumento é conferido.
 
 A [ADR 0007](decisoes/0007-observe-como-binario-separado.md) continua sendo o freio efetivo:
-`sara-observe` não está na lista de binários autorizados, e acrescentá-lo exige uma ADR que
+`engine-sensor-observe` não está na lista de binários autorizados, e acrescentá-lo exige uma ADR que
 substitua a 0014.
 
 ## O que fica adiado

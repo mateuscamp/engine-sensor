@@ -1,4 +1,4 @@
-# O caso do desenhista - a Sara viu a única parte que parece jogo
+# O caso do desenhista - o engine-sensor viu a única parte que parece jogo
 
 **Data do caso:** 29 de agosto de 2026
 **Projeto:** porte do BomberBoom para Godot (`~/godot/bomberboom-gd`), branch `desenhista`,
@@ -9,10 +9,10 @@ de `dist/`. A moldura da §1 é do autor, dita durante esta leitura.
 
 Isto **não é uma ADR** e não decide nada. É matéria-prima de uma, como o
 [caso da aranha](CASO-DA-ARANHA.md): o caso escrito antes de a conclusão ser tirada, que a
-[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) passou a exigir de toda dor local
+[ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) passou a exigir de toda dor local
 candidata a virar capacidade.
 
-**O que ele acrescenta ao caso da aranha.** Lá a Sara ficou verde sobre um mecanismo que
+**O que ele acrescenta ao caso da aranha.** Lá o engine-sensor ficou verde sobre um mecanismo que
 nunca funcionou, e a lacuna era de **domínio**: aritmética de durações, que nenhuma versão
 melhor de um verificador de posse alcança. Aqui ela fica verde sobre uma ferramenta cujo
 canal de entrada inteiro ela não enxerga — e entrada é **um dos dois eixos que ela declara
@@ -80,12 +80,12 @@ ferramenta anterior — console, sondas, Sentinela — relatava; o carimbo decla
 
 ---
 
-## 2. O que a Sara viu
+## 2. O que o engine-sensor viu
 
 ```text
 git -C <worktree> archive 3ba88af | tar -x -C /tmp/desenhista-3ba88af
-./dist/sara-linux-x86_64 check /tmp/desenhista-3ba88af
-Sara 0.1.0 - 164 arquivo(s), 53 declaração(ões), 0 erro(s), 0 aviso(s)
+./dist/engine-sensor-linux-x86_64 check /tmp/desenhista-3ba88af
+engine-sensor 0.1.0 - 164 arquivo(s), 53 declaração(ões), 0 erro(s), 0 aviso(s)
 ```
 
 Saída **0**. Nenhum diagnóstico.
@@ -111,7 +111,7 @@ As quatro do desenhista são o que a linha 15 do diário do porte registra, e es
 
 **E o desenhista não tem uma única animação.** Zero ocorrências de `Tween` em
 `ferramentas/desenhista/` e `ferramentas/menu/` — e zero de `z_index` e `move_child`, que é o
-eixo de profundidade. Os dois eixos em que a Sara é forte não têm nada para medir aqui.
+eixo de profundidade. Os dois eixos em que o engine-sensor é forte não têm nada para medir aqui.
 
 **Isso foi conferido, e não suposto, porque na hora desta leitura o binário de `dist/` estava
 atrás do `src/`.** Ele fora construído em `f1f4d5f`; depois dele entraram o relógio do Tween
@@ -126,12 +126,12 @@ mesma árvore:
 Zero declarações perdidas, seis novas, **e nenhuma delas de entrada**: as três de
 profundidade caem em `main/`, e as três de animação são o relógio do Tween resolvendo a
 variável de laço em `bomba_na_tela.gd`. **No desenhista, os dois instrumentos dizem as mesmas
-4.** O achado deste caso não depende de qual versão da Sara respondeu — é o mesmo nos dois.
+4.** O achado deste caso não depende de qual versão do engine-sensor respondeu — é o mesmo nos dois.
 
 **A diferença era um defeito de método, e foi consertada nesta mesma branch.** As 53 do
 carimbo do porte e da linha 15 do diário saem do binário de `dist/`, que é o que o README manda
-usar, enquanto o `src` já dizia 59. A coluna `Sara` da
-[ADR 0012](decisoes/0012-sara-e-corpus-coevoluem.md) mantinha o registro correto, porque nomeia
+usar, enquanto o `src` já dizia 59. A coluna `engine-sensor` da
+[ADR 0012](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md) mantinha o registro correto, porque nomeia
 o instrumento — o que não existia era portão que avisasse da distância. Agora existe:
 `adr_0012_o_binario_publicado_responde_como_o_codigo` roda as duas versões sobre as 25 fixtures
 e exige relatórios idênticos, e o `dist/` foi reconstruído. Conferido por mutação: devolvido o
@@ -145,9 +145,9 @@ a branch ganhou o `--desenho`, o `SALVAR O DESENHO` — que grava em `docs/desen
 quer daquele desenho. No commit `4feffce`: **164 arquivos, 53 declarações, 0 diagnósticos, e
 as mesmas 6 de entrada, nas mesmas seis linhas.** Os pontos de entrada foram de 33 para 34; os
 declarados continuam 2. A ferramenta ganhou uma ponta de laço, um botão e um campo de texto
-livre, e o relatório da Sara é o mesmo.
+livre, e o relatório do engine-sensor é o mesmo.
 
-Sobra a frase inteira do caso: **a Sara viu a única parte do desenhista que se comporta como
+Sobra a frase inteira do caso: **o engine-sensor viu a única parte do desenhista que se comporta como
 jogo** — um dedo numa superfície, com a posição dividida por 42 para virar célula. Todo o
 resto da ferramenta é comando, e comando ela não vê.
 
@@ -183,7 +183,7 @@ da seção e o CONTINUAR da cerimônia da garrafa. `ferramentas/*` está no `exc
 export e não embarca; `main/` embarca. O inventário de entrada do jogo publicado, portanto,
 também está incompleto — não só o das ferramentas.
 
-**E o silêncio é o dado.** Nenhum `SAR-PARSE-001`, nenhum aviso, saída 0. Pior: o
+**E o silêncio é o dado.** Nenhum `ESN-PARSE-001`, nenhum aviso, saída 0. Pior: o
 `_gui_input` **está** na tabela de construções reconhecidas do
 [`COMPATIBILIDADE.md`](COMPATIBILIDADE.md), o que faz a interface parecer coberta. O contrato
 inclui a porta que quase ninguém usa em UI Godot e cala sobre o sinal, que é a porta que todo
@@ -193,7 +193,7 @@ mundo usa.
 
 ## 4. A raiz: o modelo é o do DEDO, não o do COMANDO
 
-A regra de entrada da Sara nasceu do uso 2, e nasceu certa. O defeito de origem era de
+A regra de entrada do engine-sensor nasceu do uso 2, e nasceu certa. O defeito de origem era de
 **canal físico**: com `emulate_mouse_from_touch` ligado, um toque entregava dois eventos e os
 dois caíam no mesmo `_dedo`. A [ADR 0010](decisoes/0010-canal-fisico-de-entrada-sem-mapa-de-acoes.md)
 fez a regra enxergar canal pela classe do evento testada no ramo, e é por isso que toda
@@ -212,7 +212,7 @@ inútil, e achatar também.
 
 | onde | como foi escrito | o que era |
 |---|---|---|
-| uso 8 (25/08) | "o Sara não modela TECLA como canal de entrada" (F1 do console) | um sintoma |
+| uso 8 (25/08) | "o engine-sensor não modela TECLA como canal de entrada" (F1 do console) | um sintoma |
 | uso 10 (25/08) | "posse de estado de UI entre `Button.button_pressed` e a seção que é a fonte da verdade" | o vizinho: posse de **estado** de widget |
 | uso 15 (29/08) | "a mesma lacuna da linha 8, e agora ela custou" (ESC do desenhista) | o mesmo sintoma, de novo |
 
@@ -235,7 +235,7 @@ número errado sobre o jogo, e o jogo continua o que era.
 desenhista mentir, o desenho que o autor pensa ter feito não é o que sai no bloco — e o bloco
 é o pedido. A agente recebe uma instrução errada e a implementa corretamente. **Não há diff
 para revisar, porque a corrupção acontece antes do diff:** a suíte, a Sentinela, o carimbo e o
-`sara check` vão todos olhar uma implementação fiel de um pedido errado, e os quatro vão
+`engine-sensor check` vão todos olhar uma implementação fiel de um pedido errado, e os quatro vão
 aprovar — com razão. Com `--desenho` isso vale nas duas direções.
 
 É a pergunta 8 um degrau acima. Lá, prova de forma regressiva não pega a peça que nunca
@@ -244,7 +244,7 @@ nenhum instrumento deste projeto olha para pedido.
 
 **E o caso já tem um defeito exatamente dessa forma.** O conversor de indentação trocou por
 TAB os espaços de dentro de quatro textos da tela, e o cabeçalho saiu como
-`andar 2 —Cereja em Cadeia(hoje: com recorte)`. A suíte ficou verde nos 338 casos, a Sara
+`andar 2 —Cereja em Cadeia(hoje: com recorte)`. A suíte ficou verde nos 338 casos, o engine-sensor
 ficou verde, e quem viu foi o autor olhando a captura. Numa ferramenta que relata, isso é
 feiura. Numa superfície de fala, um rótulo que mente sobre qual andar está aberto faz o autor
 desenhar sobre a coisa errada e **pedir** a coisa errada — e é a mesma classe da "tela que
@@ -254,7 +254,7 @@ nasceu errada" que criou a `sonda_de_tira` em 28/08.
 figura sozinha não diz o que se quer dela"* — aberto duas semanas depois, um desenho salvo não
 distingue *"faz o andar 3 assim"* de *"compara com o de hoje"* de *"quanto isso custa?"*, e as
 três pedem trabalhos diferentes. É a intenção viajando junto com a forma, que é a definição do
-pedido. Ele é um `TextEdit` lido por consulta (`_nota.text`): não é só que a Sara não o
+pedido. Ele é um `TextEdit` lido por consulta (`_nota.text`): não é só que o engine-sensor não o
 declara — **não há nem sítio de conexão para declarar**. E o defeito que a sessão do porte já
 achou nele é exatamente desta classe: uma nota que fale do `"pescoço"` tem aspas, e num
 arquivo de figura crua as aspas ligariam o modo bloco e as onze linhas do desenho, que não têm
@@ -271,7 +271,7 @@ calados da §3 moram nessa zona; os outros 4 são do jogo e embarcam.
 
 Vale registrar o tamanho da camada: **51 dos 166 arquivos `.gd` da branch estão em
 `ferramentas/`** — mais que os 24 de `main/`. Ela produz 4 das 53 declarações, e as 4 saem de
-um arquivo só. (Os 164 varridos são esses 166 menos os 2 do portão em `.sara/`, que o scanner
+um arquivo só. (Os 164 varridos são esses 166 menos os 2 do portão em `.engine-sensor/`, que o scanner
 pula junto com `.git`, `.godot`, `dist` e `target`. `.claude/` não está nessa lista, e é daí
 que vem o ruído de contagem já anotado no `USO-PESSOAL.md`.)
 
@@ -308,7 +308,7 @@ entrou — **só declarando, sem diagnóstico novo**, que é o que permite saber
 duas coisas produziu ruído. Tecla entra junto ou não entra: são 2 sítios contra 29, e a
 justificativa dela é outra.
 
-Ela **não** está decidida aqui. A [ADR 0012 §3](decisoes/0012-sara-e-corpus-coevoluem.md)
+Ela **não** está decidida aqui. A [ADR 0012 §3](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md)
 exige o confronto com o corpus antes da incorporação, e ele não foi feito.
 
 **A previsão, escrita antes de medir**, porque depois vira racionalização: esta capacidade
@@ -340,7 +340,7 @@ corpus, contados com o mesmo `grep` da §3, fora de `.claude/` e `.godot/`.
 
 **Oito vezes mais sítios de sinal do que de callback, e nenhum projeto com zero.** É a forma
 do caso da profundidade e não a do relógio do Tween, e é o que importa para a segunda linha de
-evidência da [ADR 0012 §5](decisoes/0012-sara-e-corpus-coevoluem.md): a construção está nos
+evidência da [ADR 0012 §5](decisoes/0012-o-sensor-e-o-corpus-coevoluem.md): a construção está nos
 quatro projetos, inclusive nos três parados desde 24/08 — e Gods, que foi onde a profundidade
 mais achou, é também onde há mais sinais.
 
@@ -349,7 +349,7 @@ mais achou, é também onde há mais sinais.
 - **sítio não é declaração.** Isto conta onde a construção aparece, não o que uma regra
   conseguiria resolver. Dos 29 sítios do porte, 25 apontam para um método nomeado (16 com
   `bind`, 2 com `unbind`, 9 diretos) e 2 são funções anônimas — que é onde uma regra
-  provavelmente pararia, como o `SAR-PARSE-001` já faz com alvo dinâmico;
+  provavelmente pararia, como o `ESN-PARSE-001` já faz com alvo dinâmico;
 - **o Defold não entra.** O original tem 4 `on_input` e 47 `gui.pick_node`: lá o botão mora
   **dentro** do callback que o adapter já reconhece, então a forma não é a mesma e o corpus
   congelado da [ADR 0005](decisoes/0005-foco-em-godot-com-defold-congelado.md) não confirma
@@ -391,10 +391,10 @@ custou uma ADR e nenhuma hora de código.
 ## 7. O que este documento não conclui
 
 - **Não reabre o Marco 6.** Ele encerrou por conclusão em 28/08 com treze mudanças, e a
-  [ADR 0013](decisoes/0013-manter-a-sara-privada-ao-fim-do-marco-6.md) decidiu manter a Sara
+  [ADR 0013](decisoes/0013-manter-o-sensor-privado-ao-fim-do-marco-6.md) decidiu manter o engine-sensor
   privada. Os usos 14 e 15 estão no diário do porte, que continua; a tabela fechada de
   [`USO-PESSOAL.md`](USO-PESSOAL.md) não é renumerada por este caso.
-- **Não acusa a Sara de ter perdido um defeito.** Ela não perdeu: no desenhista não havia
+- **Não acusa o engine-sensor de ter perdido um defeito.** Ela não perdeu: no desenhista não havia
   defeito da classe que ela procura, porque não há animação nenhuma. O que se mediu é o
   tamanho do que ela não olha, não um erro dela.
 - **Não julga a sessão que construiu o desenhista.** Ela entregou com dois portões, conferiu
@@ -402,10 +402,10 @@ custou uma ADR e nenhuma hora de código.
   aqui é sobre **para onde o instrumento aponta**, não sobre quem o usou.
 - **Não decide se `ferramentas/` deve ser varrido.** É a mesma família da anotação sobre
   `.claude/worktrees/` no `USO-PESSOAL.md`: escolha de contrato.
-- **Não propõe que a Sara verifique fala.** Nomear a classe não é propor regra. O que este
+- **Não propõe que o engine-sensor verifique fala.** Nomear a classe não é propor regra. O que este
   caso mostra é que ela existe, que é onde a intenção do autor entra no trabalho, e que hoje
   ela não tem dono nenhum.
-- **Não conclui sobre o recorte da Sara.** Alimenta a previsão de 25/08 em vez de a
+- **Não conclui sobre o recorte do engine-sensor.** Alimenta a previsão de 25/08 em vez de a
   substituir, e desta vez do lado de dentro do eixo declarado — que é o que a distingue do
   caso da aranha.
 
@@ -418,11 +418,11 @@ custou uma ADR e nenhuma hora de código.
 | a sessão que construiu | "Ferramenta desenhista de andares", `bomberboom-gd`, 29/08/2026, PR #40 |
 | o branch lido | `desenhista`, em `3ba88af`, mais o `--desenho` ainda não commitado |
 | o carimbo, com a classificação feita na hora | `docs/carimbos/2026-08-29-desenhista.md`, no porte |
-| a linha do diário do porte | `.sara/USOS.md`, linha 15 |
-| a Sara usada na medição | `f1f4d5f`, o binário de `dist/` como estava, `sha256 1769280b…4751eb` |
-| a Sara conferida contra | o `src` em `346b7e7`: 59 declarações, as mesmas 6 de entrada, as mesmas 4 no desenhista |
+| a linha do diário do porte | `.engine-sensor/USOS.md`, linha 15 |
+| o engine-sensor usado na medição | `f1f4d5f`, o binário de `dist/` como estava, `sha256 1769280b…4751eb` |
+| o engine-sensor conferida contra | o `src` em `346b7e7`: 59 declarações, as mesmas 6 de entrada, as mesmas 4 no desenhista |
 | o que a conferência produziu | `dist/` reconstruído (`sha256 4c9ff12e…50677`) e o portão `adr_0012_o_binario_publicado_responde_como_o_codigo` |
-| a medição | `git archive 3ba88af` exportado para `/tmp`, depois `sara check`: saída 0, 53 declarações em 164 arquivos, 0 diagnósticos |
+| a medição | `git archive 3ba88af` exportado para `/tmp`, depois `engine-sensor check`: saída 0, 53 declarações em 164 arquivos, 0 diagnósticos |
 | por que exportada | a sessão do porte editava `desenhista.gd` durante a leitura; a árvore suja deu 30 sítios de sinal contra os 29 do commit |
 | o denominador do corpus | mesmo `grep`, em `~/godot/{gods,boomlitude,mineboom,bomberboom-gd}`, fora de `.claude/` e `.godot/` |
 | as 6 declarações de entrada | `main/tabuleiro.gd:303,307` e `ferramentas/desenhista/prancha_na_tela.gd:93,96,99,102` |

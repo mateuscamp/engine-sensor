@@ -90,7 +90,7 @@ fn included_entry(entry: &DirEntry) -> bool {
         entry.file_name().to_string_lossy().as_ref(),
         ".git"
             | ".godot"
-            | ".sara"
+            | ".engine-sensor"
             | ".aurora"
             | "build"
             | "dist"

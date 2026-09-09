@@ -1,5 +1,5 @@
 -- Passe os arquivos Lua puros como argumentos; o shell pode expandir globs.
--- Exemplo: luajit .sara/defold/portao_ai_first.lua modules/*.lua
+-- Exemplo: luajit .engine-sensor/defold/portao_ai_first.lua modules/*.lua
 local proibidos = {
   "go%.", "gui%.", "msg%.", "timer%.", "factory%.", "collectionfactory%.",
   "math%.random", "socket%.gettime",

@@ -47,14 +47,14 @@ pub struct AllowRule {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(default)]
-pub struct SaraConfig {
+pub struct SensorConfig {
     pub schema_version: u32,
     pub engine: EngineChoice,
     pub profiles: Vec<Profile>,
     pub allow: Vec<AllowRule>,
 }
 
-impl Default for SaraConfig {
+impl Default for SensorConfig {
     fn default() -> Self {
         Self {
             schema_version: 1,
@@ -65,9 +65,9 @@ impl Default for SaraConfig {
     }
 }
 
-impl SaraConfig {
+impl SensorConfig {
     pub fn load(project: &Path) -> Result<Self> {
-        let path = project.join("sara.toml");
+        let path = project.join("engine-sensor.toml");
         if !path.exists() {
             return Ok(Self::default());
         }

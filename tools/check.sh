@@ -4,4 +4,4 @@ set -euo pipefail
 cargo test
 cargo build --release
 
-echo "Sara: testes e binário release concluídos."
+echo "engine-sensor: testes e binário release concluídos."

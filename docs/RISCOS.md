@@ -1,4 +1,4 @@
-# Matriz de riscos do Sara 0.1.0
+# Matriz de riscos do engine-sensor 0.1.0
 
 Impacto e probabilidade variam de 1 a 3. Pontuação de 6 a 9 exige mitigação antes do
 lançamento interno.
@@ -7,7 +7,7 @@ lançamento interno.
 |---|---:|---:|---:|---|
 | Gramática comunitária não entende GDScript 4.7 | 3 | 2 | 6 | corpus obrigatório; erro explícito; não prometer o adapter se houver omissão |
 | Análise estática acusa concorrência inexistente | 3 | 2 | 6 | só prova bloqueia; fluxo incerto vira aviso; exceção exata e justificada |
-| Análise estática deixa alvo dinâmico passar | 3 | 2 | 6 | aviso `SAR-PARSE-001`; registrar cobertura de declarações resolvidas |
+| Análise estática deixa alvo dinâmico passar | 3 | 2 | 6 | aviso `ESN-PARSE-001`; registrar cobertura de declarações resolvidas |
 | Duas engines duplicam a implementação | 2 | 2 | 4 | modelo comum e semântica isolada por adapter |
 | Kit diverge entre Codex e Claude | 2 | 2 | 4 | contrato canônico único e fragmentos mínimos |
 | Linter vira produto amplo antes de provar posse | 3 | 2 | 6 | ADR bloqueia runtime, consulta, telemetria, loja e monetização |
@@ -68,5 +68,5 @@ de fora o parâmetro. A forma geral é *o instrumento muda alguma coisa para pod
 essa coisa pode ser exatamente a que decide.*
 | Julgamento multimodal produzir falsa aprovação | 3 | 2 | 6 | regressões injetadas, oráculo independente e nenhuma reprovação baseada só em opinião visual |
 | Spike crescer até SDK ou runtime | 3 | 2 | 6 | ADR 0004 limita uma cena, uma engine e uma interface provisória |
-| Execução passar a depender de serviço remoto | 3 | 1 | 3 | Sara apenas produz artefatos locais; o agente consumidor fica fora do binário |
+| Execução passar a depender de serviço remoto | 3 | 1 | 3 | engine-sensor apenas produz artefatos locais; o agente consumidor fica fora do binário |
 | Ferramenta existente já entregar a unidade de evidência do spike | 3 | 3 | 9 | **materializado em 26/08/2026**: a Defold publicou a `extension-automation-bridge` oficial e há pelo menos quatro implementações comunitárias em Godot. Mitigação: [ADR 0011](decisoes/0011-marco-7-exige-comparacao-com-ferramenta-existente.md) exige comparação escrita antes de o Marco 7 começar |
