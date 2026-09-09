@@ -73,6 +73,30 @@ de indireção, que é o padrão de dono centralizado (ADR 0009). Duas trajetór
 consideradas serializadas quando **as duas** encerram o mesmo alvo antes de começar. Pela ADR 0005 a lista do Defold
 está congelada: ela não cresce enquanto o foco for Godot.
 
+## O que conta como fonte do projeto
+
+A raiz pedida é sempre o projeto, e a análise desce dela para baixo. Não descem junto:
+
+- os diretórios de trabalho de ferramenta e de engine — `.git`, `.godot`, `.engine-sensor`,
+  `.aurora`, `build`, `dist`, `target`, `node_modules` e `vendor`;
+- **a raiz de qualquer outro checkout do Git encontrada abaixo da raiz pedida** — worktree
+  vinculada, submódulo não declarado ou clone solto. O Git assinala essa raiz com um `.git`,
+  que é diretório num repositório comum e arquivo (`gitdir: ...`) numa worktree ou submódulo;
+  encontrar a marca abaixo da raiz quer dizer que ali começa outra árvore.
+
+O critério é a **presença** da marca, e não o que ela aponta: cópia velha cujo `gitdir`
+já não existe continua sendo outro checkout. Também não é o ponto no começo do nome —
+diretório oculto que não seja checkout continua sendo lido, e worktree pedida como raiz
+continua sendo analisada por inteiro, que é onde o agente trabalha.
+
+A exceção é o **submódulo declarado**: caminho listado em `.gitmodules` na raiz é conteúdo
+que o próprio projeto reivindica, e continua sendo fonte dele.
+
+Medido em 09/09/2026 no BomberBoom: `check .` devolvia 143 arquivos e 48 avisos, e todos os
+48 vinham de quatro cópias do próprio projeto em `.claude/worktrees/` — os mesmos achados,
+contados cinco vezes, apontando árvores que ninguém edita por aquele caminho. Três das
+quatro tinham `gitdir` quebrado por um renome de repositório.
+
 ## Fora do contrato
 
 - C#, GDExtension, extensões nativas Defold e código gerado;

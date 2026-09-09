@@ -446,6 +446,53 @@ fn adr_0012_o_binario_publicado_responde_como_o_codigo() {
         divergentes.len(),
         fixtures.len()
     );
+
+    let (aninhado, _guarda) = projeto_com_checkout_aninhado();
+    let (codigo_saida, do_fonte) = resposta(do_codigo, &aninhado);
+    let (publicado_saida, do_artefato) = resposta(&publicado, &aninhado);
+    assert!(
+        (codigo_saida, do_fonte.len()) == (publicado_saida, do_artefato.len())
+            && do_fonte == do_artefato,
+        "o binário de dist/ responde diferente do código num projeto com checkout aninhado: \
+         saída {codigo_saida:?} e {} bytes pelo `src`, saída {publicado_saida:?} e {} bytes \
+         pelo artefato. Reconstrua com `tools/dist.sh`.",
+        do_fonte.len(),
+        do_artefato.len()
+    );
+}
+
+/// Projeto com uma worktree aninhada, montado em disco temporário.
+///
+/// A marca de checkout não pode virar fixture versionada: o Git recusa indexar
+/// caminho que contenha um componente `.git`, que é justamente a marca. Sem esta
+/// montagem em tempo de execução, o portão acima fica cego para a fronteira de
+/// descoberta — e ficar cego para uma capacidade nova é exatamente o defeito que ele
+/// nasceu para não deixar repetir.
+fn projeto_com_checkout_aninhado() -> (PathBuf, tempfile::TempDir) {
+    let temporario = tempfile::TempDir::new().expect("tempdir");
+    let origem = raiz().join("tests/fixtures/defold_animation_red");
+    let raiz_do_projeto = temporario.path().to_path_buf();
+    for destino in [
+        raiz_do_projeto.clone(),
+        raiz_do_projeto.join(".claude/worktrees/copia"),
+    ] {
+        for entrada in WalkDir::new(&origem) {
+            let entrada = entrada.expect("entrada");
+            let relativo = entrada.path().strip_prefix(&origem).expect("relativo");
+            let alvo = destino.join(relativo);
+            if entrada.file_type().is_dir() {
+                fs::create_dir_all(&alvo).expect("diretório");
+            } else {
+                fs::copy(entrada.path(), &alvo).expect("cópia");
+            }
+        }
+    }
+    fs::write(
+        raiz_do_projeto.join(".claude/worktrees/copia/.git"),
+        "gitdir: /nao/existe/.git/worktrees/copia\n",
+    )
+    .expect("gitfile");
+    (raiz_do_projeto, temporario)
 }
 
 // ---------------------------------------------------------------------------

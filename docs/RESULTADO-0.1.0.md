@@ -25,7 +25,7 @@ marca, SDK, runtime e engine própria continuam fora do escopo.
 | variação nas cinco varreduras | 0,64–0,74 s | registrar estabilidade |
 | JSON repetido | idêntico byte a byte | determinístico |
 | execução sem rede | código 0 em namespace sem rede | offline |
-| binário distribuível | 3.927.632 bytes | Linux x86_64, sem Python/Node |
+| binário distribuível | 3.937.288 bytes | Linux x86_64, sem Python/Node |
 | portão em projeto ativo | porte BomberBoom | `AGENTS.md` e `CLAUDE.md` ativos |
 | portões copiáveis | Godot e Defold | entrada ausente reprova explicitamente |
 
@@ -51,6 +51,15 @@ o mesmo projeto mediu 53 declarações pelo binário publicado e 59 pelo código
 fixtures e exige relatórios idênticos —, e foi ele que reprovou aqui, exatamente em
 `godot_animation_clock_control_green` e `godot_draw_order_green`, as fixtures das duas
 capacidades ausentes.)*
+
+*(Atualizado em 09/09/2026: reconstruído pela fronteira entre o projeto e os checkouts
+aninhados nele, descrita em [COMPATIBILIDADE.md](COMPATIBILIDADE.md). São 9.408 bytes a mais
+que o artefato que estava em `dist/` — 3.927.880 —, e a linha da tabela vinha 248 bytes atrás
+dele desde o renome de 09/09. A mudança é de descoberta e não de regra: nenhum diagnóstico
+novo entrou em nenhum dos cinco projetos, e a leitura do corpus caiu de 3.951 arquivos para
+819, porque 3.132 deles eram cópias dos próprios projetos em worktrees aninhadas. O portão
+do artefato passou a montar também um projeto com checkout aninhado: a marca do Git não pode
+virar fixture versionada, porque o Git recusa indexar caminho com componente `.git`.)*
 
 O porte Godot recebeu `.engine-sensor/`, `engine-sensor.toml` e o portão curto tanto em `AGENTS.md`
 quanto em `CLAUDE.md`. A inicialização preservou as instruções e mudanças que já

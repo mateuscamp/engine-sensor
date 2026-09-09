@@ -547,3 +547,204 @@ fn copy_tree(source: &std::path::Path, destination: &std::path::Path) {
         }
     }
 }
+
+// ---------------------------------------------------------------------------
+// Fronteira entre o projeto e os checkouts aninhados nele
+// ---------------------------------------------------------------------------
+
+/// Copia a fixture e planta a marca com que o Git assinala a raiz de um checkout.
+///
+/// `gitdir` ausente escreve `.git` como **diretório** — o repositório comum; presente
+/// escreve `.git` como **arquivo**, que é a forma de worktree vinculada e de submódulo.
+/// O valor não precisa existir: cópia velha com referência quebrada é metade do caso
+/// real medido no BomberBoom.
+fn plant_checkout(source: &std::path::Path, destination: &std::path::Path, gitdir: Option<&str>) {
+    copy_tree(source, destination);
+    match gitdir {
+        Some(alvo) => {
+            fs::write(destination.join(".git"), format!("gitdir: {alvo}\n")).expect("gitfile")
+        }
+        None => fs::create_dir_all(destination.join(".git")).expect("gitdir"),
+    }
+}
+
+/// Caminhos que os diagnósticos apontam, sem repetição.
+fn diagnostic_paths(report: &Value) -> std::collections::BTreeSet<String> {
+    report["diagnostics"]
+        .as_array()
+        .expect("diagnostics")
+        .iter()
+        .map(|item| item["primary"]["path"].as_str().expect("path").to_owned())
+        .collect()
+}
+
+fn check_json(project: &std::path::Path) -> (i32, Value) {
+    let output = Command::cargo_bin("engine-sensor")
+        .expect("binary")
+        .arg("check")
+        .arg(project)
+        .arg("--format")
+        .arg("json")
+        .output()
+        .expect("run");
+    let stdout = String::from_utf8(output.stdout).expect("utf8");
+    (
+        output.status.code().expect("exit code"),
+        serde_json::from_str(&stdout).unwrap_or_else(|error| {
+            panic!(
+                "json inválido: {error}\nstdout={stdout}\nstderr={}",
+                String::from_utf8_lossy(&output.stderr)
+            )
+        }),
+    )
+}
+
+/// O caso medido em 09/09/2026 no BomberBoom: `check .` na raiz do projeto devolveu
+/// 141 arquivos e 56 avisos, e 48 deles vinham de quatro cópias do próprio projeto
+/// em `.claude/worktrees/`. Não eram achados novos — eram os mesmos achados, contados
+/// cinco vezes, com o caminho de uma árvore que ninguém está editando.
+///
+/// A marca do Git é o que separa as duas coisas, e ela vale nos dois estados que o
+/// caso real tem: uma worktree com metadado válido e três cópias cujo `gitdir` aponta
+/// para um diretório que não existe mais. Nenhuma das duas é fonte do projeto pedido.
+///
+/// A segunda metade é a que impede a correção fácil de passar: `.claude/ferramentas`
+/// é diretório oculto, não é checkout, e continua analisado. O critério é a marca do
+/// Git, não o ponto no começo do nome.
+#[test]
+fn nested_checkouts_are_not_sources_of_the_requested_project() {
+    let temporary = TempDir::new().expect("tempdir");
+    let raiz = temporary.path();
+    copy_tree(&fixture("defold_animation_red"), raiz);
+
+    plant_checkout(
+        &fixture("defold_animation_red"),
+        &raiz.join(".claude/worktrees/metadado-valido"),
+        Some(
+            &raiz
+                .join(".git/worktrees/metadado-valido")
+                .display()
+                .to_string(),
+        ),
+    );
+    fs::create_dir_all(raiz.join(".git/worktrees/metadado-valido")).expect("admin dir");
+
+    plant_checkout(
+        &fixture("defold_animation_red"),
+        &raiz.join(".claude/worktrees/referencia-quebrada"),
+        Some("/nao/existe/.git/worktrees/referencia-quebrada"),
+    );
+
+    plant_checkout(
+        &fixture("defold_animation_red"),
+        &raiz.join(".claude/clone-solto"),
+        None,
+    );
+
+    let oculto = raiz.join(".claude/ferramentas");
+    fs::create_dir_all(&oculto).expect("hidden dir");
+    fs::copy(
+        fixture("defold_animation_red").join("main/hud.gui_script"),
+        oculto.join("hud.gui_script"),
+    )
+    .expect("hidden source");
+
+    let (code, report) = check_json(raiz);
+    let caminhos = diagnostic_paths(&report);
+
+    assert_eq!(
+        report["files_scanned"], 2,
+        "o scanner leu {} arquivo(s); esperado 2 — o do projeto e o do diretório oculto \
+         que não é checkout. Caminhos com diagnóstico: {caminhos:?}",
+        report["files_scanned"]
+    );
+    assert_eq!(
+        caminhos,
+        [
+            ".claude/ferramentas/hud.gui_script".to_owned(),
+            "main/hud.gui_script".to_owned()
+        ]
+        .into_iter()
+        .collect::<std::collections::BTreeSet<_>>(),
+        "checkout aninhado voltou a entrar como fonte do projeto, ou fonte legítima \
+         em diretório oculto parou de ser analisada"
+    );
+    assert_eq!(code, 1, "o conflito do próprio projeto continua bloqueando");
+}
+
+/// A correção não pode custar a análise de uma worktree: é dentro delas que o agente
+/// trabalha, e é lá que `engine-sensor check .` precisa responder. A marca do Git na
+/// raiz pedida não a exclui — ela diz apenas onde outro checkout começa, e a raiz
+/// pedida é sempre o projeto.
+#[test]
+fn a_worktree_is_analyzed_when_it_is_the_requested_root() {
+    let temporary = TempDir::new().expect("tempdir");
+    let raiz = temporary.path();
+    copy_tree(&fixture("defold_animation_red"), raiz);
+
+    for (nome, gitdir) in [
+        (
+            "metadado-valido",
+            raiz.join(".git/worktrees/metadado-valido")
+                .display()
+                .to_string(),
+        ),
+        (
+            "referencia-quebrada",
+            "/nao/existe/.git/worktrees/referencia-quebrada".to_owned(),
+        ),
+    ] {
+        let worktree = raiz.join(".claude/worktrees").join(nome);
+        plant_checkout(&fixture("defold_animation_red"), &worktree, Some(&gitdir));
+        fs::create_dir_all(raiz.join(".git/worktrees/metadado-valido")).expect("admin dir");
+
+        let (code, report) = check_json(&worktree);
+        assert_eq!(
+            code, 1,
+            "{nome}: a worktree pedida como raiz deixou de bloquear"
+        );
+        assert_eq!(
+            report["files_scanned"], 1,
+            "{nome}: fonte da worktree não foi lida"
+        );
+        assert_eq!(
+            diagnostic_paths(&report),
+            ["main/hud.gui_script".to_owned()]
+                .into_iter()
+                .collect::<std::collections::BTreeSet<_>>(),
+            "{nome}: o diagnóstico saiu com caminho fora da raiz pedida"
+        );
+    }
+}
+
+/// Submódulo é checkout aninhado que o **próprio projeto declara** como conteúdo seu,
+/// em `.gitmodules`. Worktree vinculada e clone solto não têm essa declaração, e é ela
+/// — e não o gitdir, que numa cópia velha não existe mais — que separa os dois casos.
+///
+/// Sem esta metade, a correção trocaria um defeito por outro: deixaria de contar cinco
+/// vezes o mesmo achado e passaria a não contar nenhuma vez o código que a engine
+/// carrega junto com o projeto.
+#[test]
+fn declared_submodule_stays_project_content() {
+    let temporary = TempDir::new().expect("tempdir");
+    let raiz = temporary.path();
+    copy_tree(&fixture("defold_animation_red"), raiz);
+    fs::write(
+        raiz.join(".gitmodules"),
+        "[submodule \"compartilhado\"]\n\tpath = compartilhado\n\turl = ../compartilhado.git\n",
+    )
+    .expect("gitmodules");
+
+    plant_checkout(
+        &fixture("defold_animation_red"),
+        &raiz.join("compartilhado"),
+        Some("/nao/existe/.git/modules/compartilhado"),
+    );
+
+    let (_, report) = check_json(raiz);
+    assert!(
+        diagnostic_paths(&report).contains("compartilhado/main/hud.gui_script"),
+        "o submódulo declarado saiu da análise. Caminhos: {:?}",
+        diagnostic_paths(&report)
+    );
+}
